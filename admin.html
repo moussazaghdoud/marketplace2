@@ -1,0 +1,454 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Admin — Rainbow Portal</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        brand: { 50: '#eef4ff', 100: '#dce8ff', 500: '#4F6DF5', 600: '#3B5DE7', 700: '#2D4ED9' }
+                    },
+                    fontFamily: { sans: ['Inter', 'system-ui', 'sans-serif'] }
+                }
+            }
+        }
+    </script>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+</head>
+<body class="font-sans bg-gray-50 text-gray-700 antialiased">
+
+    <!-- Top bar -->
+    <nav class="bg-white border-b border-gray-200 px-6 h-14 flex items-center justify-between sticky top-0 z-50">
+        <div class="flex items-center gap-3">
+            <span class="text-sm font-bold text-gray-900">Rainbow Admin</span>
+            <span class="text-xs text-gray-400">Content Manager</span>
+        </div>
+        <a href="/" target="_blank" class="text-xs text-brand-500 hover:text-brand-700 font-medium">View Live Site &rarr;</a>
+    </nav>
+
+    <div class="max-w-4xl mx-auto px-6 py-8">
+        <!-- Status message -->
+        <div id="status-msg" class="hidden mb-6 px-4 py-3 rounded-lg text-sm font-medium"></div>
+
+        <!-- Tabs -->
+        <div class="flex gap-1 mb-8 bg-gray-100 rounded-lg p-1 overflow-x-auto">
+            <button onclick="switchTab('hero')" class="tab-btn active px-4 py-2 rounded-md text-sm font-medium whitespace-nowrap" data-tab="hero">Hero</button>
+            <button onclick="switchTab('features')" class="tab-btn px-4 py-2 rounded-md text-sm font-medium whitespace-nowrap" data-tab="features">Features</button>
+            <button onclick="switchTab('pricing')" class="tab-btn px-4 py-2 rounded-md text-sm font-medium whitespace-nowrap" data-tab="pricing">Pricing</button>
+            <button onclick="switchTab('faq')" class="tab-btn px-4 py-2 rounded-md text-sm font-medium whitespace-nowrap" data-tab="faq">FAQ</button>
+            <button onclick="switchTab('video')" class="tab-btn px-4 py-2 rounded-md text-sm font-medium whitespace-nowrap" data-tab="video">Video</button>
+            <button onclick="switchTab('trust')" class="tab-btn px-4 py-2 rounded-md text-sm font-medium whitespace-nowrap" data-tab="trust">Trust Bar</button>
+        </div>
+
+        <!-- HERO TAB -->
+        <div id="tab-hero" class="tab-panel">
+            <div class="bg-white rounded-xl border border-gray-200 p-6">
+                <h2 class="text-lg font-semibold text-gray-900 mb-6">Hero Section</h2>
+                <div class="space-y-4">
+                    <div>
+                        <label class="block text-sm font-medium text-gray-600 mb-1">Badge Text</label>
+                        <input id="hero-badge" type="text" class="admin-input">
+                    </div>
+                    <div>
+                        <label class="block text-sm font-medium text-gray-600 mb-1">Title (HTML allowed)</label>
+                        <input id="hero-title" type="text" class="admin-input">
+                    </div>
+                    <div>
+                        <label class="block text-sm font-medium text-gray-600 mb-1">Description</label>
+                        <textarea id="hero-description" rows="3" class="admin-input"></textarea>
+                    </div>
+                    <div class="grid grid-cols-2 gap-4">
+                        <div>
+                            <label class="block text-sm font-medium text-gray-600 mb-1">Primary CTA Text</label>
+                            <input id="hero-cta-primary" type="text" class="admin-input">
+                        </div>
+                        <div>
+                            <label class="block text-sm font-medium text-gray-600 mb-1">Secondary CTA Text</label>
+                            <input id="hero-cta-secondary" type="text" class="admin-input">
+                        </div>
+                    </div>
+                    <div>
+                        <label class="block text-sm font-medium text-gray-600 mb-1">Trust Badges (comma-separated)</label>
+                        <input id="hero-trust-badges" type="text" class="admin-input">
+                    </div>
+                </div>
+                <button onclick="saveSection('hero')" class="mt-6 px-5 py-2.5 bg-brand-500 text-white text-sm font-medium rounded-lg hover:bg-brand-600 transition-colors">Save Hero</button>
+            </div>
+        </div>
+
+        <!-- FEATURES TAB -->
+        <div id="tab-features" class="tab-panel hidden">
+            <div class="bg-white rounded-xl border border-gray-200 p-6">
+                <h2 class="text-lg font-semibold text-gray-900 mb-2">Features Section</h2>
+                <div class="space-y-4 mb-6">
+                    <div>
+                        <label class="block text-sm font-medium text-gray-600 mb-1">Section Heading</label>
+                        <input id="features-heading" type="text" class="admin-input">
+                    </div>
+                    <div>
+                        <label class="block text-sm font-medium text-gray-600 mb-1">Section Subheading</label>
+                        <input id="features-subheading" type="text" class="admin-input">
+                    </div>
+                </div>
+                <div id="features-list" class="space-y-4"></div>
+                <button onclick="saveSection('features')" class="mt-6 px-5 py-2.5 bg-brand-500 text-white text-sm font-medium rounded-lg hover:bg-brand-600 transition-colors">Save Features</button>
+            </div>
+        </div>
+
+        <!-- PRICING TAB -->
+        <div id="tab-pricing" class="tab-panel hidden">
+            <div class="bg-white rounded-xl border border-gray-200 p-6">
+                <h2 class="text-lg font-semibold text-gray-900 mb-2">Pricing Section</h2>
+                <div class="space-y-4 mb-6">
+                    <div>
+                        <label class="block text-sm font-medium text-gray-600 mb-1">Section Heading</label>
+                        <input id="pricing-heading" type="text" class="admin-input">
+                    </div>
+                    <div>
+                        <label class="block text-sm font-medium text-gray-600 mb-1">Section Subheading</label>
+                        <input id="pricing-subheading" type="text" class="admin-input">
+                    </div>
+                </div>
+                <div id="pricing-list" class="space-y-6"></div>
+                <button onclick="saveSection('pricing')" class="mt-6 px-5 py-2.5 bg-brand-500 text-white text-sm font-medium rounded-lg hover:bg-brand-600 transition-colors">Save Pricing</button>
+            </div>
+        </div>
+
+        <!-- FAQ TAB -->
+        <div id="tab-faq" class="tab-panel hidden">
+            <div class="bg-white rounded-xl border border-gray-200 p-6">
+                <h2 class="text-lg font-semibold text-gray-900 mb-2">FAQ Section</h2>
+                <div class="mb-6">
+                    <label class="block text-sm font-medium text-gray-600 mb-1">Section Heading</label>
+                    <input id="faq-heading" type="text" class="admin-input">
+                </div>
+                <div id="faq-list" class="space-y-4"></div>
+                <button onclick="addFaqItem()" class="mt-4 px-4 py-2 border border-dashed border-gray-300 text-sm text-gray-500 rounded-lg hover:border-brand-500 hover:text-brand-500 transition-colors w-full">+ Add Question</button>
+                <button onclick="saveSection('faq')" class="mt-6 px-5 py-2.5 bg-brand-500 text-white text-sm font-medium rounded-lg hover:bg-brand-600 transition-colors">Save FAQ</button>
+            </div>
+        </div>
+
+        <!-- VIDEO TAB -->
+        <div id="tab-video" class="tab-panel hidden">
+            <div class="bg-white rounded-xl border border-gray-200 p-6">
+                <h2 class="text-lg font-semibold text-gray-900 mb-6">Video Section</h2>
+                <div class="space-y-4">
+                    <div>
+                        <label class="block text-sm font-medium text-gray-600 mb-1">Section Heading</label>
+                        <input id="video-heading" type="text" class="admin-input">
+                    </div>
+                    <div>
+                        <label class="block text-sm font-medium text-gray-600 mb-1">Section Subheading</label>
+                        <input id="video-subheading" type="text" class="admin-input">
+                    </div>
+                    <div>
+                        <label class="block text-sm font-medium text-gray-600 mb-1">YouTube Embed URL</label>
+                        <input id="video-url" type="text" class="admin-input" placeholder="https://www.youtube.com/embed/...">
+                    </div>
+                </div>
+                <button onclick="saveSection('video')" class="mt-6 px-5 py-2.5 bg-brand-500 text-white text-sm font-medium rounded-lg hover:bg-brand-600 transition-colors">Save Video</button>
+            </div>
+        </div>
+
+        <!-- TRUST TAB -->
+        <div id="tab-trust" class="tab-panel hidden">
+            <div class="bg-white rounded-xl border border-gray-200 p-6">
+                <h2 class="text-lg font-semibold text-gray-900 mb-6">Trust Bar</h2>
+                <div id="trust-list" class="space-y-4"></div>
+                <button onclick="saveSection('trust')" class="mt-6 px-5 py-2.5 bg-brand-500 text-white text-sm font-medium rounded-lg hover:bg-brand-600 transition-colors">Save Trust Bar</button>
+            </div>
+        </div>
+    </div>
+
+    <style>
+        .admin-input {
+            width: 100%;
+            padding: 0.625rem 0.75rem;
+            border: 1px solid #e5e7eb;
+            border-radius: 0.5rem;
+            font-size: 0.875rem;
+            outline: none;
+            transition: border-color 0.15s;
+        }
+        .admin-input:focus {
+            border-color: #4F6DF5;
+            box-shadow: 0 0 0 2px rgba(79, 109, 245, 0.1);
+        }
+        .tab-btn {
+            color: #6b7280;
+            transition: all 0.15s;
+        }
+        .tab-btn.active {
+            background: white;
+            color: #111827;
+            box-shadow: 0 1px 2px rgba(0,0,0,0.05);
+        }
+        .tab-btn:not(.active):hover {
+            color: #374151;
+        }
+    </style>
+
+    <script>
+    var content = {};
+
+    // Load content
+    fetch('/api/content')
+        .then(function(r) { return r.json(); })
+        .then(function(data) {
+            content = data;
+            populateAll();
+        });
+
+    function switchTab(name) {
+        document.querySelectorAll('.tab-panel').forEach(function(p) { p.classList.add('hidden'); });
+        document.querySelectorAll('.tab-btn').forEach(function(b) { b.classList.remove('active'); });
+        document.getElementById('tab-' + name).classList.remove('hidden');
+        document.querySelector('[data-tab="' + name + '"]').classList.add('active');
+    }
+
+    function populateAll() {
+        // Hero
+        document.getElementById('hero-badge').value = content.hero.badge || '';
+        document.getElementById('hero-title').value = content.hero.title || '';
+        document.getElementById('hero-description').value = content.hero.description || '';
+        document.getElementById('hero-cta-primary').value = content.hero.ctaPrimary || '';
+        document.getElementById('hero-cta-secondary').value = content.hero.ctaSecondary || '';
+        document.getElementById('hero-trust-badges').value = (content.hero.trustBadges || []).join(', ');
+
+        // Features
+        document.getElementById('features-heading').value = content.features.heading || '';
+        document.getElementById('features-subheading').value = content.features.subheading || '';
+        renderFeatures();
+
+        // Pricing
+        document.getElementById('pricing-heading').value = content.pricing.heading || '';
+        document.getElementById('pricing-subheading').value = content.pricing.subheading || '';
+        renderPricing();
+
+        // FAQ
+        document.getElementById('faq-heading').value = content.faq.heading || '';
+        renderFaq();
+
+        // Video
+        document.getElementById('video-heading').value = content.video.heading || '';
+        document.getElementById('video-subheading').value = content.video.subheading || '';
+        document.getElementById('video-url').value = content.video.youtubeUrl || '';
+
+        // Trust
+        renderTrust();
+    }
+
+    // --- Features ---
+    var iconColorOptions = ['blue', 'violet', 'emerald', 'amber', 'pink', 'cyan', 'red', 'indigo', 'teal', 'orange'];
+
+    function renderFeatures() {
+        var list = document.getElementById('features-list');
+        list.innerHTML = '';
+        content.features.items.forEach(function(f, i) {
+            var colorOpts = iconColorOptions.map(function(c) {
+                return '<option value="' + c + '"' + (c === f.iconBg ? ' selected' : '') + '>' + c + '</option>';
+            }).join('');
+            list.innerHTML +=
+                '<div class="border border-gray-200 rounded-lg p-4">' +
+                    '<div class="flex items-center justify-between mb-3">' +
+                        '<span class="text-sm font-medium text-gray-900">Feature ' + (i + 1) + '</span>' +
+                    '</div>' +
+                    '<div class="space-y-3">' +
+                        '<div><label class="block text-xs text-gray-500 mb-1">Title</label>' +
+                        '<input class="admin-input" id="feat-title-' + i + '" value="' + escapeAttr(f.title) + '"></div>' +
+                        '<div><label class="block text-xs text-gray-500 mb-1">Description</label>' +
+                        '<textarea class="admin-input" rows="2" id="feat-desc-' + i + '">' + escapeHtml(f.description) + '</textarea></div>' +
+                        '<div><label class="block text-xs text-gray-500 mb-1">Icon Color</label>' +
+                        '<select class="admin-input" id="feat-color-' + i + '">' + colorOpts + '</select></div>' +
+                    '</div>' +
+                '</div>';
+        });
+    }
+
+    // --- Pricing ---
+    function renderPricing() {
+        var list = document.getElementById('pricing-list');
+        list.innerHTML = '';
+        content.pricing.plans.forEach(function(p, i) {
+            list.innerHTML +=
+                '<div class="border border-gray-200 rounded-lg p-4">' +
+                    '<div class="flex items-center justify-between mb-3">' +
+                        '<span class="text-sm font-medium text-gray-900">' + escapeHtml(p.name) + ' Plan</span>' +
+                        '<label class="flex items-center gap-2 text-xs text-gray-500"><input type="checkbox" id="plan-hl-' + i + '"' + (p.highlighted ? ' checked' : '') + '> Highlighted</label>' +
+                    '</div>' +
+                    '<div class="grid grid-cols-2 gap-3">' +
+                        '<div><label class="block text-xs text-gray-500 mb-1">Name</label>' +
+                        '<input class="admin-input" id="plan-name-' + i + '" value="' + escapeAttr(p.name) + '"></div>' +
+                        '<div><label class="block text-xs text-gray-500 mb-1">Subtitle</label>' +
+                        '<input class="admin-input" id="plan-sub-' + i + '" value="' + escapeAttr(p.subtitle) + '"></div>' +
+                        '<div><label class="block text-xs text-gray-500 mb-1">Price Display</label>' +
+                        '<input class="admin-input" id="plan-price-' + i + '" value="' + escapeAttr(p.price) + '"></div>' +
+                        '<div><label class="block text-xs text-gray-500 mb-1">Price Note</label>' +
+                        '<input class="admin-input" id="plan-note-' + i + '" value="' + escapeAttr(p.priceNote) + '"></div>' +
+                        '<div><label class="block text-xs text-gray-500 mb-1">Price Per User (number)</label>' +
+                        '<input type="number" step="0.01" class="admin-input" id="plan-ppu-' + i + '" value="' + p.pricePerUser + '"></div>' +
+                        '<div><label class="block text-xs text-gray-500 mb-1">CTA Text</label>' +
+                        '<input class="admin-input" id="plan-cta-' + i + '" value="' + escapeAttr(p.ctaText) + '"></div>' +
+                    '</div>' +
+                    '<div class="mt-3"><label class="block text-xs text-gray-500 mb-1">Features (one per line)</label>' +
+                    '<textarea class="admin-input" rows="4" id="plan-features-' + i + '">' + p.features.join('\n') + '</textarea></div>' +
+                    (p.badge !== undefined ? '<div class="mt-3"><label class="block text-xs text-gray-500 mb-1">Badge Text</label><input class="admin-input" id="plan-badge-' + i + '" value="' + escapeAttr(p.badge || '') + '"></div>' : '<div class="mt-3"><label class="block text-xs text-gray-500 mb-1">Badge Text (optional)</label><input class="admin-input" id="plan-badge-' + i + '" value=""></div>') +
+                    (p.ctaLink ? '<div class="mt-3"><label class="block text-xs text-gray-500 mb-1">CTA Link (optional)</label><input class="admin-input" id="plan-link-' + i + '" value="' + escapeAttr(p.ctaLink || '') + '"></div>' : '<div class="mt-3"><label class="block text-xs text-gray-500 mb-1">CTA Link (optional)</label><input class="admin-input" id="plan-link-' + i + '" value=""></div>') +
+                '</div>';
+        });
+    }
+
+    // --- FAQ ---
+    function renderFaq() {
+        var list = document.getElementById('faq-list');
+        list.innerHTML = '';
+        content.faq.items.forEach(function(f, i) {
+            list.innerHTML +=
+                '<div class="border border-gray-200 rounded-lg p-4">' +
+                    '<div class="flex items-center justify-between mb-3">' +
+                        '<span class="text-sm font-medium text-gray-900">Q' + (i + 1) + '</span>' +
+                        '<button onclick="removeFaqItem(' + i + ')" class="text-xs text-red-400 hover:text-red-600">Remove</button>' +
+                    '</div>' +
+                    '<div class="space-y-3">' +
+                        '<div><label class="block text-xs text-gray-500 mb-1">Question</label>' +
+                        '<input class="admin-input" id="faq-q-' + i + '" value="' + escapeAttr(f.question) + '"></div>' +
+                        '<div><label class="block text-xs text-gray-500 mb-1">Answer</label>' +
+                        '<textarea class="admin-input" rows="3" id="faq-a-' + i + '">' + escapeHtml(f.answer) + '</textarea></div>' +
+                    '</div>' +
+                '</div>';
+        });
+    }
+
+    function addFaqItem() {
+        content.faq.items.push({ question: '', answer: '' });
+        renderFaq();
+    }
+
+    function removeFaqItem(i) {
+        content.faq.items.splice(i, 1);
+        renderFaq();
+    }
+
+    // --- Trust ---
+    function renderTrust() {
+        var list = document.getElementById('trust-list');
+        list.innerHTML = '';
+        content.trust.items.forEach(function(t, i) {
+            list.innerHTML +=
+                '<div class="grid grid-cols-2 gap-3">' +
+                    '<div><label class="block text-xs text-gray-500 mb-1">Value</label>' +
+                    '<input class="admin-input" id="trust-val-' + i + '" value="' + escapeAttr(t.value) + '"></div>' +
+                    '<div><label class="block text-xs text-gray-500 mb-1">Label</label>' +
+                    '<input class="admin-input" id="trust-lbl-' + i + '" value="' + escapeAttr(t.label) + '"></div>' +
+                '</div>';
+        });
+    }
+
+    // --- Save ---
+    function saveSection(section) {
+        // Collect from form into content object
+        if (section === 'hero') {
+            content.hero.badge = document.getElementById('hero-badge').value;
+            content.hero.title = document.getElementById('hero-title').value;
+            content.hero.description = document.getElementById('hero-description').value;
+            content.hero.ctaPrimary = document.getElementById('hero-cta-primary').value;
+            content.hero.ctaSecondary = document.getElementById('hero-cta-secondary').value;
+            content.hero.trustBadges = document.getElementById('hero-trust-badges').value.split(',').map(function(s) { return s.trim(); }).filter(Boolean);
+        }
+
+        if (section === 'features') {
+            content.features.heading = document.getElementById('features-heading').value;
+            content.features.subheading = document.getElementById('features-subheading').value;
+            content.features.items.forEach(function(f, i) {
+                f.title = document.getElementById('feat-title-' + i).value;
+                f.description = document.getElementById('feat-desc-' + i).value;
+                f.iconBg = document.getElementById('feat-color-' + i).value;
+            });
+        }
+
+        if (section === 'pricing') {
+            content.pricing.heading = document.getElementById('pricing-heading').value;
+            content.pricing.subheading = document.getElementById('pricing-subheading').value;
+            content.pricing.plans.forEach(function(p, i) {
+                p.name = document.getElementById('plan-name-' + i).value;
+                p.subtitle = document.getElementById('plan-sub-' + i).value;
+                p.price = document.getElementById('plan-price-' + i).value;
+                p.priceNote = document.getElementById('plan-note-' + i).value;
+                p.pricePerUser = parseFloat(document.getElementById('plan-ppu-' + i).value) || 0;
+                p.ctaText = document.getElementById('plan-cta-' + i).value;
+                p.highlighted = document.getElementById('plan-hl-' + i).checked;
+                p.features = document.getElementById('plan-features-' + i).value.split('\n').map(function(s) { return s.trim(); }).filter(Boolean);
+                var badge = document.getElementById('plan-badge-' + i).value.trim();
+                p.badge = badge || undefined;
+                var link = document.getElementById('plan-link-' + i).value.trim();
+                p.ctaLink = link || undefined;
+            });
+        }
+
+        if (section === 'faq') {
+            content.faq.heading = document.getElementById('faq-heading').value;
+            content.faq.items = content.faq.items.map(function(f, i) {
+                return {
+                    question: document.getElementById('faq-q-' + i).value,
+                    answer: document.getElementById('faq-a-' + i).value
+                };
+            });
+        }
+
+        if (section === 'video') {
+            content.video.heading = document.getElementById('video-heading').value;
+            content.video.subheading = document.getElementById('video-subheading').value;
+            content.video.youtubeUrl = document.getElementById('video-url').value;
+        }
+
+        if (section === 'trust') {
+            content.trust.items = content.trust.items.map(function(t, i) {
+                return {
+                    value: document.getElementById('trust-val-' + i).value,
+                    label: document.getElementById('trust-lbl-' + i).value
+                };
+            });
+        }
+
+        // POST to server
+        fetch('/api/content', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify(content)
+        })
+        .then(function(r) { return r.json(); })
+        .then(function(data) {
+            if (data.success) {
+                showStatus('Saved successfully!', 'success');
+            } else {
+                showStatus('Error saving content.', 'error');
+            }
+        })
+        .catch(function() {
+            showStatus('Error saving content.', 'error');
+        });
+    }
+
+    function showStatus(msg, type) {
+        var el = document.getElementById('status-msg');
+        el.textContent = msg;
+        el.className = 'mb-6 px-4 py-3 rounded-lg text-sm font-medium ' +
+            (type === 'success' ? 'bg-green-50 text-green-700 border border-green-200' : 'bg-red-50 text-red-700 border border-red-200');
+        setTimeout(function() { el.className = 'hidden mb-6 px-4 py-3 rounded-lg text-sm font-medium'; }, 3000);
+    }
+
+    function escapeAttr(s) {
+        return String(s).replace(/&/g, '&amp;').replace(/"/g, '&quot;').replace(/</g, '&lt;').replace(/>/g, '&gt;');
+    }
+    function escapeHtml(s) {
+        return String(s).replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;');
+    }
+    </script>
+</body>
+</html>
