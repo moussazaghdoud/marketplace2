@@ -196,7 +196,9 @@ function renderPricing(pricing) {
         }
 
         var ctaHtml;
-        if (p.ctaLink) {
+        if (p.pricePerUser === 0 && !p.ctaLink) {
+            ctaHtml = '<button onclick="openOnboarding()" class="w-full py-2.5 rounded-lg border border-brand-500 text-brand-600 text-sm font-medium hover:bg-blue-50 transition-colors">' + escapeHtml(p.ctaText) + '</button>';
+        } else if (p.ctaLink) {
             ctaHtml = '<a href="' + p.ctaLink + '" target="_blank" class="block text-center py-2.5 rounded-lg border border-gray-200 text-sm font-medium text-gray-700 hover:border-brand-500 hover:text-brand-600 transition-colors">' + escapeHtml(p.ctaText) + '</a>';
         } else if (p.highlighted) {
             ctaHtml = '<button onclick="checkout(\'' + planKey + '\')" class="w-full py-2.5 rounded-lg bg-brand-500 text-white text-sm font-medium hover:bg-brand-600 transition-colors">' + escapeHtml(p.ctaText) + '</button>';

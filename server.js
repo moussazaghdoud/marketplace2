@@ -2,12 +2,20 @@ require('dotenv').config();
 const express = require('express');
 const fs = require('fs');
 const path = require('path');
+const crypto = require('crypto');
 const multer = require('multer');
+const { createProxyMiddleware } = require('http-proxy-middleware');
 const stripe = require('stripe')(process.env.STRIPE_SECRET_KEY);
 
 const app = express();
 const PORT = process.env.PORT || 3000;
 const CONTENT_PATH = path.join(__dirname, 'data', 'content.json');
+
+// Rainbow config
+const RAINBOW_DOMAIN = process.env.RAINBOW_DOMAIN || 'https://sandbox.openrainbow.com';
+const RAINBOW_APP_ID = process.env.RAINBOW_APP_ID || '';
+const RAINBOW_APP_SECRET = process.env.RAINBOW_APP_SECRET || '';
+const RAINBOW_CLIENT_VERSION = process.env.RAINBOW_CLIENT_VERSION || '2.165.11';
 
 // Plan key → Stripe Price ID mapping
 // Replace these with real Price IDs from your Stripe Dashboard
@@ -15,6 +23,49 @@ const PLAN_PRICES = {
     'business':   process.env.STRIPE_PRICE_BUSINESS   || 'price_REPLACE_ME_BUSINESS',
     'enterprise': process.env.STRIPE_PRICE_ENTERPRISE || 'price_REPLACE_ME_ENTERPRISE'
 };
+
+// --- Rainbow API proxy (must be mounted BEFORE express.json()) ---
+app.use('/api/rainbow', createProxyMiddleware({
+    target: RAINBOW_DOMAIN,
+    changeOrigin: true,
+    secure: true,
+    pathRewrite: function (path) { return '/api/rainbow' + path; },
+    on: {
+        proxyReq: function (proxyReq, req) {
+            // Remove forwarded headers that cause Rainbow to redirect
+            proxyReq.removeHeader('x-forwarded-for');
+            proxyReq.removeHeader('x-forwarded-host');
+            proxyReq.removeHeader('x-forwarded-proto');
+            proxyReq.removeHeader('x-forwarded-port');
+
+            // Inject x-rainbow-client headers on all requests
+            proxyReq.setHeader('x-rainbow-client', 'web_win');
+            proxyReq.setHeader('x-rainbow-client-version', RAINBOW_CLIENT_VERSION);
+
+            // For login requests, compute x-rainbow-app-auth from password
+            if (req.url.match(/\/authentication\/.*\/login/)) {
+                var authHeader = req.headers['authorization'] || '';
+                if (authHeader.startsWith('Basic ')) {
+                    try {
+                        var decoded = Buffer.from(authHeader.slice(6), 'base64').toString('utf8');
+                        var colonIdx = decoded.indexOf(':');
+                        if (colonIdx > -1) {
+                            var password = decoded.substring(colonIdx + 1);
+                            var hash = crypto.createHash('sha256')
+                                .update(RAINBOW_APP_SECRET + password)
+                                .digest('hex')
+                                .toUpperCase();
+                            var appAuth = Buffer.from(RAINBOW_APP_ID + ':' + hash).toString('base64');
+                            proxyReq.setHeader('x-rainbow-app-auth', 'Basic ' + appAuth);
+                        }
+                    } catch (e) {
+                        console.error('Rainbow auth header error:', e.message);
+                    }
+                }
+            }
+        }
+    }
+}));
 
 // Multer storage — saves to images/ with original filename
 const storage = multer.diskStorage({

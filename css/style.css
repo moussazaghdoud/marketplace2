@@ -29,6 +29,22 @@ input[type="number"] {
     display: flex;
 }
 
+/* Onboarding modal */
+#onboarding-modal.active {
+    display: flex;
+}
+#onboarding-modal .onboarding-card {
+    transition: opacity 0.2s ease, transform 0.2s ease;
+}
+#onboarding-modal .onboarding-card.step-entering {
+    opacity: 0;
+    transform: translateY(8px);
+}
+#onboarding-modal .onboarding-card.step-visible {
+    opacity: 1;
+    transform: translateY(0);
+}
+
 ::selection {
     background: rgba(79, 109, 245, 0.15);
 }

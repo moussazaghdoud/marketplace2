@@ -68,7 +68,7 @@
                 <a href="#demo" class="text-sm text-gray-500 hover:text-gray-900 transition-colors">Demo</a>
                 <a href="#pricing" class="text-sm text-gray-500 hover:text-gray-900 transition-colors">Pricing</a>
                 <a href="#faq" class="text-sm text-gray-500 hover:text-gray-900 transition-colors">FAQ</a>
-                <a href="#pricing" class="px-5 py-2 rounded-lg bg-brand-500 text-white text-sm font-medium hover:bg-brand-600 transition-colors">Get Started</a>
+                <button onclick="openOnboarding()" class="px-5 py-2 rounded-lg bg-brand-500 text-white text-sm font-medium hover:bg-brand-600 transition-colors">Get Started</button>
                 <a href="/admin" class="text-sm text-gray-400 hover:text-gray-900 transition-colors ml-2">Admin</a>
             </div>
             <button id="mobile-menu-btn" class="md:hidden p-2" aria-label="Menu">
@@ -80,7 +80,7 @@
             <a href="#demo" class="block text-sm text-gray-600 py-2">Demo</a>
             <a href="#pricing" class="block text-sm text-gray-600 py-2">Pricing</a>
             <a href="#faq" class="block text-sm text-gray-600 py-2">FAQ</a>
-            <a href="#pricing" class="block text-center text-sm font-medium text-white bg-brand-500 rounded-lg py-2.5">Get Started</a>
+            <button onclick="openOnboarding()" class="block w-full text-center text-sm font-medium text-white bg-brand-500 rounded-lg py-2.5">Get Started</button>
             <a href="/admin" class="block text-sm text-gray-400 py-2">Admin</a>
         </div>
     </nav>
@@ -94,7 +94,7 @@
                     <h1 id="hero-title" class="text-4xl sm:text-5xl font-bold text-gray-900 leading-tight"></h1>
                     <p id="hero-description" class="mt-5 text-lg text-gray-500 max-w-xl leading-relaxed"></p>
                     <div class="mt-8 flex flex-col sm:flex-row gap-3 justify-center lg:justify-start">
-                        <a id="hero-cta-primary" href="#pricing" class="px-7 py-3 rounded-lg bg-brand-500 text-white font-medium hover:bg-brand-600 transition-colors"></a>
+                        <button id="hero-cta-primary" onclick="openOnboarding()" class="px-7 py-3 rounded-lg bg-brand-500 text-white font-medium hover:bg-brand-600 transition-colors"></button>
                         <a id="hero-cta-secondary" href="#demo" class="px-7 py-3 rounded-lg border border-gray-200 text-gray-700 font-medium hover:border-gray-300 transition-colors"></a>
                     </div>
                     <div id="hero-trust-badges" class="mt-8 flex justify-center lg:justify-start gap-6 text-xs text-gray-400 font-medium"></div>
@@ -208,6 +208,18 @@
         </div>
     </footer>
 
+    <!-- ONBOARDING MODAL -->
+    <div id="onboarding-modal" class="fixed inset-0 z-[100] hidden">
+        <div class="absolute inset-0 bg-black/40 backdrop-blur-sm" onclick="closeOnboarding()"></div>
+        <div class="absolute inset-0 flex items-center justify-center p-4">
+            <div id="ob-card" class="onboarding-card bg-white rounded-2xl shadow-xl max-w-sm w-full p-7 relative step-visible" onclick="event.stopPropagation()">
+                <button onclick="closeOnboarding()" class="absolute top-3 right-3 w-8 h-8 flex items-center justify-center rounded-full hover:bg-gray-100 z-10" aria-label="Close">
+                    <svg class="w-4 h-4 text-gray-400" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M6 18L18 6M6 6l12 12"/></svg>
+                </button>
+            </div>
+        </div>
+    </div>
+
     <!-- CHECKOUT MODAL -->
     <div id="checkout-modal" class="fixed inset-0 z-[100] hidden">
         <div class="absolute inset-0 bg-black/40 backdrop-blur-sm" onclick="closeCheckout()"></div>
@@ -255,5 +267,6 @@
 
     <script src="https://js.stripe.com/v3/"></script>
     <script src="js/main.js"></script>
+    <script src="js/onboarding.js"></script>
 </body>
 </html>
