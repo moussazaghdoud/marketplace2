@@ -45,13 +45,6 @@ app.use('/api/rainbow', createProxyMiddleware({
             proxyReq.setHeader('x-rainbow-client', 'web_win');
             proxyReq.setHeader('x-rainbow-client-version', RAINBOW_CLIENT_VERSION);
 
-            // Re-write body since express.json() consumed the stream
-            if (req.body && Object.keys(req.body).length > 0) {
-                var bodyData = JSON.stringify(req.body);
-                proxyReq.setHeader('Content-Length', Buffer.byteLength(bodyData));
-                proxyReq.write(bodyData);
-            }
-
             // Compute x-rainbow-app-auth from password
             var password = '';
 
@@ -79,6 +72,13 @@ app.use('/api/rainbow', createProxyMiddleware({
                     .toUpperCase();
                 var appAuth = Buffer.from(RAINBOW_APP_ID + ':' + hash).toString('base64');
                 proxyReq.setHeader('x-rainbow-app-auth', 'Basic ' + appAuth);
+            }
+
+            // Re-write body AFTER all headers are set, since write() flushes headers
+            if (req.body && Object.keys(req.body).length > 0) {
+                var bodyData = JSON.stringify(req.body);
+                proxyReq.setHeader('Content-Length', Buffer.byteLength(bodyData));
+                proxyReq.write(bodyData);
             }
         }
     }
