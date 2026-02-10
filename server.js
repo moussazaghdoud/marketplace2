@@ -5,7 +5,7 @@ const path = require('path');
 const crypto = require('crypto');
 const multer = require('multer');
 const { createProxyMiddleware } = require('http-proxy-middleware');
-const stripe = require('stripe')(process.env.STRIPE_SECRET_KEY);
+const stripe = process.env.STRIPE_SECRET_KEY ? require('stripe')(process.env.STRIPE_SECRET_KEY) : null;
 
 const app = express();
 const PORT = process.env.PORT || 3000;
@@ -150,6 +150,10 @@ app.get('/api/stripe-key', (req, res) => {
 
 // Create a subscription (called when user submits payment form)
 app.post('/api/create-subscription', async (req, res) => {
+    if (!stripe) {
+        return res.status(500).json({ error: 'Stripe is not configured. Set STRIPE_SECRET_KEY.' });
+    }
+
     const { email, planKey, licenseCount } = req.body;
 
     if (!email || !planKey || !licenseCount) {
