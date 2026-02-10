@@ -1,7 +1,7 @@
 {
   "hero": {
     "badge": "Cloud Communication by Alcatel-Lucent Enterprise",
-    "title": "Team communication,<br><span class='text-brand-500 text-3xl sm:text-4xl'>Secured, Simplified, French.</span>",
+    "title": "Team communication,<br><span class='text-brand-500 text-2xl sm:text-3xl'>Secured, Simplified, French.</span>",
     "description": "Messaging, video conferencing, file sharing, and telephony in one secure platform. Available in 88 countries.",
     "ctaPrimary": "Start Free",
     "ctaSecondary": "Watch Demo",
