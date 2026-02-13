@@ -1,0 +1,262 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Blog - Rainbow by ALE</title>
+    <meta name="description" content="Retrouvez les derniers articles, actualites et guides sur Rainbow, la plateforme de communication cloud par Alcatel-Lucent Enterprise.">
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        brand: { 50: '#eef4ff', 100: '#dce8ff', 500: '#4F6DF5', 600: '#3B5DE7', 700: '#2D4ED9' }
+                    },
+                    fontFamily: { sans: ['Inter', 'system-ui', 'sans-serif'] }
+                }
+            }
+        }
+    </script>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        .line-clamp-3 { display: -webkit-box; -webkit-line-clamp: 3; -webkit-box-orient: vertical; overflow: hidden; }
+    </style>
+</head>
+<body class="font-sans text-gray-700 antialiased bg-white">
+
+    <!-- NAV -->
+    <nav id="navbar" class="fixed top-0 w-full z-50 bg-white/80 backdrop-blur-md border-b border-gray-100">
+        <div class="max-w-6xl mx-auto px-6 flex items-center justify-between h-16">
+            <a href="/" class="flex items-center gap-2">
+                <div class="w-8 h-8 bg-brand-500 rounded-lg flex items-center justify-center">
+                    <svg class="w-5 h-5 text-white" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M13 10V3L4 14h7v7l9-11h-7z"/></svg>
+                </div>
+                <span class="text-lg font-bold text-gray-900">Rainbow</span>
+            </a>
+            <div class="hidden md:flex items-center gap-6">
+                <a href="/" class="text-sm text-gray-500 hover:text-gray-900 transition-colors">Accueil</a>
+                <a href="/product/rainbow" class="text-sm text-gray-500 hover:text-gray-900 transition-colors">Produit</a>
+                <a href="/blog" class="text-sm font-medium text-brand-500 transition-colors">Blog</a>
+                <a href="/reviews" class="text-sm text-gray-500 hover:text-gray-900 transition-colors">Avis</a>
+                <a href="/support" class="text-sm text-gray-500 hover:text-gray-900 transition-colors">Support</a>
+                <a href="/tutorials" class="text-sm text-gray-500 hover:text-gray-900 transition-colors">Tutoriels</a>
+                <a href="/login" class="text-sm text-gray-500 hover:text-gray-900 transition-colors">Se connecter</a>
+                <a href="/" class="px-5 py-2 rounded-lg bg-brand-500 text-white text-sm font-medium hover:bg-brand-600 transition-colors">Demarrer</a>
+            </div>
+            <button id="mobile-menu-btn" class="md:hidden p-2" aria-label="Menu">
+                <svg class="w-6 h-6 text-gray-600" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M4 6h16M4 12h16M4 18h16"/></svg>
+            </button>
+        </div>
+        <div id="mobile-menu" class="md:hidden hidden border-t border-gray-100 bg-white px-6 py-4 space-y-3">
+            <a href="/" class="block text-sm text-gray-600 py-2">Accueil</a>
+            <a href="/product/rainbow" class="block text-sm text-gray-600 py-2">Produit</a>
+            <a href="/blog" class="block text-sm font-medium text-brand-500 py-2">Blog</a>
+            <a href="/reviews" class="block text-sm text-gray-600 py-2">Avis</a>
+            <a href="/support" class="block text-sm text-gray-600 py-2">Support</a>
+            <a href="/tutorials" class="block text-sm text-gray-600 py-2">Tutoriels</a>
+            <a href="/login" class="block text-sm text-gray-600 py-2">Se connecter</a>
+            <a href="/" class="block w-full text-center text-sm font-medium text-white bg-brand-500 rounded-lg py-2.5">Demarrer</a>
+        </div>
+    </nav>
+
+    <!-- HERO -->
+    <header class="pt-28 pb-16 px-6 bg-gradient-to-br from-brand-100 via-white to-white">
+        <div class="max-w-5xl mx-auto text-center">
+            <h1 class="text-4xl sm:text-5xl font-bold text-gray-900 leading-tight">Blog Rainbow</h1>
+            <p class="mt-4 text-lg text-gray-500 max-w-2xl mx-auto">Decouvrez nos derniers articles, guides et actualites sur la communication et la collaboration en entreprise.</p>
+        </div>
+    </header>
+
+    <!-- CATEGORY FILTERS -->
+    <section class="px-6 -mt-4 mb-8">
+        <div class="max-w-5xl mx-auto">
+            <div id="category-filters" class="flex flex-wrap gap-2 justify-center">
+                <button onclick="filterCategory('')" class="category-btn px-4 py-2 rounded-full text-sm font-medium bg-brand-500 text-white transition-colors">Tous</button>
+            </div>
+        </div>
+    </section>
+
+    <!-- ARTICLES GRID -->
+    <section class="px-6 pb-20">
+        <div class="max-w-5xl mx-auto">
+            <div id="articles-grid" class="grid sm:grid-cols-2 lg:grid-cols-3 gap-8">
+                <!-- Populated by JS -->
+            </div>
+            <div id="no-articles" class="hidden text-center py-20">
+                <svg class="w-16 h-16 mx-auto text-gray-300 mb-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.5"><path stroke-linecap="round" stroke-linejoin="round" d="M19.5 14.25v-2.625a3.375 3.375 0 00-3.375-3.375h-1.5A1.125 1.125 0 0113.5 7.125v-1.5a3.375 3.375 0 00-3.375-3.375H8.25m0 12.75h7.5m-7.5 3H12M10.5 2.25H5.625c-.621 0-1.125.504-1.125 1.125v17.25c0 .621.504 1.125 1.125 1.125h12.75c.621 0 1.125-.504 1.125-1.125V11.25a9 9 0 00-9-9z"/></svg>
+                <p class="text-gray-400 text-lg">Aucun article pour le moment.</p>
+            </div>
+            <div id="loading" class="text-center py-20">
+                <div class="inline-block w-8 h-8 border-4 border-brand-500 border-t-transparent rounded-full animate-spin"></div>
+                <p class="mt-3 text-gray-400 text-sm">Chargement des articles...</p>
+            </div>
+        </div>
+    </section>
+
+    <!-- FOOTER -->
+    <footer class="bg-gray-900 text-gray-400 pt-16 pb-8 px-6">
+        <div class="max-w-6xl mx-auto">
+            <div class="grid sm:grid-cols-2 lg:grid-cols-4 gap-10 mb-12">
+                <div>
+                    <h4 class="text-white font-semibold text-sm mb-4">Produit</h4>
+                    <ul class="space-y-2 text-sm">
+                        <li><a href="/product/rainbow" class="hover:text-white transition-colors">Rainbow</a></li>
+                        <li><a href="/#features" class="hover:text-white transition-colors">Fonctionnalites</a></li>
+                        <li><a href="/#pricing" class="hover:text-white transition-colors">Tarifs</a></li>
+                        <li><a href="/#demo" class="hover:text-white transition-colors">Demo</a></li>
+                    </ul>
+                </div>
+                <div>
+                    <h4 class="text-white font-semibold text-sm mb-4">Ressources</h4>
+                    <ul class="space-y-2 text-sm">
+                        <li><a href="/blog" class="hover:text-white transition-colors">Blog</a></li>
+                        <li><a href="/tutorials" class="hover:text-white transition-colors">Tutoriels</a></li>
+                        <li><a href="#" class="hover:text-white transition-colors">Documentation API</a></li>
+                        <li><a href="#" class="hover:text-white transition-colors">Changelog</a></li>
+                    </ul>
+                </div>
+                <div>
+                    <h4 class="text-white font-semibold text-sm mb-4">Support</h4>
+                    <ul class="space-y-2 text-sm">
+                        <li><a href="/support" class="hover:text-white transition-colors">Centre d'aide</a></li>
+                        <li><a href="/support" class="hover:text-white transition-colors">Contactez-nous</a></li>
+                        <li><a href="#" class="hover:text-white transition-colors">Statut du service</a></li>
+                        <li><a href="/reviews" class="hover:text-white transition-colors">Avis clients</a></li>
+                    </ul>
+                </div>
+                <div>
+                    <h4 class="text-white font-semibold text-sm mb-4">Entreprise</h4>
+                    <ul class="space-y-2 text-sm">
+                        <li><a href="#" class="hover:text-white transition-colors">A propos</a></li>
+                        <li><a href="#" class="hover:text-white transition-colors">Carrieres</a></li>
+                        <li><a href="#" class="hover:text-white transition-colors">Mentions legales</a></li>
+                        <li><a href="#" class="hover:text-white transition-colors">Politique de confidentialite</a></li>
+                    </ul>
+                </div>
+            </div>
+            <div class="border-t border-gray-800 pt-6 text-center text-xs text-gray-500">
+                &copy; 2024 Rainbow by ALE. Tous droits reserves.
+            </div>
+        </div>
+    </footer>
+
+    <script>
+        // Mobile menu toggle
+        document.getElementById('mobile-menu-btn').addEventListener('click', function() {
+            document.getElementById('mobile-menu').classList.toggle('hidden');
+        });
+
+        let currentCategory = '';
+        let allCategories = [];
+
+        // Load categories
+        async function loadCategories() {
+            try {
+                const res = await fetch('/api/blog/categories');
+                if (!res.ok) return;
+                allCategories = await res.json();
+                const container = document.getElementById('category-filters');
+                allCategories.forEach(function(cat) {
+                    const btn = document.createElement('button');
+                    btn.textContent = cat.name;
+                    btn.className = 'category-btn px-4 py-2 rounded-full text-sm font-medium bg-gray-100 text-gray-600 hover:bg-gray-200 transition-colors';
+                    btn.onclick = function() { filterCategory(cat.slug); };
+                    btn.dataset.slug = cat.slug;
+                    container.appendChild(btn);
+                });
+            } catch(e) { /* silent */ }
+        }
+
+        function filterCategory(slug) {
+            currentCategory = slug;
+            // Update active button styles
+            document.querySelectorAll('.category-btn').forEach(function(btn) {
+                if ((!slug && !btn.dataset.slug) || btn.dataset.slug === slug) {
+                    btn.className = 'category-btn px-4 py-2 rounded-full text-sm font-medium bg-brand-500 text-white transition-colors';
+                } else {
+                    btn.className = 'category-btn px-4 py-2 rounded-full text-sm font-medium bg-gray-100 text-gray-600 hover:bg-gray-200 transition-colors';
+                }
+            });
+            loadArticles();
+        }
+
+        // Load articles
+        async function loadArticles() {
+            const grid = document.getElementById('articles-grid');
+            const noArticles = document.getElementById('no-articles');
+            const loading = document.getElementById('loading');
+
+            loading.classList.remove('hidden');
+            grid.innerHTML = '';
+            noArticles.classList.add('hidden');
+
+            try {
+                let url = '/api/blog/articles';
+                if (currentCategory) url += '?category=' + encodeURIComponent(currentCategory);
+                const res = await fetch(url);
+                if (!res.ok) throw new Error('Failed to fetch');
+                const articles = await res.json();
+
+                loading.classList.add('hidden');
+
+                if (!articles || articles.length === 0) {
+                    noArticles.classList.remove('hidden');
+                    return;
+                }
+
+                articles.forEach(function(article) {
+                    var coverHtml = '';
+                    if (article.coverImage) {
+                        coverHtml = '<img src="' + article.coverImage + '" alt="' + escapeHtml(article.title) + '" class="w-full h-48 object-cover">';
+                    } else {
+                        coverHtml = '<div class="w-full h-48 bg-gradient-to-br from-brand-500 to-indigo-600 flex items-center justify-center"><svg class="w-12 h-12 text-white/40" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.5"><path stroke-linecap="round" stroke-linejoin="round" d="M19.5 14.25v-2.625a3.375 3.375 0 00-3.375-3.375h-1.5A1.125 1.125 0 0113.5 7.125v-1.5a3.375 3.375 0 00-3.375-3.375H8.25m2.25 0H5.625c-.621 0-1.125.504-1.125 1.125v17.25c0 .621.504 1.125 1.125 1.125h12.75c.621 0 1.125-.504 1.125-1.125V11.25a9 9 0 00-9-9z"/></svg></div>';
+                    }
+
+                    var categoryBadge = '';
+                    if (article.categoryName) {
+                        categoryBadge = '<span class="inline-block px-2.5 py-0.5 rounded-full text-xs font-medium bg-brand-50 text-brand-600 mb-2">' + escapeHtml(article.categoryName) + '</span>';
+                    }
+
+                    var dateStr = '';
+                    if (article.publishedAt || article.createdAt) {
+                        var d = new Date(article.publishedAt || article.createdAt);
+                        dateStr = d.toLocaleDateString('fr-FR', { year: 'numeric', month: 'long', day: 'numeric' });
+                    }
+
+                    var card = document.createElement('a');
+                    card.href = '/blog/' + article.slug;
+                    card.className = 'group bg-white rounded-xl border border-gray-100 overflow-hidden hover:shadow-lg hover:border-gray-200 transition-all duration-300';
+                    card.innerHTML = coverHtml +
+                        '<div class="p-5">' +
+                            categoryBadge +
+                            '<h3 class="text-lg font-semibold text-gray-900 group-hover:text-brand-500 transition-colors mb-2">' + escapeHtml(article.title) + '</h3>' +
+                            '<p class="text-sm text-gray-500 line-clamp-3 mb-4">' + escapeHtml(article.excerpt || '') + '</p>' +
+                            '<div class="flex items-center justify-between">' +
+                                '<span class="text-xs text-gray-400">' + dateStr + '</span>' +
+                                '<span class="text-sm font-medium text-brand-500 group-hover:translate-x-1 transition-transform inline-flex items-center gap-1">Lire la suite <span>&rarr;</span></span>' +
+                            '</div>' +
+                        '</div>';
+                    grid.appendChild(card);
+                });
+            } catch(e) {
+                loading.classList.add('hidden');
+                noArticles.classList.remove('hidden');
+            }
+        }
+
+        function escapeHtml(str) {
+            if (!str) return '';
+            var div = document.createElement('div');
+            div.textContent = str;
+            return div.innerHTML;
+        }
+
+        // Init
+        loadCategories();
+        loadArticles();
+    </script>
+</body>
+</html>

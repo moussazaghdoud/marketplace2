@@ -1,0 +1,1527 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Rainbow Admin</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        sidebar: '#1e293b',
+                        brand: { 50:'#eef4ff', 100:'#dce8ff', 200:'#b9d0ff', 500:'#4F6DF5', 600:'#3B5DE7', 700:'#2D4ED9' }
+                    },
+                    fontFamily: { sans: ['Inter','system-ui','sans-serif'] }
+                }
+            }
+        }
+    </script>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        * { box-sizing: border-box; }
+        body { font-family: 'Inter', system-ui, sans-serif; }
+        .admin-input {
+            width: 100%; padding: 0.5rem 0.75rem; border: 1px solid #d1d5db; border-radius: 0.5rem;
+            font-size: 0.875rem; outline: none; transition: border-color 0.15s;
+        }
+        .admin-input:focus { border-color: #4F6DF5; box-shadow: 0 0 0 2px rgba(79,109,245,0.15); }
+        .admin-textarea { resize: vertical; min-height: 60px; }
+        .sidebar-link { display:flex; align-items:center; gap:0.75rem; padding:0.625rem 1rem; border-radius:0.5rem; font-size:0.875rem; font-weight:500; color:#94a3b8; cursor:pointer; transition: all 0.15s; }
+        .sidebar-link:hover { color:#e2e8f0; background:rgba(255,255,255,0.05); }
+        .sidebar-link.active { color:#fff; background:rgba(79,109,245,0.25); }
+        .stat-card { background:#fff; border:1px solid #e5e7eb; border-radius:0.75rem; padding:1.25rem; }
+        .table-container { overflow-x:auto; }
+        table { width:100%; border-collapse:collapse; font-size:0.875rem; }
+        thead th { text-align:left; padding:0.75rem 1rem; background:#f9fafb; border-bottom:1px solid #e5e7eb; font-weight:600; color:#374151; white-space:nowrap; }
+        tbody td { padding:0.75rem 1rem; border-bottom:1px solid #f3f4f6; color:#4b5563; }
+        tbody tr:hover { background:#f9fafb; }
+        .badge { display:inline-block; padding:0.125rem 0.5rem; border-radius:9999px; font-size:0.75rem; font-weight:500; }
+        .badge-green { background:#dcfce7; color:#166534; }
+        .badge-yellow { background:#fef9c3; color:#854d0e; }
+        .badge-red { background:#fee2e2; color:#991b1b; }
+        .badge-blue { background:#dbeafe; color:#1e40af; }
+        .badge-gray { background:#f3f4f6; color:#374151; }
+        .btn { padding:0.5rem 1rem; border-radius:0.5rem; font-size:0.875rem; font-weight:500; cursor:pointer; transition:all 0.15s; border:none; }
+        .btn-primary { background:#4F6DF5; color:#fff; }
+        .btn-primary:hover { background:#3B5DE7; }
+        .btn-secondary { background:#f3f4f6; color:#374151; border:1px solid #d1d5db; }
+        .btn-secondary:hover { background:#e5e7eb; }
+        .btn-danger { background:#ef4444; color:#fff; }
+        .btn-danger:hover { background:#dc2626; }
+        .btn-sm { padding:0.25rem 0.75rem; font-size:0.75rem; }
+        .modal-overlay { position:fixed; inset:0; background:rgba(0,0,0,0.4); z-index:100; display:flex; align-items:center; justify-content:center; }
+        .modal-content { background:#fff; border-radius:0.75rem; max-width:600px; width:90%; max-height:85vh; overflow-y:auto; padding:1.5rem; }
+        .modal-lg { max-width:800px; }
+        .content-tab-btn { padding:0.5rem 1rem; border-radius:0.375rem; font-size:0.8125rem; font-weight:500; color:#6b7280; cursor:pointer; transition:all 0.15s; border:none; background:transparent; }
+        .content-tab-btn.active { background:#fff; color:#111827; box-shadow:0 1px 2px rgba(0,0,0,0.05); }
+        .content-tab-btn:not(.active):hover { color:#374151; }
+        .toast { position:fixed; top:1rem; right:1rem; z-index:200; padding:0.75rem 1.25rem; border-radius:0.5rem; font-size:0.875rem; font-weight:500; box-shadow:0 4px 12px rgba(0,0,0,0.15); transition:opacity 0.3s; }
+        .toast-success { background:#dcfce7; color:#166534; border:1px solid #86efac; }
+        .toast-error { background:#fee2e2; color:#991b1b; border:1px solid #fca5a5; }
+    </style>
+</head>
+<body class="bg-gray-50 text-gray-700 antialiased">
+
+<!-- Toast container -->
+<div id="toast-container"></div>
+
+<!-- LOGIN SCREEN -->
+<div id="login-screen" class="min-h-screen flex items-center justify-center bg-gradient-to-br from-slate-900 to-slate-700">
+    <div class="bg-white rounded-2xl shadow-xl p-8 w-full max-w-md">
+        <div class="text-center mb-8">
+            <div class="w-12 h-12 bg-brand-500 rounded-xl mx-auto mb-4 flex items-center justify-center">
+                <svg class="w-7 h-7 text-white" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z"/></svg>
+            </div>
+            <h1 class="text-2xl font-bold text-gray-900">Rainbow Admin</h1>
+            <p class="text-sm text-gray-500 mt-1">Sign in to your admin account</p>
+        </div>
+        <div id="login-error" class="hidden mb-4 p-3 bg-red-50 border border-red-200 text-red-700 text-sm rounded-lg"></div>
+        <form id="login-form" onsubmit="handleLogin(event)">
+            <div class="mb-4">
+                <label class="block text-sm font-medium text-gray-700 mb-1">Email</label>
+                <input type="email" id="login-email" value="admin@rainbow.ale.com" class="admin-input" placeholder="admin@rainbow.ale.com" required>
+            </div>
+            <div class="mb-6">
+                <label class="block text-sm font-medium text-gray-700 mb-1">Password</label>
+                <input type="password" id="login-password" value="Admin123!" class="admin-input" placeholder="Enter password" required>
+            </div>
+            <button type="submit" id="login-btn" class="w-full btn btn-primary py-2.5 text-base">Sign In</button>
+        </form>
+    </div>
+</div>
+
+<!-- MAIN APP (hidden until login) -->
+<div id="app-container" class="hidden flex min-h-screen">
+    <!-- Sidebar -->
+    <aside class="w-64 bg-sidebar flex flex-col flex-shrink-0 sticky top-0 h-screen overflow-y-auto">
+        <div class="p-5 border-b border-slate-700">
+            <h1 class="text-lg font-bold text-white">Rainbow Admin</h1>
+            <p id="admin-user-info" class="text-xs text-slate-400 mt-0.5"></p>
+        </div>
+        <nav class="flex-1 p-3 space-y-0.5">
+            <div class="sidebar-link active" onclick="switchSection('dashboard')" data-section="dashboard">
+                <svg class="w-5 h-5" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-4 0h4"/></svg>
+                Dashboard
+            </div>
+            <div class="sidebar-link" onclick="switchSection('content')" data-section="content">
+                <svg class="w-5 h-5" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z"/></svg>
+                Content
+            </div>
+            <div class="sidebar-link" onclick="switchSection('admin-users')" data-section="admin-users">
+                <svg class="w-5 h-5" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M12 4.354a4 4 0 110 5.292M15 21H3v-1a6 6 0 0112 0v1zm0 0h6v-1a6 6 0 00-9-5.197M13 7a4 4 0 11-8 0 4 4 0 018 0z"/></svg>
+                Admin Users
+            </div>
+            <div class="sidebar-link" onclick="switchSection('clients')" data-section="clients">
+                <svg class="w-5 h-5" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0zm6 3a2 2 0 11-4 0 2 2 0 014 0zM7 10a2 2 0 11-4 0 2 2 0 014 0z"/></svg>
+                Clients
+            </div>
+            <div class="sidebar-link" onclick="switchSection('products')" data-section="products">
+                <svg class="w-5 h-5" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M20 7l-8-4-8 4m16 0l-8 4m8-4v10l-8 4m0-10L4 7m8 4v10M4 7v10l8 4"/></svg>
+                Products
+            </div>
+            <div class="sidebar-link" onclick="switchSection('subscriptions')" data-section="subscriptions">
+                <svg class="w-5 h-5" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M3 10h18M7 15h1m4 0h1m-7 4h12a3 3 0 003-3V8a3 3 0 00-3-3H6a3 3 0 00-3 3v8a3 3 0 003 3z"/></svg>
+                Subscriptions
+            </div>
+            <div class="sidebar-link" onclick="switchSection('blog')" data-section="blog">
+                <svg class="w-5 h-5" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M19 20H5a2 2 0 01-2-2V6a2 2 0 012-2h10a2 2 0 012 2v1m2 13a2 2 0 01-2-2V7m2 13a2 2 0 002-2V9a2 2 0 00-2-2h-2m-4-3H9M7 16h6M7 8h6v4H7V8z"/></svg>
+                Blog
+            </div>
+            <div class="sidebar-link" onclick="switchSection('reviews')" data-section="reviews">
+                <svg class="w-5 h-5" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M11.049 2.927c.3-.921 1.603-.921 1.902 0l1.519 4.674a1 1 0 00.95.69h4.915c.969 0 1.371 1.24.588 1.81l-3.976 2.888a1 1 0 00-.363 1.118l1.518 4.674c.3.922-.755 1.688-1.538 1.118l-3.976-2.888a1 1 0 00-1.176 0l-3.976 2.888c-.783.57-1.838-.197-1.538-1.118l1.518-4.674a1 1 0 00-.363-1.118l-3.976-2.888c-.784-.57-.38-1.81.588-1.81h4.914a1 1 0 00.951-.69l1.519-4.674z"/></svg>
+                Reviews
+            </div>
+            <div class="sidebar-link" onclick="switchSection('contacts')" data-section="contacts">
+                <svg class="w-5 h-5" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z"/></svg>
+                Contact Messages
+            </div>
+        </nav>
+        <div class="p-3 border-t border-slate-700">
+            <div class="sidebar-link" onclick="handleLogout()">
+                <svg class="w-5 h-5" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M17 16l4-4m0 0l-4-4m4 4H7m6 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h4a3 3 0 013 3v1"/></svg>
+                Logout
+            </div>
+        </div>
+    </aside>
+
+    <!-- Main content -->
+    <main class="flex-1 overflow-y-auto">
+        <div class="p-6 lg:p-8 max-w-7xl">
+            <!-- DASHBOARD -->
+            <div id="section-dashboard" class="section-panel">
+                <h2 class="text-2xl font-bold text-gray-900 mb-6">Dashboard</h2>
+                <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-5 gap-4 mb-8" id="stats-cards">
+                    <div class="stat-card"><p class="text-xs font-medium text-gray-500 uppercase tracking-wide">Total Clients</p><p class="text-2xl font-bold text-gray-900 mt-1" id="stat-clients">--</p></div>
+                    <div class="stat-card"><p class="text-xs font-medium text-gray-500 uppercase tracking-wide">Active Subscriptions</p><p class="text-2xl font-bold text-gray-900 mt-1" id="stat-subs">--</p></div>
+                    <div class="stat-card"><p class="text-xs font-medium text-gray-500 uppercase tracking-wide">MRR</p><p class="text-2xl font-bold text-green-600 mt-1" id="stat-mrr">--</p></div>
+                    <div class="stat-card"><p class="text-xs font-medium text-gray-500 uppercase tracking-wide">New This Month</p><p class="text-2xl font-bold text-blue-600 mt-1" id="stat-new">--</p></div>
+                    <div class="stat-card"><p class="text-xs font-medium text-gray-500 uppercase tracking-wide">Pending Contacts</p><p class="text-2xl font-bold text-amber-600 mt-1" id="stat-contacts">--</p></div>
+                </div>
+                <div class="bg-white rounded-xl border border-gray-200 p-6">
+                    <h3 class="text-lg font-semibold text-gray-900 mb-4">Quick Actions</h3>
+                    <div class="flex flex-wrap gap-3">
+                        <button onclick="switchSection('clients')" class="btn btn-secondary">View Clients</button>
+                        <button onclick="switchSection('subscriptions')" class="btn btn-secondary">View Subscriptions</button>
+                        <button onclick="switchSection('contacts')" class="btn btn-secondary">Pending Messages</button>
+                        <button onclick="switchSection('blog')" class="btn btn-secondary">Manage Blog</button>
+                        <button onclick="switchSection('content')" class="btn btn-secondary">Edit Content</button>
+                    </div>
+                </div>
+            </div>
+
+            <!-- CONTENT (replaces old admin.html) -->
+            <div id="section-content" class="section-panel hidden">
+                <h2 class="text-2xl font-bold text-gray-900 mb-6">Content Manager</h2>
+                <div id="content-status-msg" class="hidden mb-4 px-4 py-3 rounded-lg text-sm font-medium"></div>
+                <div class="flex gap-1 mb-6 bg-gray-100 rounded-lg p-1 overflow-x-auto">
+                    <button onclick="switchContentTab('hero')" class="content-tab-btn active" data-ctab="hero">Hero</button>
+                    <button onclick="switchContentTab('features')" class="content-tab-btn" data-ctab="features">Features</button>
+                    <button onclick="switchContentTab('pricing')" class="content-tab-btn" data-ctab="pricing">Pricing</button>
+                    <button onclick="switchContentTab('faq')" class="content-tab-btn" data-ctab="faq">FAQ</button>
+                    <button onclick="switchContentTab('video')" class="content-tab-btn" data-ctab="video">Video</button>
+                    <button onclick="switchContentTab('trust')" class="content-tab-btn" data-ctab="trust">Trust Bar</button>
+                    <button onclick="switchContentTab('images')" class="content-tab-btn" data-ctab="images">Images</button>
+                </div>
+
+                <!-- Hero sub-tab -->
+                <div id="ctab-hero" class="content-tab-panel">
+                    <div class="bg-white rounded-xl border border-gray-200 p-6">
+                        <h3 class="text-lg font-semibold text-gray-900 mb-6">Hero Section</h3>
+                        <div class="space-y-4">
+                            <div><label class="block text-sm font-medium text-gray-600 mb-1">Badge Text</label><input id="c-hero-badge" type="text" class="admin-input"></div>
+                            <div><label class="block text-sm font-medium text-gray-600 mb-1">Title (HTML allowed)</label><input id="c-hero-title" type="text" class="admin-input"></div>
+                            <div><label class="block text-sm font-medium text-gray-600 mb-1">Description</label><textarea id="c-hero-description" rows="3" class="admin-input admin-textarea"></textarea></div>
+                            <div class="grid grid-cols-2 gap-4">
+                                <div><label class="block text-sm font-medium text-gray-600 mb-1">Primary CTA Text</label><input id="c-hero-cta-primary" type="text" class="admin-input"></div>
+                                <div><label class="block text-sm font-medium text-gray-600 mb-1">Secondary CTA Text</label><input id="c-hero-cta-secondary" type="text" class="admin-input"></div>
+                            </div>
+                            <div><label class="block text-sm font-medium text-gray-600 mb-1">Trust Badges (comma-separated)</label><input id="c-hero-trust-badges" type="text" class="admin-input"></div>
+                            <div>
+                                <label class="block text-sm font-medium text-gray-600 mb-1">Hero Image</label>
+                                <div class="flex items-center gap-4">
+                                    <img id="c-hero-image-preview" src="" alt="Hero preview" class="w-32 h-20 object-cover rounded-lg border border-gray-200 bg-gray-50">
+                                    <div>
+                                        <input type="file" id="c-hero-image-file" accept="image/*" onchange="uploadContentImage('c-hero-image-file','c-hero-image-preview','c-hero-image-path')" class="text-sm text-gray-500 file:mr-3 file:py-2 file:px-4 file:rounded-lg file:border-0 file:text-sm file:font-medium file:bg-brand-50 file:text-brand-600 hover:file:bg-brand-100">
+                                        <input type="hidden" id="c-hero-image-path">
+                                        <p class="text-xs text-gray-400 mt-1">Max 5 MB. JPG, PNG, or WebP.</p>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <button onclick="saveContentSection('hero')" class="mt-6 btn btn-primary">Save Hero</button>
+                    </div>
+                </div>
+
+                <!-- Features sub-tab -->
+                <div id="ctab-features" class="content-tab-panel hidden">
+                    <div class="bg-white rounded-xl border border-gray-200 p-6">
+                        <h3 class="text-lg font-semibold text-gray-900 mb-4">Features Section</h3>
+                        <div class="space-y-4 mb-6">
+                            <div><label class="block text-sm font-medium text-gray-600 mb-1">Section Heading</label><input id="c-features-heading" type="text" class="admin-input"></div>
+                            <div><label class="block text-sm font-medium text-gray-600 mb-1">Section Subheading</label><input id="c-features-subheading" type="text" class="admin-input"></div>
+                        </div>
+                        <div id="c-features-list" class="space-y-4"></div>
+                        <button onclick="saveContentSection('features')" class="mt-6 btn btn-primary">Save Features</button>
+                    </div>
+                </div>
+
+                <!-- Pricing sub-tab -->
+                <div id="ctab-pricing" class="content-tab-panel hidden">
+                    <div class="bg-white rounded-xl border border-gray-200 p-6">
+                        <h3 class="text-lg font-semibold text-gray-900 mb-4">Pricing Section</h3>
+                        <div class="space-y-4 mb-6">
+                            <div><label class="block text-sm font-medium text-gray-600 mb-1">Section Heading</label><input id="c-pricing-heading" type="text" class="admin-input"></div>
+                            <div><label class="block text-sm font-medium text-gray-600 mb-1">Section Subheading</label><input id="c-pricing-subheading" type="text" class="admin-input"></div>
+                        </div>
+                        <div id="c-pricing-list" class="space-y-6"></div>
+                        <button onclick="saveContentSection('pricing')" class="mt-6 btn btn-primary">Save Pricing</button>
+                    </div>
+                </div>
+
+                <!-- FAQ sub-tab -->
+                <div id="ctab-faq" class="content-tab-panel hidden">
+                    <div class="bg-white rounded-xl border border-gray-200 p-6">
+                        <h3 class="text-lg font-semibold text-gray-900 mb-4">FAQ Section</h3>
+                        <div class="mb-6"><label class="block text-sm font-medium text-gray-600 mb-1">Section Heading</label><input id="c-faq-heading" type="text" class="admin-input"></div>
+                        <div id="c-faq-list" class="space-y-4"></div>
+                        <button onclick="addContentFaqItem()" class="mt-4 px-4 py-2 border border-dashed border-gray-300 text-sm text-gray-500 rounded-lg hover:border-brand-500 hover:text-brand-500 transition-colors w-full">+ Add Question</button>
+                        <button onclick="saveContentSection('faq')" class="mt-6 btn btn-primary">Save FAQ</button>
+                    </div>
+                </div>
+
+                <!-- Video sub-tab -->
+                <div id="ctab-video" class="content-tab-panel hidden">
+                    <div class="bg-white rounded-xl border border-gray-200 p-6">
+                        <h3 class="text-lg font-semibold text-gray-900 mb-6">Video Section</h3>
+                        <div class="space-y-4">
+                            <div><label class="block text-sm font-medium text-gray-600 mb-1">Section Heading</label><input id="c-video-heading" type="text" class="admin-input"></div>
+                            <div><label class="block text-sm font-medium text-gray-600 mb-1">Section Subheading</label><input id="c-video-subheading" type="text" class="admin-input"></div>
+                            <div><label class="block text-sm font-medium text-gray-600 mb-1">YouTube Embed URL</label><input id="c-video-url" type="text" class="admin-input" placeholder="https://www.youtube.com/embed/..."></div>
+                        </div>
+                        <button onclick="saveContentSection('video')" class="mt-6 btn btn-primary">Save Video</button>
+                    </div>
+                </div>
+
+                <!-- Trust sub-tab -->
+                <div id="ctab-trust" class="content-tab-panel hidden">
+                    <div class="bg-white rounded-xl border border-gray-200 p-6">
+                        <h3 class="text-lg font-semibold text-gray-900 mb-6">Trust Bar</h3>
+                        <div id="c-trust-list" class="space-y-4"></div>
+                        <button onclick="saveContentSection('trust')" class="mt-6 btn btn-primary">Save Trust Bar</button>
+                    </div>
+                </div>
+
+                <!-- Images sub-tab -->
+                <div id="ctab-images" class="content-tab-panel hidden">
+                    <div class="bg-white rounded-xl border border-gray-200 p-6">
+                        <h3 class="text-lg font-semibold text-gray-900 mb-4">Product Screenshots</h3>
+                        <div class="mb-6"><label class="block text-sm font-medium text-gray-600 mb-1">Section Heading</label><input id="c-screenshots-heading" type="text" class="admin-input"></div>
+                        <div id="c-screenshots-list" class="space-y-6"></div>
+                        <button onclick="saveContentSection('images')" class="mt-6 btn btn-primary">Save Screenshots</button>
+                    </div>
+                </div>
+            </div>
+
+            <!-- ADMIN USERS -->
+            <div id="section-admin-users" class="section-panel hidden">
+                <div class="flex items-center justify-between mb-6">
+                    <h2 class="text-2xl font-bold text-gray-900">Admin Users</h2>
+                    <button onclick="openAdminUserModal()" class="btn btn-primary">+ New User</button>
+                </div>
+                <div class="bg-white rounded-xl border border-gray-200 overflow-hidden">
+                    <div class="table-container">
+                        <table>
+                            <thead><tr><th>Name</th><th>Email</th><th>Role</th><th>Created</th><th>Actions</th></tr></thead>
+                            <tbody id="admin-users-tbody"></tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+
+            <!-- CLIENTS -->
+            <div id="section-clients" class="section-panel hidden">
+                <div class="flex items-center justify-between mb-6">
+                    <h2 class="text-2xl font-bold text-gray-900">Clients</h2>
+                </div>
+                <div class="bg-white rounded-xl border border-gray-200 p-4 mb-4 flex flex-wrap gap-3">
+                    <input type="text" id="clients-search" placeholder="Search by name, email, company..." class="admin-input" style="max-width:300px" onkeyup="debounceLoadClients()">
+                    <select id="clients-status-filter" class="admin-input" style="max-width:180px" onchange="loadClients()">
+                        <option value="">All Statuses</option>
+                        <option value="active">Active</option>
+                        <option value="inactive">Inactive</option>
+                        <option value="pending">Pending</option>
+                    </select>
+                </div>
+                <div class="bg-white rounded-xl border border-gray-200 overflow-hidden">
+                    <div class="table-container">
+                        <table>
+                            <thead><tr><th>Name</th><th>Email</th><th>Company</th><th>Status</th><th>Created</th><th>Actions</th></tr></thead>
+                            <tbody id="clients-tbody"></tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+
+            <!-- PRODUCTS -->
+            <div id="section-products" class="section-panel hidden">
+                <div class="flex items-center justify-between mb-6">
+                    <h2 class="text-2xl font-bold text-gray-900">Products</h2>
+                </div>
+                <div class="bg-white rounded-xl border border-gray-200 overflow-hidden">
+                    <div class="table-container">
+                        <table>
+                            <thead><tr><th>Name</th><th>Slug</th><th>Plans</th><th>Active</th><th>Created</th><th>Actions</th></tr></thead>
+                            <tbody id="products-tbody"></tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+
+            <!-- SUBSCRIPTIONS -->
+            <div id="section-subscriptions" class="section-panel hidden">
+                <div class="flex items-center justify-between mb-6">
+                    <h2 class="text-2xl font-bold text-gray-900">Subscriptions</h2>
+                </div>
+                <div class="bg-white rounded-xl border border-gray-200 p-4 mb-4 flex flex-wrap gap-3">
+                    <select id="subs-status-filter" class="admin-input" style="max-width:180px" onchange="loadSubscriptions()">
+                        <option value="">All Statuses</option>
+                        <option value="active">Active</option>
+                        <option value="canceled">Canceled</option>
+                        <option value="past_due">Past Due</option>
+                        <option value="trialing">Trialing</option>
+                    </select>
+                </div>
+                <div class="bg-white rounded-xl border border-gray-200 overflow-hidden">
+                    <div class="table-container">
+                        <table>
+                            <thead><tr><th>Client</th><th>Product</th><th>Plan</th><th>Licenses</th><th>Status</th><th>Created</th><th>Actions</th></tr></thead>
+                            <tbody id="subs-tbody"></tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+
+            <!-- BLOG -->
+            <div id="section-blog" class="section-panel hidden">
+                <h2 class="text-2xl font-bold text-gray-900 mb-6">Blog Management</h2>
+                <!-- Sub-tabs: Articles / Categories -->
+                <div class="flex gap-2 mb-6">
+                    <button onclick="switchBlogTab('articles')" class="btn btn-primary blog-tab-btn" data-btab="articles">Articles</button>
+                    <button onclick="switchBlogTab('categories')" class="btn btn-secondary blog-tab-btn" data-btab="categories">Categories</button>
+                </div>
+
+                <div id="blog-articles-panel">
+                    <div class="flex items-center justify-between mb-4">
+                        <select id="articles-status-filter" class="admin-input" style="max-width:180px" onchange="loadArticles()">
+                            <option value="">All Statuses</option>
+                            <option value="draft">Draft</option>
+                            <option value="published">Published</option>
+                        </select>
+                        <button onclick="openArticleModal()" class="btn btn-primary">+ New Article</button>
+                    </div>
+                    <div class="bg-white rounded-xl border border-gray-200 overflow-hidden">
+                        <div class="table-container">
+                            <table>
+                                <thead><tr><th>Title</th><th>Category</th><th>Status</th><th>Published</th><th>Actions</th></tr></thead>
+                                <tbody id="articles-tbody"></tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+
+                <div id="blog-categories-panel" class="hidden">
+                    <div class="flex items-center justify-between mb-4">
+                        <p class="text-sm text-gray-500">Manage blog categories</p>
+                        <button onclick="openCategoryModal()" class="btn btn-primary">+ New Category</button>
+                    </div>
+                    <div class="bg-white rounded-xl border border-gray-200 overflow-hidden">
+                        <div class="table-container">
+                            <table>
+                                <thead><tr><th>Name</th><th>Slug</th><th>Actions</th></tr></thead>
+                                <tbody id="categories-tbody"></tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- REVIEWS -->
+            <div id="section-reviews" class="section-panel hidden">
+                <div class="flex items-center justify-between mb-6">
+                    <h2 class="text-2xl font-bold text-gray-900">Reviews</h2>
+                    <button onclick="openReviewModal()" class="btn btn-primary">+ New Review</button>
+                </div>
+                <div class="bg-white rounded-xl border border-gray-200 overflow-hidden">
+                    <div class="table-container">
+                        <table>
+                            <thead><tr><th>Author</th><th>Company</th><th>Rating</th><th>Content</th><th>Approved</th><th>Actions</th></tr></thead>
+                            <tbody id="reviews-tbody"></tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+
+            <!-- CONTACTS -->
+            <div id="section-contacts" class="section-panel hidden">
+                <div class="flex items-center justify-between mb-6">
+                    <h2 class="text-2xl font-bold text-gray-900">Contact Messages</h2>
+                </div>
+                <div class="bg-white rounded-xl border border-gray-200 overflow-hidden">
+                    <div class="table-container">
+                        <table>
+                            <thead><tr><th>Name</th><th>Email</th><th>Subject</th><th>Status</th><th>Created</th><th>Actions</th></tr></thead>
+                            <tbody id="contacts-tbody"></tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </main>
+</div>
+
+<!-- MODAL CONTAINER -->
+<div id="modal-container"></div>
+
+<script>
+// ======================== GLOBALS ========================
+var token = localStorage.getItem('rainbow_admin_token');
+var adminUser = null;
+var siteContent = {};
+var clientsTimer = null;
+
+// ======================== HELPERS ========================
+function esc(s) { return String(s||'').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;'); }
+function escAttr(s) { return esc(s); }
+function formatDate(d) { if (!d) return '-'; try { return new Date(d).toLocaleDateString('en-US',{year:'numeric',month:'short',day:'numeric'}); } catch(e) { return d; } }
+function statusBadge(s) {
+    var m = { active:'badge-green', inactive:'badge-gray', pending:'badge-yellow', canceled:'badge-red', past_due:'badge-red', trialing:'badge-blue', draft:'badge-yellow', published:'badge-green', new:'badge-blue', 'in-progress':'badge-yellow', resolved:'badge-green', closed:'badge-gray' };
+    return '<span class="badge '+(m[s]||'badge-gray')+'">'+esc(s||'unknown')+'</span>';
+}
+function showToast(msg, type) {
+    var el = document.createElement('div');
+    el.className = 'toast toast-' + (type||'success');
+    el.textContent = msg;
+    document.getElementById('toast-container').appendChild(el);
+    setTimeout(function(){ el.style.opacity='0'; setTimeout(function(){ el.remove(); },300); }, 3000);
+}
+
+async function apiFetch(url, options) {
+    var opts = options || {};
+    opts.headers = opts.headers || {};
+    if (token) opts.headers['Authorization'] = 'Bearer ' + token;
+    if (opts.body && typeof opts.body === 'object' && !(opts.body instanceof FormData)) {
+        opts.headers['Content-Type'] = 'application/json';
+        opts.body = JSON.stringify(opts.body);
+    }
+    var res = await fetch(url, opts);
+    if (res.status === 401) { handleLogout(); throw new Error('Unauthorized'); }
+    return res;
+}
+
+function closeModal() { document.getElementById('modal-container').innerHTML = ''; }
+
+function showModal(html, large) {
+    document.getElementById('modal-container').innerHTML =
+        '<div class="modal-overlay" onclick="if(event.target===this)closeModal()">' +
+        '<div class="modal-content'+(large?' modal-lg':'')+'">' + html + '</div></div>';
+}
+
+// ======================== AUTH ========================
+async function handleLogin(e) {
+    e.preventDefault();
+    var email = document.getElementById('login-email').value;
+    var password = document.getElementById('login-password').value;
+    var errEl = document.getElementById('login-error');
+    var btn = document.getElementById('login-btn');
+    btn.textContent = 'Signing in...'; btn.disabled = true;
+    errEl.classList.add('hidden');
+    try {
+        var res = await fetch('/api/admin/login', {
+            method:'POST', headers:{'Content-Type':'application/json'},
+            body: JSON.stringify({email, password})
+        });
+        var data = await res.json();
+        if (!res.ok) throw new Error(data.error || 'Login failed');
+        token = data.token;
+        adminUser = data.user;
+        localStorage.setItem('rainbow_admin_token', token);
+        showApp();
+    } catch(err) {
+        errEl.textContent = err.message; errEl.classList.remove('hidden');
+    } finally {
+        btn.textContent = 'Sign In'; btn.disabled = false;
+    }
+}
+
+function handleLogout() {
+    token = null; adminUser = null;
+    localStorage.removeItem('rainbow_admin_token');
+    document.getElementById('app-container').classList.add('hidden');
+    document.getElementById('login-screen').classList.remove('hidden');
+}
+
+async function showApp() {
+    document.getElementById('login-screen').classList.add('hidden');
+    document.getElementById('app-container').classList.remove('hidden');
+    if (!adminUser) {
+        try {
+            var res = await apiFetch('/api/admin/me');
+            adminUser = await res.json();
+        } catch(e) { handleLogout(); return; }
+    }
+    document.getElementById('admin-user-info').textContent = (adminUser.firstName||'')+' '+(adminUser.lastName||'');
+    loadDashboard();
+}
+
+// Check token on load
+if (token) { showApp(); } else {
+    document.getElementById('login-screen').classList.remove('hidden');
+}
+
+// ======================== NAVIGATION ========================
+function switchSection(name) {
+    document.querySelectorAll('.section-panel').forEach(function(p){ p.classList.add('hidden'); });
+    document.querySelectorAll('.sidebar-link[data-section]').forEach(function(l){ l.classList.remove('active'); });
+    var panel = document.getElementById('section-'+name);
+    if (panel) panel.classList.remove('hidden');
+    var link = document.querySelector('.sidebar-link[data-section="'+name+'"]');
+    if (link) link.classList.add('active');
+
+    // Load data for section
+    switch(name) {
+        case 'dashboard': loadDashboard(); break;
+        case 'content': loadContent(); break;
+        case 'admin-users': loadAdminUsers(); break;
+        case 'clients': loadClients(); break;
+        case 'products': loadProducts(); break;
+        case 'subscriptions': loadSubscriptions(); break;
+        case 'blog': loadArticles(); loadCategories(); break;
+        case 'reviews': loadReviews(); break;
+        case 'contacts': loadContacts(); break;
+    }
+}
+
+// ======================== DASHBOARD ========================
+async function loadDashboard() {
+    try {
+        var res = await apiFetch('/api/admin/subscriptions/stats');
+        var d = await res.json();
+        document.getElementById('stat-clients').textContent = d.totalClients || 0;
+        document.getElementById('stat-subs').textContent = d.activeSubscriptions || 0;
+        document.getElementById('stat-mrr').textContent = '$' + (d.mrr || '0.00');
+        document.getElementById('stat-new').textContent = d.newClientsThisMonth || 0;
+        document.getElementById('stat-contacts').textContent = d.pendingContacts || 0;
+    } catch(e) { console.error('Failed to load stats', e); }
+}
+
+// ======================== CONTENT MANAGER ========================
+function switchContentTab(name) {
+    document.querySelectorAll('.content-tab-panel').forEach(function(p){ p.classList.add('hidden'); });
+    document.querySelectorAll('.content-tab-btn').forEach(function(b){ b.classList.remove('active'); });
+    var panel = document.getElementById('ctab-'+name);
+    if (panel) panel.classList.remove('hidden');
+    var btn = document.querySelector('[data-ctab="'+name+'"]');
+    if (btn) btn.classList.add('active');
+}
+
+var iconColorOptions = ['blue','violet','emerald','amber','pink','cyan','red','indigo','teal','orange'];
+
+async function loadContent() {
+    try {
+        var res = await apiFetch('/api/content');
+        siteContent = await res.json();
+        populateContentAll();
+    } catch(e) { showToast('Failed to load content','error'); }
+}
+
+function populateContentAll() {
+    var c = siteContent;
+    // Hero
+    if (c.hero) {
+        document.getElementById('c-hero-badge').value = c.hero.badge || '';
+        document.getElementById('c-hero-title').value = c.hero.title || '';
+        document.getElementById('c-hero-description').value = c.hero.description || '';
+        document.getElementById('c-hero-cta-primary').value = c.hero.ctaPrimary || '';
+        document.getElementById('c-hero-cta-secondary').value = c.hero.ctaSecondary || '';
+        document.getElementById('c-hero-trust-badges').value = (c.hero.trustBadges || []).join(', ');
+        if (c.hero.image) {
+            document.getElementById('c-hero-image-preview').src = '/' + c.hero.image;
+            document.getElementById('c-hero-image-path').value = c.hero.image;
+        }
+    }
+    // Features
+    if (c.features) {
+        document.getElementById('c-features-heading').value = c.features.heading || '';
+        document.getElementById('c-features-subheading').value = c.features.subheading || '';
+        renderContentFeatures();
+    }
+    // Pricing
+    if (c.pricing) {
+        document.getElementById('c-pricing-heading').value = c.pricing.heading || '';
+        document.getElementById('c-pricing-subheading').value = c.pricing.subheading || '';
+        renderContentPricing();
+    }
+    // FAQ
+    if (c.faq) {
+        document.getElementById('c-faq-heading').value = c.faq.heading || '';
+        renderContentFaq();
+    }
+    // Video
+    if (c.video) {
+        document.getElementById('c-video-heading').value = c.video.heading || '';
+        document.getElementById('c-video-subheading').value = c.video.subheading || '';
+        document.getElementById('c-video-url').value = c.video.youtubeUrl || '';
+    }
+    // Trust
+    if (c.trust) renderContentTrust();
+    // Screenshots
+    if (c.screenshots) {
+        document.getElementById('c-screenshots-heading').value = c.screenshots.heading || '';
+        renderContentScreenshots();
+    }
+}
+
+function renderContentFeatures() {
+    var list = document.getElementById('c-features-list');
+    list.innerHTML = '';
+    if (!siteContent.features || !siteContent.features.items) return;
+    siteContent.features.items.forEach(function(f,i) {
+        var colorOpts = iconColorOptions.map(function(c){ return '<option value="'+c+'"'+(c===f.iconBg?' selected':'')+'>'+c+'</option>'; }).join('');
+        list.innerHTML +=
+            '<div class="border border-gray-200 rounded-lg p-4"><div class="flex items-center justify-between mb-3"><span class="text-sm font-medium text-gray-900">Feature '+(i+1)+'</span></div>' +
+            '<div class="space-y-3">' +
+            '<div><label class="block text-xs text-gray-500 mb-1">Title</label><input class="admin-input" id="cf-title-'+i+'" value="'+escAttr(f.title)+'"></div>' +
+            '<div><label class="block text-xs text-gray-500 mb-1">Description</label><textarea class="admin-input admin-textarea" rows="2" id="cf-desc-'+i+'">'+esc(f.description)+'</textarea></div>' +
+            '<div><label class="block text-xs text-gray-500 mb-1">Icon Color</label><select class="admin-input" id="cf-color-'+i+'">'+colorOpts+'</select></div>' +
+            '</div></div>';
+    });
+}
+
+function renderContentPricing() {
+    var list = document.getElementById('c-pricing-list');
+    list.innerHTML = '';
+    if (!siteContent.pricing || !siteContent.pricing.plans) return;
+    siteContent.pricing.plans.forEach(function(p,i) {
+        list.innerHTML +=
+            '<div class="border border-gray-200 rounded-lg p-4">' +
+            '<div class="flex items-center justify-between mb-3"><span class="text-sm font-medium text-gray-900">'+esc(p.name)+' Plan</span>' +
+            '<label class="flex items-center gap-2 text-xs text-gray-500"><input type="checkbox" id="cp-hl-'+i+'"'+(p.highlighted?' checked':'')+'>Highlighted</label></div>' +
+            '<div class="grid grid-cols-2 gap-3">' +
+            '<div><label class="block text-xs text-gray-500 mb-1">Name</label><input class="admin-input" id="cp-name-'+i+'" value="'+escAttr(p.name)+'"></div>' +
+            '<div><label class="block text-xs text-gray-500 mb-1">Subtitle</label><input class="admin-input" id="cp-sub-'+i+'" value="'+escAttr(p.subtitle)+'"></div>' +
+            '<div><label class="block text-xs text-gray-500 mb-1">Price Display</label><input class="admin-input" id="cp-price-'+i+'" value="'+escAttr(p.price)+'"></div>' +
+            '<div><label class="block text-xs text-gray-500 mb-1">Price Note</label><input class="admin-input" id="cp-note-'+i+'" value="'+escAttr(p.priceNote)+'"></div>' +
+            '<div><label class="block text-xs text-gray-500 mb-1">Price Per User</label><input type="number" step="0.01" class="admin-input" id="cp-ppu-'+i+'" value="'+p.pricePerUser+'"></div>' +
+            '<div><label class="block text-xs text-gray-500 mb-1">CTA Text</label><input class="admin-input" id="cp-cta-'+i+'" value="'+escAttr(p.ctaText)+'"></div>' +
+            '</div>' +
+            '<div class="mt-3"><label class="block text-xs text-gray-500 mb-1">Features (one per line)</label><textarea class="admin-input admin-textarea" rows="4" id="cp-features-'+i+'">'+p.features.join('\n')+'</textarea></div>' +
+            '<div class="mt-3"><label class="block text-xs text-gray-500 mb-1">Badge Text (optional)</label><input class="admin-input" id="cp-badge-'+i+'" value="'+escAttr(p.badge||'')+'"></div>' +
+            '<div class="mt-3"><label class="block text-xs text-gray-500 mb-1">CTA Link (optional)</label><input class="admin-input" id="cp-link-'+i+'" value="'+escAttr(p.ctaLink||'')+'"></div>' +
+            '</div>';
+    });
+}
+
+function renderContentFaq() {
+    var list = document.getElementById('c-faq-list');
+    list.innerHTML = '';
+    if (!siteContent.faq || !siteContent.faq.items) return;
+    siteContent.faq.items.forEach(function(f,i) {
+        list.innerHTML +=
+            '<div class="border border-gray-200 rounded-lg p-4">' +
+            '<div class="flex items-center justify-between mb-3"><span class="text-sm font-medium text-gray-900">Q'+(i+1)+'</span>' +
+            '<button onclick="removeContentFaqItem('+i+')" class="text-xs text-red-400 hover:text-red-600">Remove</button></div>' +
+            '<div class="space-y-3">' +
+            '<div><label class="block text-xs text-gray-500 mb-1">Question</label><input class="admin-input" id="cfaq-q-'+i+'" value="'+escAttr(f.question)+'"></div>' +
+            '<div><label class="block text-xs text-gray-500 mb-1">Answer</label><textarea class="admin-input admin-textarea" rows="3" id="cfaq-a-'+i+'">'+esc(f.answer)+'</textarea></div>' +
+            '</div></div>';
+    });
+}
+
+function addContentFaqItem() {
+    if (!siteContent.faq) siteContent.faq = { heading:'', items:[] };
+    siteContent.faq.items.push({ question:'', answer:'' });
+    renderContentFaq();
+}
+
+function removeContentFaqItem(i) {
+    siteContent.faq.items.splice(i,1);
+    renderContentFaq();
+}
+
+function renderContentTrust() {
+    var list = document.getElementById('c-trust-list');
+    list.innerHTML = '';
+    if (!siteContent.trust || !siteContent.trust.items) return;
+    siteContent.trust.items.forEach(function(t,i) {
+        list.innerHTML +=
+            '<div class="grid grid-cols-2 gap-3">' +
+            '<div><label class="block text-xs text-gray-500 mb-1">Value</label><input class="admin-input" id="ct-val-'+i+'" value="'+escAttr(t.value)+'"></div>' +
+            '<div><label class="block text-xs text-gray-500 mb-1">Label</label><input class="admin-input" id="ct-lbl-'+i+'" value="'+escAttr(t.label)+'"></div>' +
+            '</div>';
+    });
+}
+
+function renderContentScreenshots() {
+    var list = document.getElementById('c-screenshots-list');
+    list.innerHTML = '';
+    if (!siteContent.screenshots || !siteContent.screenshots.items) return;
+    siteContent.screenshots.items.forEach(function(s,i) {
+        list.innerHTML +=
+            '<div class="border border-gray-200 rounded-lg p-4">' +
+            '<div class="flex items-center justify-between mb-3"><span class="text-sm font-medium text-gray-900">Screenshot '+(i+1)+'</span></div>' +
+            '<div class="flex items-start gap-4 mb-3">' +
+            '<img id="css-preview-'+i+'" src="/'+escAttr(s.image)+'" alt="Preview" class="w-32 h-20 object-cover rounded-lg border border-gray-200">' +
+            '<div class="flex-1">' +
+            '<input type="file" id="css-file-'+i+'" accept="image/*" onchange="uploadContentImage(\'css-file-'+i+'\',\'css-preview-'+i+'\',\'css-path-'+i+'\')" class="text-sm text-gray-500 file:mr-3 file:py-2 file:px-4 file:rounded-lg file:border-0 file:text-sm file:font-medium file:bg-brand-50 file:text-brand-600 hover:file:bg-brand-100">' +
+            '<input type="hidden" id="css-path-'+i+'" value="'+escAttr(s.image)+'">' +
+            '<p class="text-xs text-gray-400 mt-1">Max 5 MB. JPG, PNG, or WebP.</p>' +
+            '</div></div>' +
+            '<div class="space-y-3">' +
+            '<div><label class="block text-xs text-gray-500 mb-1">Label</label><input class="admin-input" id="css-label-'+i+'" value="'+escAttr(s.label)+'"></div>' +
+            '<div><label class="block text-xs text-gray-500 mb-1">Alt Text</label><input class="admin-input" id="css-alt-'+i+'" value="'+escAttr(s.alt)+'"></div>' +
+            '</div></div>';
+    });
+}
+
+function uploadContentImage(fileInputId, previewId, pathInputId) {
+    var fileInput = document.getElementById(fileInputId);
+    if (!fileInput.files || !fileInput.files[0]) return;
+    var formData = new FormData();
+    formData.append('image', fileInput.files[0]);
+    apiFetch('/api/upload', { method:'POST', body:formData })
+        .then(function(r){ return r.json(); })
+        .then(function(data){
+            if (data.success) {
+                document.getElementById(previewId).src = '/' + data.path;
+                document.getElementById(pathInputId).value = data.path;
+                showToast('Image uploaded!');
+            } else { showToast('Upload failed: '+(data.error||'Unknown'),'error'); }
+        })
+        .catch(function(){ showToast('Upload failed.','error'); });
+}
+
+function saveContentSection(section) {
+    var c = siteContent;
+    if (section === 'hero') {
+        if (!c.hero) c.hero = {};
+        c.hero.badge = document.getElementById('c-hero-badge').value;
+        c.hero.title = document.getElementById('c-hero-title').value;
+        c.hero.description = document.getElementById('c-hero-description').value;
+        c.hero.ctaPrimary = document.getElementById('c-hero-cta-primary').value;
+        c.hero.ctaSecondary = document.getElementById('c-hero-cta-secondary').value;
+        c.hero.trustBadges = document.getElementById('c-hero-trust-badges').value.split(',').map(function(s){return s.trim();}).filter(Boolean);
+        var heroImgPath = document.getElementById('c-hero-image-path').value;
+        if (heroImgPath) c.hero.image = heroImgPath;
+    }
+    if (section === 'features' && c.features) {
+        c.features.heading = document.getElementById('c-features-heading').value;
+        c.features.subheading = document.getElementById('c-features-subheading').value;
+        c.features.items.forEach(function(f,i) {
+            f.title = document.getElementById('cf-title-'+i).value;
+            f.description = document.getElementById('cf-desc-'+i).value;
+            f.iconBg = document.getElementById('cf-color-'+i).value;
+        });
+    }
+    if (section === 'pricing' && c.pricing) {
+        c.pricing.heading = document.getElementById('c-pricing-heading').value;
+        c.pricing.subheading = document.getElementById('c-pricing-subheading').value;
+        c.pricing.plans.forEach(function(p,i) {
+            p.name = document.getElementById('cp-name-'+i).value;
+            p.subtitle = document.getElementById('cp-sub-'+i).value;
+            p.price = document.getElementById('cp-price-'+i).value;
+            p.priceNote = document.getElementById('cp-note-'+i).value;
+            p.pricePerUser = parseFloat(document.getElementById('cp-ppu-'+i).value) || 0;
+            p.ctaText = document.getElementById('cp-cta-'+i).value;
+            p.highlighted = document.getElementById('cp-hl-'+i).checked;
+            p.features = document.getElementById('cp-features-'+i).value.split('\n').map(function(s){return s.trim();}).filter(Boolean);
+            var badge = document.getElementById('cp-badge-'+i).value.trim();
+            p.badge = badge || undefined;
+            var link = document.getElementById('cp-link-'+i).value.trim();
+            p.ctaLink = link || undefined;
+        });
+    }
+    if (section === 'faq' && c.faq) {
+        c.faq.heading = document.getElementById('c-faq-heading').value;
+        c.faq.items = c.faq.items.map(function(f,i) {
+            return { question: document.getElementById('cfaq-q-'+i).value, answer: document.getElementById('cfaq-a-'+i).value };
+        });
+    }
+    if (section === 'video') {
+        if (!c.video) c.video = {};
+        c.video.heading = document.getElementById('c-video-heading').value;
+        c.video.subheading = document.getElementById('c-video-subheading').value;
+        c.video.youtubeUrl = document.getElementById('c-video-url').value;
+    }
+    if (section === 'trust' && c.trust) {
+        c.trust.items = c.trust.items.map(function(t,i) {
+            return { value: document.getElementById('ct-val-'+i).value, label: document.getElementById('ct-lbl-'+i).value };
+        });
+    }
+    if (section === 'images') {
+        c.screenshots = c.screenshots || { heading:'', items:[] };
+        c.screenshots.heading = document.getElementById('c-screenshots-heading').value;
+        c.screenshots.items = c.screenshots.items.map(function(s,i) {
+            return { image: document.getElementById('css-path-'+i).value || s.image, label: document.getElementById('css-label-'+i).value, alt: document.getElementById('css-alt-'+i).value };
+        });
+    }
+
+    apiFetch('/api/content', { method:'POST', body: c })
+        .then(function(r){ return r.json(); })
+        .then(function(data){
+            if (data.success) showToast('Content saved!');
+            else showToast('Error saving content','error');
+        })
+        .catch(function(){ showToast('Error saving content','error'); });
+}
+
+// ======================== ADMIN USERS ========================
+var adminUsersData = [];
+
+async function loadAdminUsers() {
+    try {
+        var res = await apiFetch('/api/admin/users');
+        adminUsersData = await res.json();
+        renderAdminUsers();
+    } catch(e) { showToast('Failed to load admin users','error'); }
+}
+
+function renderAdminUsers() {
+    var tbody = document.getElementById('admin-users-tbody');
+    if (!adminUsersData.length) { tbody.innerHTML = '<tr><td colspan="5" class="text-center text-gray-400 py-8">No admin users found</td></tr>'; return; }
+    tbody.innerHTML = adminUsersData.map(function(u) {
+        return '<tr>' +
+            '<td class="font-medium text-gray-900">'+esc(u.firstName)+' '+esc(u.lastName)+'</td>' +
+            '<td>'+esc(u.email)+'</td>' +
+            '<td><span class="badge badge-blue">'+esc(u.role)+'</span></td>' +
+            '<td>'+formatDate(u.createdAt)+'</td>' +
+            '<td class="space-x-2">' +
+                '<button class="btn btn-secondary btn-sm" onclick="openAdminUserModal(\''+u.id+'\')">Edit</button>' +
+                '<button class="btn btn-danger btn-sm" onclick="deleteAdminUser(\''+u.id+'\')">Delete</button>' +
+            '</td></tr>';
+    }).join('');
+}
+
+function openAdminUserModal(id) {
+    var u = id ? adminUsersData.find(function(x){return x.id===id;}) : null;
+    var html = '<h3 class="text-lg font-semibold text-gray-900 mb-4">'+(u?'Edit':'Create')+' Admin User</h3>' +
+        '<form onsubmit="saveAdminUser(event,\''+(id||'')+'\')">' +
+        '<div class="space-y-3">' +
+        '<div class="grid grid-cols-2 gap-3">' +
+        '<div><label class="block text-sm font-medium text-gray-600 mb-1">First Name</label><input class="admin-input" id="au-fn" value="'+escAttr(u?u.firstName:'')+'" required></div>' +
+        '<div><label class="block text-sm font-medium text-gray-600 mb-1">Last Name</label><input class="admin-input" id="au-ln" value="'+escAttr(u?u.lastName:'')+'" required></div>' +
+        '</div>' +
+        '<div><label class="block text-sm font-medium text-gray-600 mb-1">Email</label><input type="email" class="admin-input" id="au-email" value="'+escAttr(u?u.email:'')+'" required></div>' +
+        '<div><label class="block text-sm font-medium text-gray-600 mb-1">Password'+(u?' (leave blank to keep)':'')+'</label><input type="password" class="admin-input" id="au-password" '+(u?'':'required')+'></div>' +
+        '<div><label class="block text-sm font-medium text-gray-600 mb-1">Role</label><select class="admin-input" id="au-role"><option value="admin"'+(u&&u.role==='admin'?' selected':'')+'>Admin</option><option value="editor"'+(u&&u.role==='editor'?' selected':'')+'>Editor</option><option value="superadmin"'+(u&&u.role==='superadmin'?' selected':'')+'>Super Admin</option></select></div>' +
+        '</div>' +
+        '<div class="flex justify-end gap-3 mt-6"><button type="button" class="btn btn-secondary" onclick="closeModal()">Cancel</button><button type="submit" class="btn btn-primary">Save</button></div>' +
+        '</form>';
+    showModal(html);
+}
+
+async function saveAdminUser(e, id) {
+    e.preventDefault();
+    var body = {
+        firstName: document.getElementById('au-fn').value,
+        lastName: document.getElementById('au-ln').value,
+        email: document.getElementById('au-email').value,
+        role: document.getElementById('au-role').value
+    };
+    var pw = document.getElementById('au-password').value;
+    if (pw) body.password = pw;
+    try {
+        if (id) {
+            await apiFetch('/api/admin/users/'+id, { method:'PUT', body:body });
+        } else {
+            if (!pw) { showToast('Password required','error'); return; }
+            await apiFetch('/api/admin/users', { method:'POST', body:body });
+        }
+        closeModal(); showToast('Admin user saved!'); loadAdminUsers();
+    } catch(e) { showToast('Failed to save user','error'); }
+}
+
+async function deleteAdminUser(id) {
+    if (!confirm('Delete this admin user?')) return;
+    try {
+        var res = await apiFetch('/api/admin/users/'+id, { method:'DELETE' });
+        var data = await res.json();
+        if (data.error) { showToast(data.error,'error'); return; }
+        showToast('Admin user deleted!'); loadAdminUsers();
+    } catch(e) { showToast('Failed to delete user','error'); }
+}
+
+// ======================== CLIENTS ========================
+var clientsData = [];
+
+function debounceLoadClients() {
+    clearTimeout(clientsTimer);
+    clientsTimer = setTimeout(loadClients, 300);
+}
+
+async function loadClients() {
+    try {
+        var search = document.getElementById('clients-search').value;
+        var status = document.getElementById('clients-status-filter').value;
+        var params = new URLSearchParams();
+        if (search) params.append('search', search);
+        if (status) params.append('status', status);
+        var res = await apiFetch('/api/admin/clients?'+params.toString());
+        clientsData = await res.json();
+        renderClients();
+    } catch(e) { showToast('Failed to load clients','error'); }
+}
+
+function renderClients() {
+    var tbody = document.getElementById('clients-tbody');
+    if (!clientsData.length) { tbody.innerHTML = '<tr><td colspan="6" class="text-center text-gray-400 py-8">No clients found</td></tr>'; return; }
+    tbody.innerHTML = clientsData.map(function(c) {
+        return '<tr>' +
+            '<td class="font-medium text-gray-900">'+esc(c.firstName)+' '+esc(c.lastName)+'</td>' +
+            '<td>'+esc(c.email)+'</td>' +
+            '<td>'+esc(c.company||'-')+'</td>' +
+            '<td>'+statusBadge(c.status)+'</td>' +
+            '<td>'+formatDate(c.createdAt)+'</td>' +
+            '<td class="space-x-2">' +
+                '<button class="btn btn-secondary btn-sm" onclick="viewClient(\''+c.id+'\')">View</button>' +
+                '<button class="btn btn-secondary btn-sm" onclick="openEditClientModal(\''+c.id+'\')">Edit</button>' +
+                '<button class="btn btn-danger btn-sm" onclick="deleteClient(\''+c.id+'\')">Delete</button>' +
+            '</td></tr>';
+    }).join('');
+}
+
+async function viewClient(id) {
+    try {
+        var res = await apiFetch('/api/admin/clients/'+id);
+        var c = await res.json();
+        var subsHtml = '';
+        if (c.subscriptions && c.subscriptions.length) {
+            subsHtml = '<h4 class="text-sm font-semibold text-gray-900 mt-4 mb-2">Subscriptions</h4><table class="w-full text-sm"><thead><tr><th class="text-left p-1">Product</th><th class="text-left p-1">Plan</th><th class="text-left p-1">Status</th></tr></thead><tbody>' +
+                c.subscriptions.map(function(s){ return '<tr><td class="p-1">'+esc(s.productName||'-')+'</td><td class="p-1">'+esc(s.planKey||'-')+'</td><td class="p-1">'+statusBadge(s.status)+'</td></tr>'; }).join('') +
+                '</tbody></table>';
+        }
+        var html = '<h3 class="text-lg font-semibold text-gray-900 mb-4">Client Details</h3>' +
+            '<div class="grid grid-cols-2 gap-3 text-sm">' +
+            '<div><span class="text-gray-500">Name:</span> <span class="font-medium">'+esc(c.firstName)+' '+esc(c.lastName)+'</span></div>' +
+            '<div><span class="text-gray-500">Email:</span> '+esc(c.email)+'</div>' +
+            '<div><span class="text-gray-500">Company:</span> '+esc(c.company||'-')+'</div>' +
+            '<div><span class="text-gray-500">Size:</span> '+esc(c.companySize||'-')+'</div>' +
+            '<div><span class="text-gray-500">Phone:</span> '+esc(c.phone||'-')+'</div>' +
+            '<div><span class="text-gray-500">Status:</span> '+statusBadge(c.status)+'</div>' +
+            '<div><span class="text-gray-500">Stripe ID:</span> '+esc(c.stripeCustomerId||'-')+'</div>' +
+            '<div><span class="text-gray-500">Verified:</span> '+(c.emailVerified?'Yes':'No')+'</div>' +
+            '<div><span class="text-gray-500">Address:</span> '+esc([c.address,c.city,c.country,c.postalCode].filter(Boolean).join(', ')||'-')+'</div>' +
+            '<div><span class="text-gray-500">Created:</span> '+formatDate(c.createdAt)+'</div>' +
+            '</div>' + subsHtml +
+            '<div class="flex justify-end mt-6"><button class="btn btn-secondary" onclick="closeModal()">Close</button></div>';
+        showModal(html, true);
+    } catch(e) { showToast('Failed to load client details','error'); }
+}
+
+function openEditClientModal(id) {
+    var c = clientsData.find(function(x){return x.id===id;});
+    if (!c) return;
+    var html = '<h3 class="text-lg font-semibold text-gray-900 mb-4">Edit Client</h3>' +
+        '<form onsubmit="saveClient(event,\''+id+'\')">' +
+        '<div class="space-y-3">' +
+        '<div class="grid grid-cols-2 gap-3">' +
+        '<div><label class="block text-sm font-medium text-gray-600 mb-1">First Name</label><input class="admin-input" id="ec-fn" value="'+escAttr(c.firstName)+'" required></div>' +
+        '<div><label class="block text-sm font-medium text-gray-600 mb-1">Last Name</label><input class="admin-input" id="ec-ln" value="'+escAttr(c.lastName)+'" required></div>' +
+        '</div>' +
+        '<div><label class="block text-sm font-medium text-gray-600 mb-1">Company</label><input class="admin-input" id="ec-company" value="'+escAttr(c.company||'')+'"></div>' +
+        '<div class="grid grid-cols-2 gap-3">' +
+        '<div><label class="block text-sm font-medium text-gray-600 mb-1">Company Size</label><input class="admin-input" id="ec-size" value="'+escAttr(c.companySize||'')+'"></div>' +
+        '<div><label class="block text-sm font-medium text-gray-600 mb-1">Phone</label><input class="admin-input" id="ec-phone" value="'+escAttr(c.phone||'')+'"></div>' +
+        '</div>' +
+        '<div><label class="block text-sm font-medium text-gray-600 mb-1">Status</label><select class="admin-input" id="ec-status">' +
+        '<option value="active"'+(c.status==='active'?' selected':'')+'>Active</option>' +
+        '<option value="inactive"'+(c.status==='inactive'?' selected':'')+'>Inactive</option>' +
+        '<option value="pending"'+(c.status==='pending'?' selected':'')+'>Pending</option>' +
+        '</select></div>' +
+        '</div>' +
+        '<div class="flex justify-end gap-3 mt-6"><button type="button" class="btn btn-secondary" onclick="closeModal()">Cancel</button><button type="submit" class="btn btn-primary">Save</button></div>' +
+        '</form>';
+    showModal(html);
+}
+
+async function saveClient(e, id) {
+    e.preventDefault();
+    var body = {
+        firstName: document.getElementById('ec-fn').value,
+        lastName: document.getElementById('ec-ln').value,
+        company: document.getElementById('ec-company').value,
+        companySize: document.getElementById('ec-size').value,
+        phone: document.getElementById('ec-phone').value,
+        status: document.getElementById('ec-status').value
+    };
+    try {
+        await apiFetch('/api/admin/clients/'+id, { method:'PUT', body:body });
+        closeModal(); showToast('Client updated!'); loadClients();
+    } catch(e) { showToast('Failed to save client','error'); }
+}
+
+async function deleteClient(id) {
+    if (!confirm('Delete this client and all their subscriptions? This cannot be undone.')) return;
+    try {
+        await apiFetch('/api/admin/clients/'+id, { method:'DELETE' });
+        showToast('Client deleted!'); loadClients();
+    } catch(e) { showToast('Failed to delete client','error'); }
+}
+
+// ======================== PRODUCTS ========================
+var productsData = [];
+
+async function loadProducts() {
+    try {
+        var res = await apiFetch('/api/admin/products');
+        productsData = await res.json();
+        renderProducts();
+    } catch(e) { showToast('Failed to load products','error'); }
+}
+
+function renderProducts() {
+    var tbody = document.getElementById('products-tbody');
+    if (!productsData.length) { tbody.innerHTML = '<tr><td colspan="6" class="text-center text-gray-400 py-8">No products found</td></tr>'; return; }
+    tbody.innerHTML = productsData.map(function(p) {
+        var planKeys = p.plans ? Object.keys(p.plans) : [];
+        return '<tr>' +
+            '<td class="font-medium text-gray-900">'+esc(p.name)+'</td>' +
+            '<td>'+esc(p.slug)+'</td>' +
+            '<td>'+planKeys.map(function(k){return '<span class="badge badge-blue mr-1">'+esc(k)+'</span>';}).join('')+'</td>' +
+            '<td>'+(p.isActive?'<span class="badge badge-green">Active</span>':'<span class="badge badge-gray">Inactive</span>')+'</td>' +
+            '<td>'+formatDate(p.createdAt)+'</td>' +
+            '<td><button class="btn btn-secondary btn-sm" onclick="openProductModal(\''+p.id+'\')">Edit</button></td>' +
+            '</tr>';
+    }).join('');
+}
+
+function openProductModal(id) {
+    var p = productsData.find(function(x){return x.id===id;});
+    if (!p) return;
+    var plans = p.plans || {};
+    var planKeys = Object.keys(plans);
+
+    var plansHtml = planKeys.map(function(key, idx) {
+        var plan = plans[key];
+        return '<div class="border border-gray-200 rounded-lg p-4 mb-4">' +
+            '<h4 class="text-sm font-semibold text-gray-900 mb-3">Plan: '+esc(key)+'</h4>' +
+            '<div class="grid grid-cols-2 gap-3">' +
+            '<div><label class="block text-xs text-gray-500 mb-1">Name</label><input class="admin-input" id="pp-name-'+idx+'" value="'+escAttr(plan.name||'')+'"></div>' +
+            '<div><label class="block text-xs text-gray-500 mb-1">Subtitle</label><input class="admin-input" id="pp-subtitle-'+idx+'" value="'+escAttr(plan.subtitle||'')+'"></div>' +
+            '<div><label class="block text-xs text-gray-500 mb-1">Price</label><input class="admin-input" id="pp-price-'+idx+'" value="'+escAttr(plan.price||'')+'"></div>' +
+            '<div><label class="block text-xs text-gray-500 mb-1">Price Per User</label><input type="number" step="0.01" class="admin-input" id="pp-ppu-'+idx+'" value="'+(plan.pricePerUser||0)+'"></div>' +
+            '<div><label class="block text-xs text-gray-500 mb-1">Price Note</label><input class="admin-input" id="pp-note-'+idx+'" value="'+escAttr(plan.priceNote||'')+'"></div>' +
+            '<div><label class="block text-xs text-gray-500 mb-1">CTA Text</label><input class="admin-input" id="pp-cta-'+idx+'" value="'+escAttr(plan.ctaText||'')+'"></div>' +
+            '<div><label class="block text-xs text-gray-500 mb-1">CTA Link</label><input class="admin-input" id="pp-link-'+idx+'" value="'+escAttr(plan.ctaLink||'')+'"></div>' +
+            '<div><label class="block text-xs text-gray-500 mb-1">Stripe Price ID</label><input class="admin-input" id="pp-stripe-'+idx+'" value="'+escAttr(plan.stripePriceId||'')+'"></div>' +
+            '<div><label class="block text-xs text-gray-500 mb-1">Badge</label><input class="admin-input" id="pp-badge-'+idx+'" value="'+escAttr(plan.badge||'')+'"></div>' +
+            '<div><label class="flex items-center gap-2 text-xs text-gray-500 mt-4"><input type="checkbox" id="pp-hl-'+idx+'"'+(plan.highlighted?' checked':'')+'>Highlighted</label></div>' +
+            '</div>' +
+            '<div class="mt-3"><label class="block text-xs text-gray-500 mb-1">Features (one per line)</label><textarea class="admin-input admin-textarea" rows="4" id="pp-features-'+idx+'">'+((plan.features||[]).join('\n'))+'</textarea></div>' +
+            '</div>';
+    }).join('');
+
+    var html = '<h3 class="text-lg font-semibold text-gray-900 mb-4">Edit Product: '+esc(p.name)+'</h3>' +
+        '<form onsubmit="saveProduct(event,\''+id+'\')">' +
+        '<div class="space-y-3 mb-6">' +
+        '<div class="grid grid-cols-2 gap-3">' +
+        '<div><label class="block text-sm font-medium text-gray-600 mb-1">Name</label><input class="admin-input" id="ep-name" value="'+escAttr(p.name)+'" required></div>' +
+        '<div><label class="block text-sm font-medium text-gray-600 mb-1">Slug</label><input class="admin-input" id="ep-slug" value="'+escAttr(p.slug)+'" required></div>' +
+        '</div>' +
+        '<div><label class="block text-sm font-medium text-gray-600 mb-1">Short Description</label><input class="admin-input" id="ep-short" value="'+escAttr(p.shortDescription||'')+'"></div>' +
+        '<div><label class="block text-sm font-medium text-gray-600 mb-1">Full Description</label><textarea class="admin-input admin-textarea" rows="3" id="ep-full">'+esc(p.fullDescription||'')+'</textarea></div>' +
+        '<div><label class="flex items-center gap-2 text-sm text-gray-600"><input type="checkbox" id="ep-active"'+(p.isActive?' checked':'')+'>Active</label></div>' +
+        '</div>' +
+        '<h4 class="text-base font-semibold text-gray-900 mb-3">Plans</h4>' +
+        '<div id="product-plans-container">' + plansHtml + '</div>' +
+        '<div class="flex justify-end gap-3 mt-6"><button type="button" class="btn btn-secondary" onclick="closeModal()">Cancel</button><button type="submit" class="btn btn-primary">Save Product</button></div>' +
+        '</form>';
+    showModal(html, true);
+
+    // Store plan keys for retrieval
+    window._editProductPlanKeys = planKeys;
+}
+
+async function saveProduct(e, id) {
+    e.preventDefault();
+    var p = productsData.find(function(x){return x.id===id;});
+    var planKeys = window._editProductPlanKeys || [];
+    var plans = {};
+    planKeys.forEach(function(key, idx) {
+        plans[key] = {
+            name: document.getElementById('pp-name-'+idx).value,
+            subtitle: document.getElementById('pp-subtitle-'+idx).value,
+            price: document.getElementById('pp-price-'+idx).value,
+            pricePerUser: parseFloat(document.getElementById('pp-ppu-'+idx).value) || 0,
+            priceNote: document.getElementById('pp-note-'+idx).value,
+            ctaText: document.getElementById('pp-cta-'+idx).value,
+            ctaLink: document.getElementById('pp-link-'+idx).value || undefined,
+            stripePriceId: document.getElementById('pp-stripe-'+idx).value || undefined,
+            badge: document.getElementById('pp-badge-'+idx).value || undefined,
+            highlighted: document.getElementById('pp-hl-'+idx).checked,
+            features: document.getElementById('pp-features-'+idx).value.split('\n').map(function(s){return s.trim();}).filter(Boolean)
+        };
+    });
+
+    var body = {
+        name: document.getElementById('ep-name').value,
+        slug: document.getElementById('ep-slug').value,
+        shortDescription: document.getElementById('ep-short').value,
+        fullDescription: document.getElementById('ep-full').value,
+        isActive: document.getElementById('ep-active').checked ? 1 : 0,
+        benefits: p.benefits || [],
+        gallery: p.gallery || [],
+        plans: plans
+    };
+    try {
+        await apiFetch('/api/admin/products/'+id, { method:'PUT', body:body });
+        closeModal(); showToast('Product saved!'); loadProducts();
+    } catch(e) { showToast('Failed to save product','error'); }
+}
+
+// ======================== SUBSCRIPTIONS ========================
+var subsData = [];
+
+async function loadSubscriptions() {
+    try {
+        var status = document.getElementById('subs-status-filter').value;
+        var params = new URLSearchParams();
+        if (status) params.append('status', status);
+        var res = await apiFetch('/api/admin/subscriptions?'+params.toString());
+        subsData = await res.json();
+        renderSubscriptions();
+    } catch(e) { showToast('Failed to load subscriptions','error'); }
+}
+
+function renderSubscriptions() {
+    var tbody = document.getElementById('subs-tbody');
+    if (!subsData.length) { tbody.innerHTML = '<tr><td colspan="7" class="text-center text-gray-400 py-8">No subscriptions found</td></tr>'; return; }
+    tbody.innerHTML = subsData.map(function(s) {
+        return '<tr>' +
+            '<td class="font-medium text-gray-900">'+esc((s.clientFirstName||'')+' '+(s.clientLastName||''))+'<br><span class="text-xs text-gray-400">'+esc(s.clientEmail||'')+'</span></td>' +
+            '<td>'+esc(s.productName||'-')+'</td>' +
+            '<td>'+esc(s.planKey||'-')+'</td>' +
+            '<td>'+esc(s.licenseCount||1)+'</td>' +
+            '<td>'+statusBadge(s.status)+'</td>' +
+            '<td>'+formatDate(s.createdAt)+'</td>' +
+            '<td><button class="btn btn-secondary btn-sm" onclick="openSubModal(\''+s.id+'\')">Edit</button></td>' +
+            '</tr>';
+    }).join('');
+}
+
+function openSubModal(id) {
+    var s = subsData.find(function(x){return x.id===id;});
+    if (!s) return;
+    var html = '<h3 class="text-lg font-semibold text-gray-900 mb-4">Edit Subscription</h3>' +
+        '<div class="text-sm text-gray-500 mb-4">Client: '+esc((s.clientFirstName||'')+' '+(s.clientLastName||''))+' - '+esc(s.productName||'-')+'</div>' +
+        '<form onsubmit="saveSub(event,\''+id+'\')">' +
+        '<div class="space-y-3">' +
+        '<div><label class="block text-sm font-medium text-gray-600 mb-1">Status</label>' +
+        '<select class="admin-input" id="es-status">' +
+        '<option value="active"'+(s.status==='active'?' selected':'')+'>Active</option>' +
+        '<option value="canceled"'+(s.status==='canceled'?' selected':'')+'>Canceled</option>' +
+        '<option value="past_due"'+(s.status==='past_due'?' selected':'')+'>Past Due</option>' +
+        '<option value="trialing"'+(s.status==='trialing'?' selected':'')+'>Trialing</option>' +
+        '</select></div>' +
+        '<div><label class="block text-sm font-medium text-gray-600 mb-1">Plan Key</label><input class="admin-input" id="es-plan" value="'+escAttr(s.planKey||'')+'"></div>' +
+        '<div><label class="block text-sm font-medium text-gray-600 mb-1">License Count</label><input type="number" class="admin-input" id="es-licenses" value="'+(s.licenseCount||1)+'" min="1"></div>' +
+        '</div>' +
+        '<div class="flex justify-end gap-3 mt-6"><button type="button" class="btn btn-secondary" onclick="closeModal()">Cancel</button><button type="submit" class="btn btn-primary">Save</button></div>' +
+        '</form>';
+    showModal(html);
+}
+
+async function saveSub(e, id) {
+    e.preventDefault();
+    var body = {
+        status: document.getElementById('es-status').value,
+        planKey: document.getElementById('es-plan').value,
+        licenseCount: parseInt(document.getElementById('es-licenses').value) || 1
+    };
+    try {
+        await apiFetch('/api/admin/subscriptions/'+id, { method:'PUT', body:body });
+        closeModal(); showToast('Subscription updated!'); loadSubscriptions();
+    } catch(e) { showToast('Failed to save subscription','error'); }
+}
+
+// ======================== BLOG ========================
+var articlesData = [];
+var categoriesData = [];
+
+function switchBlogTab(name) {
+    document.getElementById('blog-articles-panel').classList.toggle('hidden', name !== 'articles');
+    document.getElementById('blog-categories-panel').classList.toggle('hidden', name !== 'categories');
+    document.querySelectorAll('.blog-tab-btn').forEach(function(b) {
+        if (b.dataset.btab === name) { b.className = 'btn btn-primary blog-tab-btn'; }
+        else { b.className = 'btn btn-secondary blog-tab-btn'; }
+    });
+}
+
+async function loadArticles() {
+    try {
+        var res = await apiFetch('/api/admin/blog/articles');
+        articlesData = await res.json();
+        renderArticles();
+    } catch(e) { showToast('Failed to load articles','error'); }
+}
+
+function renderArticles() {
+    var filter = document.getElementById('articles-status-filter').value;
+    var filtered = filter ? articlesData.filter(function(a){return a.status===filter;}) : articlesData;
+    var tbody = document.getElementById('articles-tbody');
+    if (!filtered.length) { tbody.innerHTML = '<tr><td colspan="5" class="text-center text-gray-400 py-8">No articles found</td></tr>'; return; }
+    tbody.innerHTML = filtered.map(function(a) {
+        return '<tr>' +
+            '<td class="font-medium text-gray-900">'+esc(a.title)+'</td>' +
+            '<td>'+esc(a.categoryName||'-')+'</td>' +
+            '<td>'+statusBadge(a.status)+'</td>' +
+            '<td>'+formatDate(a.publishedAt)+'</td>' +
+            '<td class="space-x-2">' +
+                '<button class="btn btn-secondary btn-sm" onclick="openArticleModal(\''+a.id+'\')">Edit</button>' +
+                '<button class="btn btn-danger btn-sm" onclick="deleteArticle(\''+a.id+'\')">Delete</button>' +
+            '</td></tr>';
+    }).join('');
+}
+
+function openArticleModal(id) {
+    var a = id ? articlesData.find(function(x){return x.id===id;}) : null;
+    var catOpts = '<option value="">-- No Category --</option>' +
+        categoriesData.map(function(c){ return '<option value="'+c.id+'"'+(a && a.categoryId===c.id?' selected':'')+'>'+esc(c.name)+'</option>'; }).join('');
+
+    var html = '<h3 class="text-lg font-semibold text-gray-900 mb-4">'+(a?'Edit':'New')+' Article</h3>' +
+        '<form onsubmit="saveArticle(event,\''+(id||'')+'\')">' +
+        '<div class="space-y-3">' +
+        '<div><label class="block text-sm font-medium text-gray-600 mb-1">Title</label><input class="admin-input" id="art-title" value="'+escAttr(a?a.title:'')+'" required></div>' +
+        '<div><label class="block text-sm font-medium text-gray-600 mb-1">Slug</label><input class="admin-input" id="art-slug" value="'+escAttr(a?a.slug:'')+'" required></div>' +
+        '<div><label class="block text-sm font-medium text-gray-600 mb-1">Category</label><select class="admin-input" id="art-cat">'+catOpts+'</select></div>' +
+        '<div><label class="block text-sm font-medium text-gray-600 mb-1">Excerpt</label><textarea class="admin-input admin-textarea" rows="2" id="art-excerpt">'+esc(a?a.excerpt:'')+'</textarea></div>' +
+        '<div><label class="block text-sm font-medium text-gray-600 mb-1">Content (HTML)</label><textarea class="admin-input admin-textarea" rows="8" id="art-content">'+esc(a?a.content:'')+'</textarea></div>' +
+        '<div><label class="block text-sm font-medium text-gray-600 mb-1">Cover Image URL</label><input class="admin-input" id="art-cover" value="'+escAttr(a?a.coverImage:'')+'"></div>' +
+        '<div><label class="block text-sm font-medium text-gray-600 mb-1">Status</label><select class="admin-input" id="art-status">' +
+        '<option value="draft"'+(a&&a.status==='draft'?' selected':'')+'>Draft</option>' +
+        '<option value="published"'+(a&&a.status==='published'?' selected':'')+'>Published</option>' +
+        '</select></div>' +
+        '</div>' +
+        '<div class="flex justify-end gap-3 mt-6"><button type="button" class="btn btn-secondary" onclick="closeModal()">Cancel</button><button type="submit" class="btn btn-primary">Save</button></div>' +
+        '</form>';
+    showModal(html, true);
+}
+
+async function saveArticle(e, id) {
+    e.preventDefault();
+    var body = {
+        title: document.getElementById('art-title').value,
+        slug: document.getElementById('art-slug').value,
+        categoryId: document.getElementById('art-cat').value || null,
+        excerpt: document.getElementById('art-excerpt').value,
+        content: document.getElementById('art-content').value,
+        coverImage: document.getElementById('art-cover').value,
+        status: document.getElementById('art-status').value
+    };
+    try {
+        if (id) {
+            await apiFetch('/api/admin/blog/articles/'+id, { method:'PUT', body:body });
+        } else {
+            await apiFetch('/api/admin/blog/articles', { method:'POST', body:body });
+        }
+        closeModal(); showToast('Article saved!'); loadArticles();
+    } catch(e) { showToast('Failed to save article','error'); }
+}
+
+async function deleteArticle(id) {
+    if (!confirm('Delete this article?')) return;
+    try {
+        await apiFetch('/api/admin/blog/articles/'+id, { method:'DELETE' });
+        showToast('Article deleted!'); loadArticles();
+    } catch(e) { showToast('Failed to delete article','error'); }
+}
+
+// --- Categories ---
+async function loadCategories() {
+    try {
+        var res = await apiFetch('/api/admin/blog/categories');
+        categoriesData = await res.json();
+        renderCategories();
+    } catch(e) { showToast('Failed to load categories','error'); }
+}
+
+function renderCategories() {
+    var tbody = document.getElementById('categories-tbody');
+    if (!categoriesData.length) { tbody.innerHTML = '<tr><td colspan="3" class="text-center text-gray-400 py-8">No categories found</td></tr>'; return; }
+    tbody.innerHTML = categoriesData.map(function(c) {
+        return '<tr>' +
+            '<td class="font-medium text-gray-900">'+esc(c.name)+'</td>' +
+            '<td>'+esc(c.slug)+'</td>' +
+            '<td class="space-x-2">' +
+                '<button class="btn btn-secondary btn-sm" onclick="openCategoryModal(\''+c.id+'\')">Edit</button>' +
+                '<button class="btn btn-danger btn-sm" onclick="deleteCategory(\''+c.id+'\')">Delete</button>' +
+            '</td></tr>';
+    }).join('');
+}
+
+function openCategoryModal(id) {
+    var c = id ? categoriesData.find(function(x){return x.id===id;}) : null;
+    var html = '<h3 class="text-lg font-semibold text-gray-900 mb-4">'+(c?'Edit':'New')+' Category</h3>' +
+        '<form onsubmit="saveCategory(event,\''+(id||'')+'\')">' +
+        '<div class="space-y-3">' +
+        '<div><label class="block text-sm font-medium text-gray-600 mb-1">Name</label><input class="admin-input" id="cat-name" value="'+escAttr(c?c.name:'')+'" required></div>' +
+        '<div><label class="block text-sm font-medium text-gray-600 mb-1">Slug</label><input class="admin-input" id="cat-slug" value="'+escAttr(c?c.slug:'')+'" required></div>' +
+        '</div>' +
+        '<div class="flex justify-end gap-3 mt-6"><button type="button" class="btn btn-secondary" onclick="closeModal()">Cancel</button><button type="submit" class="btn btn-primary">Save</button></div>' +
+        '</form>';
+    showModal(html);
+}
+
+async function saveCategory(e, id) {
+    e.preventDefault();
+    var body = { name: document.getElementById('cat-name').value, slug: document.getElementById('cat-slug').value };
+    try {
+        if (id) {
+            await apiFetch('/api/admin/blog/categories/'+id, { method:'PUT', body:body });
+        } else {
+            await apiFetch('/api/admin/blog/categories', { method:'POST', body:body });
+        }
+        closeModal(); showToast('Category saved!'); loadCategories();
+    } catch(e) { showToast('Failed to save category','error'); }
+}
+
+async function deleteCategory(id) {
+    if (!confirm('Delete this category? Articles using it will have their category cleared.')) return;
+    try {
+        await apiFetch('/api/admin/blog/categories/'+id, { method:'DELETE' });
+        showToast('Category deleted!'); loadCategories();
+    } catch(e) { showToast('Failed to delete category','error'); }
+}
+
+// ======================== REVIEWS ========================
+var reviewsData = [];
+
+async function loadReviews() {
+    try {
+        var res = await apiFetch('/api/admin/blog/reviews');
+        reviewsData = await res.json();
+        renderReviews();
+    } catch(e) { showToast('Failed to load reviews','error'); }
+}
+
+function renderReviews() {
+    var tbody = document.getElementById('reviews-tbody');
+    if (!reviewsData.length) { tbody.innerHTML = '<tr><td colspan="6" class="text-center text-gray-400 py-8">No reviews found</td></tr>'; return; }
+    tbody.innerHTML = reviewsData.map(function(r) {
+        var stars = '';
+        for (var i=0; i<5; i++) { stars += i<r.rating ? '<span class="text-yellow-400">&#9733;</span>' : '<span class="text-gray-300">&#9733;</span>'; }
+        return '<tr>' +
+            '<td class="font-medium text-gray-900">'+esc(r.authorName)+'</td>' +
+            '<td>'+esc(r.authorCompany||'-')+'</td>' +
+            '<td>'+stars+'</td>' +
+            '<td class="max-w-xs truncate">'+esc(r.content)+'</td>' +
+            '<td>'+(r.isApproved?'<span class="badge badge-green">Yes</span>':'<span class="badge badge-yellow">No</span>')+'</td>' +
+            '<td class="space-x-2">' +
+                '<button class="btn btn-secondary btn-sm" onclick="openReviewModal(\''+r.id+'\')">Edit</button>' +
+                (r.isApproved ?
+                    '<button class="btn btn-secondary btn-sm" onclick="toggleReviewApproval(\''+r.id+'\',false)">Unapprove</button>' :
+                    '<button class="btn btn-primary btn-sm" onclick="toggleReviewApproval(\''+r.id+'\',true)">Approve</button>') +
+                '<button class="btn btn-danger btn-sm" onclick="deleteReview(\''+r.id+'\')">Delete</button>' +
+            '</td></tr>';
+    }).join('');
+}
+
+function openReviewModal(id) {
+    var r = id ? reviewsData.find(function(x){return x.id===id;}) : null;
+    var html = '<h3 class="text-lg font-semibold text-gray-900 mb-4">'+(r?'Edit':'New')+' Review</h3>' +
+        '<form onsubmit="saveReview(event,\''+(id||'')+'\')">' +
+        '<div class="space-y-3">' +
+        '<div><label class="block text-sm font-medium text-gray-600 mb-1">Author Name</label><input class="admin-input" id="rv-name" value="'+escAttr(r?r.authorName:'')+'" required></div>' +
+        '<div><label class="block text-sm font-medium text-gray-600 mb-1">Company</label><input class="admin-input" id="rv-company" value="'+escAttr(r?r.authorCompany:'')+'"></div>' +
+        '<div><label class="block text-sm font-medium text-gray-600 mb-1">Avatar URL</label><input class="admin-input" id="rv-avatar" value="'+escAttr(r?r.authorAvatar:'')+'"></div>' +
+        '<div><label class="block text-sm font-medium text-gray-600 mb-1">Rating (1-5)</label><input type="number" class="admin-input" id="rv-rating" value="'+(r?r.rating:5)+'" min="1" max="5" required></div>' +
+        '<div><label class="block text-sm font-medium text-gray-600 mb-1">Content</label><textarea class="admin-input admin-textarea" rows="4" id="rv-content" required>'+esc(r?r.content:'')+'</textarea></div>' +
+        '<div><label class="flex items-center gap-2 text-sm text-gray-600"><input type="checkbox" id="rv-approved"'+(r?r.isApproved?' checked':'':' checked')+'>Approved</label></div>' +
+        '</div>' +
+        '<div class="flex justify-end gap-3 mt-6"><button type="button" class="btn btn-secondary" onclick="closeModal()">Cancel</button><button type="submit" class="btn btn-primary">Save</button></div>' +
+        '</form>';
+    showModal(html);
+}
+
+async function saveReview(e, id) {
+    e.preventDefault();
+    var body = {
+        authorName: document.getElementById('rv-name').value,
+        authorCompany: document.getElementById('rv-company').value,
+        authorAvatar: document.getElementById('rv-avatar').value,
+        rating: parseInt(document.getElementById('rv-rating').value) || 5,
+        content: document.getElementById('rv-content').value,
+        isApproved: document.getElementById('rv-approved').checked
+    };
+    try {
+        if (id) {
+            await apiFetch('/api/admin/blog/reviews/'+id, { method:'PUT', body:body });
+        } else {
+            await apiFetch('/api/admin/blog/reviews', { method:'POST', body:body });
+        }
+        closeModal(); showToast('Review saved!'); loadReviews();
+    } catch(e) { showToast('Failed to save review','error'); }
+}
+
+async function toggleReviewApproval(id, approve) {
+    var r = reviewsData.find(function(x){return x.id===id;});
+    if (!r) return;
+    try {
+        await apiFetch('/api/admin/blog/reviews/'+id, { method:'PUT', body: {
+            authorName: r.authorName, authorCompany: r.authorCompany, authorAvatar: r.authorAvatar,
+            rating: r.rating, content: r.content, isApproved: approve
+        }});
+        showToast(approve ? 'Review approved!' : 'Review unapproved!'); loadReviews();
+    } catch(e) { showToast('Failed to update review','error'); }
+}
+
+async function deleteReview(id) {
+    if (!confirm('Delete this review?')) return;
+    try {
+        await apiFetch('/api/admin/blog/reviews/'+id, { method:'DELETE' });
+        showToast('Review deleted!'); loadReviews();
+    } catch(e) { showToast('Failed to delete review','error'); }
+}
+
+// ======================== CONTACTS ========================
+var contactsData = [];
+
+async function loadContacts() {
+    try {
+        var res = await apiFetch('/api/admin/blog/contacts');
+        contactsData = await res.json();
+        renderContacts();
+    } catch(e) { showToast('Failed to load contacts','error'); }
+}
+
+function renderContacts() {
+    var tbody = document.getElementById('contacts-tbody');
+    if (!contactsData.length) { tbody.innerHTML = '<tr><td colspan="6" class="text-center text-gray-400 py-8">No contact messages found</td></tr>'; return; }
+    tbody.innerHTML = contactsData.map(function(c) {
+        return '<tr>' +
+            '<td class="font-medium text-gray-900">'+esc((c.firstName||'')+' '+(c.lastName||''))+'</td>' +
+            '<td>'+esc(c.email||'')+'</td>' +
+            '<td class="max-w-xs truncate">'+esc(c.subject||c.message||'-')+'</td>' +
+            '<td>'+statusBadge(c.status)+'</td>' +
+            '<td>'+formatDate(c.createdAt)+'</td>' +
+            '<td class="space-x-2">' +
+                '<button class="btn btn-secondary btn-sm" onclick="openContactModal(\''+c.id+'\')">View / Update</button>' +
+                '<button class="btn btn-danger btn-sm" onclick="deleteContact(\''+c.id+'\')">Delete</button>' +
+            '</td></tr>';
+    }).join('');
+}
+
+function openContactModal(id) {
+    var c = contactsData.find(function(x){return x.id===id;});
+    if (!c) return;
+    var html = '<h3 class="text-lg font-semibold text-gray-900 mb-4">Contact Message</h3>' +
+        '<div class="space-y-3 mb-4 text-sm">' +
+        '<div><span class="text-gray-500 font-medium">From:</span> '+esc((c.firstName||'')+' '+(c.lastName||''))+' &lt;'+esc(c.email||'')+'&gt;</div>' +
+        (c.phone ? '<div><span class="text-gray-500 font-medium">Phone:</span> '+esc(c.phone)+'</div>' : '') +
+        (c.company ? '<div><span class="text-gray-500 font-medium">Company:</span> '+esc(c.company)+'</div>' : '') +
+        (c.subject ? '<div><span class="text-gray-500 font-medium">Subject:</span> '+esc(c.subject)+'</div>' : '') +
+        '<div><span class="text-gray-500 font-medium">Message:</span></div>' +
+        '<div class="bg-gray-50 rounded-lg p-3 text-sm text-gray-700 whitespace-pre-wrap">'+esc(c.message||'')+'</div>' +
+        '<div><span class="text-gray-500 font-medium">Received:</span> '+formatDate(c.createdAt)+'</div>' +
+        '</div>' +
+        '<form onsubmit="saveContact(event,\''+id+'\')">' +
+        '<div class="space-y-3">' +
+        '<div><label class="block text-sm font-medium text-gray-600 mb-1">Status</label>' +
+        '<select class="admin-input" id="ct-status">' +
+        '<option value="new"'+(c.status==='new'?' selected':'')+'>New</option>' +
+        '<option value="in-progress"'+(c.status==='in-progress'?' selected':'')+'>In Progress</option>' +
+        '<option value="resolved"'+(c.status==='resolved'?' selected':'')+'>Resolved</option>' +
+        '<option value="closed"'+(c.status==='closed'?' selected':'')+'>Closed</option>' +
+        '</select></div>' +
+        '<div><label class="block text-sm font-medium text-gray-600 mb-1">Admin Notes</label><textarea class="admin-input admin-textarea" rows="3" id="ct-notes">'+esc(c.adminNotes||'')+'</textarea></div>' +
+        '</div>' +
+        '<div class="flex justify-end gap-3 mt-6"><button type="button" class="btn btn-secondary" onclick="closeModal()">Close</button><button type="submit" class="btn btn-primary">Update</button></div>' +
+        '</form>';
+    showModal(html, true);
+}
+
+async function saveContact(e, id) {
+    e.preventDefault();
+    var body = {
+        status: document.getElementById('ct-status').value,
+        adminNotes: document.getElementById('ct-notes').value
+    };
+    try {
+        await apiFetch('/api/admin/blog/contacts/'+id, { method:'PUT', body:body });
+        closeModal(); showToast('Contact updated!'); loadContacts();
+    } catch(e) { showToast('Failed to update contact','error'); }
+}
+
+async function deleteContact(id) {
+    if (!confirm('Delete this contact message?')) return;
+    try {
+        await apiFetch('/api/admin/blog/contacts/'+id, { method:'DELETE' });
+        showToast('Contact deleted!'); loadContacts();
+    } catch(e) { showToast('Failed to delete contact','error'); }
+}
+</script>
+</body>
+</html>

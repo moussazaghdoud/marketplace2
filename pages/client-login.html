@@ -1,0 +1,422 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Rainbow - Connexion Client</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        rainbow: {
+                            50: '#eef1fe',
+                            100: '#d9dffe',
+                            200: '#b8c3fd',
+                            300: '#8da0fb',
+                            400: '#6e83f8',
+                            500: '#4F6DF5',
+                            600: '#3a54e0',
+                            700: '#2d42b8',
+                            800: '#243591',
+                            900: '#1e2d76',
+                        }
+                    },
+                    fontFamily: {
+                        sans: ['Inter', 'sans-serif'],
+                    }
+                }
+            }
+        }
+    </script>
+    <style>
+        body { font-family: 'Inter', sans-serif; }
+        .tab-active {
+            color: #4F6DF5;
+            border-bottom: 2px solid #4F6DF5;
+        }
+        .tab-inactive {
+            color: #9CA3AF;
+            border-bottom: 2px solid transparent;
+        }
+        .tab-inactive:hover {
+            color: #6B7280;
+        }
+        .fade-in {
+            animation: fadeIn 0.3s ease-in-out;
+        }
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(8px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        .input-focus:focus {
+            border-color: #4F6DF5;
+            box-shadow: 0 0 0 3px rgba(79, 109, 245, 0.15);
+        }
+    </style>
+</head>
+<body class="bg-gray-50 min-h-screen flex items-center justify-center p-4">
+
+    <div class="w-full max-w-md">
+        <!-- Logo / Brand -->
+        <div class="text-center mb-8">
+            <div class="inline-flex items-center gap-3 mb-2">
+                <div class="w-10 h-10 bg-rainbow-500 rounded-xl flex items-center justify-center">
+                    <svg class="w-6 h-6 text-white" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" d="M3.055 11H5a2 2 0 012 2v1a2 2 0 002 2 2 2 0 012 2v2.945M8 3.935V5.5A2.5 2.5 0 0010.5 8h.5a2 2 0 012 2 2 2 0 104 0 2 2 0 012-2h1.064M15 20.488V18a2 2 0 012-2h3.064M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/>
+                    </svg>
+                </div>
+                <span class="text-2xl font-bold text-gray-900">Rainbow</span>
+            </div>
+            <p class="text-gray-500 text-sm">Plateforme de communication unifiee</p>
+        </div>
+
+        <!-- Card -->
+        <div class="bg-white rounded-2xl shadow-lg shadow-gray-200/60 border border-gray-100 overflow-hidden">
+            <!-- Tabs -->
+            <div class="flex border-b border-gray-100">
+                <button id="tab-login" onclick="switchTab('login')" class="flex-1 py-4 text-sm font-semibold text-center transition-colors tab-active">
+                    Connexion
+                </button>
+                <button id="tab-register" onclick="switchTab('register')" class="flex-1 py-4 text-sm font-semibold text-center transition-colors tab-inactive">
+                    Inscription
+                </button>
+            </div>
+
+            <div class="p-6 sm:p-8">
+                <!-- Error / Success Messages -->
+                <div id="message-box" class="hidden mb-4 p-3 rounded-lg text-sm font-medium"></div>
+
+                <!-- Login Form -->
+                <form id="form-login" class="space-y-5 fade-in" onsubmit="handleLogin(event)">
+                    <div>
+                        <label for="login-email" class="block text-sm font-medium text-gray-700 mb-1.5">Adresse e-mail</label>
+                        <input type="email" id="login-email" required placeholder="vous@entreprise.com"
+                            class="input-focus w-full px-4 py-2.5 border border-gray-300 rounded-lg text-sm text-gray-900 placeholder-gray-400 outline-none transition-all">
+                    </div>
+                    <div>
+                        <label for="login-password" class="block text-sm font-medium text-gray-700 mb-1.5">Mot de passe</label>
+                        <div class="relative">
+                            <input type="password" id="login-password" required placeholder="Votre mot de passe"
+                                class="input-focus w-full px-4 py-2.5 border border-gray-300 rounded-lg text-sm text-gray-900 placeholder-gray-400 outline-none transition-all pr-10">
+                            <button type="button" onclick="togglePassword('login-password', this)" class="absolute right-3 top-1/2 -translate-y-1/2 text-gray-400 hover:text-gray-600">
+                                <svg class="w-5 h-5 eye-off" fill="none" stroke="currentColor" stroke-width="1.5" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M3.98 8.223A10.477 10.477 0 001.934 12C3.226 16.338 7.244 19.5 12 19.5c.993 0 1.953-.138 2.863-.395M6.228 6.228A10.45 10.45 0 0112 4.5c4.756 0 8.773 3.162 10.065 7.498a10.523 10.523 0 01-4.293 5.774M6.228 6.228L3 3m3.228 3.228l3.65 3.65m7.894 7.894L21 21m-3.228-3.228l-3.65-3.65m0 0a3 3 0 10-4.243-4.243m4.242 4.242L9.88 9.88"/></svg>
+                                <svg class="w-5 h-5 eye-on hidden" fill="none" stroke="currentColor" stroke-width="1.5" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M2.036 12.322a1.012 1.012 0 010-.639C3.423 7.51 7.36 4.5 12 4.5c4.638 0 8.573 3.007 9.963 7.178.07.207.07.431 0 .639C20.577 16.49 16.64 19.5 12 19.5c-4.638 0-8.573-3.007-9.963-7.178z"/><path stroke-linecap="round" stroke-linejoin="round" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"/></svg>
+                            </button>
+                        </div>
+                    </div>
+                    <div class="flex items-center justify-between">
+                        <label class="flex items-center gap-2 cursor-pointer">
+                            <input type="checkbox" id="remember-me" class="w-4 h-4 rounded border-gray-300 text-rainbow-500 focus:ring-rainbow-500">
+                            <span class="text-sm text-gray-600">Se souvenir de moi</span>
+                        </label>
+                        <button type="button" onclick="showForgotPassword()" class="text-sm text-rainbow-500 hover:text-rainbow-600 font-medium">
+                            Mot de passe oublie ?
+                        </button>
+                    </div>
+                    <button type="submit" id="btn-login"
+                        class="w-full py-2.5 px-4 bg-rainbow-500 hover:bg-rainbow-600 text-white font-semibold rounded-lg text-sm transition-colors disabled:opacity-60 disabled:cursor-not-allowed">
+                        Se connecter
+                    </button>
+                </form>
+
+                <!-- Register Form -->
+                <form id="form-register" class="space-y-5 fade-in hidden" onsubmit="handleRegister(event)">
+                    <div class="grid grid-cols-2 gap-4">
+                        <div>
+                            <label for="reg-firstName" class="block text-sm font-medium text-gray-700 mb-1.5">Prenom</label>
+                            <input type="text" id="reg-firstName" required placeholder="Jean"
+                                class="input-focus w-full px-4 py-2.5 border border-gray-300 rounded-lg text-sm text-gray-900 placeholder-gray-400 outline-none transition-all">
+                        </div>
+                        <div>
+                            <label for="reg-lastName" class="block text-sm font-medium text-gray-700 mb-1.5">Nom</label>
+                            <input type="text" id="reg-lastName" required placeholder="Dupont"
+                                class="input-focus w-full px-4 py-2.5 border border-gray-300 rounded-lg text-sm text-gray-900 placeholder-gray-400 outline-none transition-all">
+                        </div>
+                    </div>
+                    <div>
+                        <label for="reg-email" class="block text-sm font-medium text-gray-700 mb-1.5">Adresse e-mail</label>
+                        <input type="email" id="reg-email" required placeholder="vous@entreprise.com"
+                            class="input-focus w-full px-4 py-2.5 border border-gray-300 rounded-lg text-sm text-gray-900 placeholder-gray-400 outline-none transition-all">
+                    </div>
+                    <div>
+                        <label for="reg-password" class="block text-sm font-medium text-gray-700 mb-1.5">Mot de passe</label>
+                        <div class="relative">
+                            <input type="password" id="reg-password" required placeholder="Min. 8 caracteres"
+                                class="input-focus w-full px-4 py-2.5 border border-gray-300 rounded-lg text-sm text-gray-900 placeholder-gray-400 outline-none transition-all pr-10">
+                            <button type="button" onclick="togglePassword('reg-password', this)" class="absolute right-3 top-1/2 -translate-y-1/2 text-gray-400 hover:text-gray-600">
+                                <svg class="w-5 h-5 eye-off" fill="none" stroke="currentColor" stroke-width="1.5" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M3.98 8.223A10.477 10.477 0 001.934 12C3.226 16.338 7.244 19.5 12 19.5c.993 0 1.953-.138 2.863-.395M6.228 6.228A10.45 10.45 0 0112 4.5c4.756 0 8.773 3.162 10.065 7.498a10.523 10.523 0 01-4.293 5.774M6.228 6.228L3 3m3.228 3.228l3.65 3.65m7.894 7.894L21 21m-3.228-3.228l-3.65-3.65m0 0a3 3 0 10-4.243-4.243m4.242 4.242L9.88 9.88"/></svg>
+                                <svg class="w-5 h-5 eye-on hidden" fill="none" stroke="currentColor" stroke-width="1.5" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M2.036 12.322a1.012 1.012 0 010-.639C3.423 7.51 7.36 4.5 12 4.5c4.638 0 8.573 3.007 9.963 7.178.07.207.07.431 0 .639C20.577 16.49 16.64 19.5 12 19.5c-4.638 0-8.573-3.007-9.963-7.178z"/><path stroke-linecap="round" stroke-linejoin="round" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"/></svg>
+                            </button>
+                        </div>
+                    </div>
+                    <div>
+                        <label for="reg-confirmPassword" class="block text-sm font-medium text-gray-700 mb-1.5">Confirmer le mot de passe</label>
+                        <input type="password" id="reg-confirmPassword" required placeholder="Retapez votre mot de passe"
+                            class="input-focus w-full px-4 py-2.5 border border-gray-300 rounded-lg text-sm text-gray-900 placeholder-gray-400 outline-none transition-all">
+                    </div>
+                    <button type="submit" id="btn-register"
+                        class="w-full py-2.5 px-4 bg-rainbow-500 hover:bg-rainbow-600 text-white font-semibold rounded-lg text-sm transition-colors disabled:opacity-60 disabled:cursor-not-allowed">
+                        Creer mon compte
+                    </button>
+                    <p class="text-xs text-gray-500 text-center">
+                        En vous inscrivant, vous acceptez nos
+                        <a href="#" class="text-rainbow-500 hover:underline">Conditions d'utilisation</a> et notre
+                        <a href="#" class="text-rainbow-500 hover:underline">Politique de confidentialite</a>.
+                    </p>
+                </form>
+
+                <!-- Forgot Password Form -->
+                <form id="form-forgot" class="space-y-5 fade-in hidden" onsubmit="handleForgotPassword(event)">
+                    <div class="text-center mb-2">
+                        <div class="w-12 h-12 bg-rainbow-50 rounded-full flex items-center justify-center mx-auto mb-3">
+                            <svg class="w-6 h-6 text-rainbow-500" fill="none" stroke="currentColor" stroke-width="1.5" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M21.75 6.75v10.5a2.25 2.25 0 01-2.25 2.25h-15a2.25 2.25 0 01-2.25-2.25V6.75m19.5 0A2.25 2.25 0 0019.5 4.5h-15a2.25 2.25 0 00-2.25 2.25m19.5 0v.243a2.25 2.25 0 01-1.07 1.916l-7.5 4.615a2.25 2.25 0 01-2.36 0L3.32 8.91a2.25 2.25 0 01-1.07-1.916V6.75"/></svg>
+                        </div>
+                        <h3 class="text-lg font-semibold text-gray-900">Mot de passe oublie ?</h3>
+                        <p class="text-sm text-gray-500 mt-1">Entrez votre adresse e-mail et nous vous enverrons un lien de reinitialisation.</p>
+                    </div>
+                    <div>
+                        <label for="forgot-email" class="block text-sm font-medium text-gray-700 mb-1.5">Adresse e-mail</label>
+                        <input type="email" id="forgot-email" required placeholder="vous@entreprise.com"
+                            class="input-focus w-full px-4 py-2.5 border border-gray-300 rounded-lg text-sm text-gray-900 placeholder-gray-400 outline-none transition-all">
+                    </div>
+                    <button type="submit" id="btn-forgot"
+                        class="w-full py-2.5 px-4 bg-rainbow-500 hover:bg-rainbow-600 text-white font-semibold rounded-lg text-sm transition-colors disabled:opacity-60 disabled:cursor-not-allowed">
+                        Envoyer le lien
+                    </button>
+                    <button type="button" onclick="hideForgotPassword()" class="w-full py-2.5 px-4 text-gray-600 hover:text-gray-800 font-medium text-sm transition-colors">
+                        Retour a la connexion
+                    </button>
+                </form>
+            </div>
+        </div>
+
+        <!-- Footer -->
+        <p class="text-center text-xs text-gray-400 mt-6">
+            &copy; 2026 Rainbow by Alcatel-Lucent Enterprise. Tous droits reserves.
+        </p>
+    </div>
+
+    <script>
+        // =============================================
+        // Configuration
+        // =============================================
+        const API_BASE = window.location.origin;
+
+        // =============================================
+        // Tab switching
+        // =============================================
+        function switchTab(tab) {
+            const loginTab = document.getElementById('tab-login');
+            const registerTab = document.getElementById('tab-register');
+            const loginForm = document.getElementById('form-login');
+            const registerForm = document.getElementById('form-register');
+            const forgotForm = document.getElementById('form-forgot');
+
+            hideMessage();
+            forgotForm.classList.add('hidden');
+
+            if (tab === 'login') {
+                loginTab.className = loginTab.className.replace('tab-inactive', 'tab-active');
+                registerTab.className = registerTab.className.replace('tab-active', 'tab-inactive');
+                loginForm.classList.remove('hidden');
+                registerForm.classList.add('hidden');
+            } else {
+                registerTab.className = registerTab.className.replace('tab-inactive', 'tab-active');
+                loginTab.className = loginTab.className.replace('tab-active', 'tab-inactive');
+                registerForm.classList.remove('hidden');
+                loginForm.classList.add('hidden');
+            }
+        }
+
+        // =============================================
+        // Password visibility toggle
+        // =============================================
+        function togglePassword(inputId, btn) {
+            const input = document.getElementById(inputId);
+            const eyeOff = btn.querySelector('.eye-off');
+            const eyeOn = btn.querySelector('.eye-on');
+            if (input.type === 'password') {
+                input.type = 'text';
+                eyeOff.classList.add('hidden');
+                eyeOn.classList.remove('hidden');
+            } else {
+                input.type = 'password';
+                eyeOff.classList.remove('hidden');
+                eyeOn.classList.add('hidden');
+            }
+        }
+
+        // =============================================
+        // Message display
+        // =============================================
+        function showMessage(text, type) {
+            const box = document.getElementById('message-box');
+            box.classList.remove('hidden', 'bg-red-50', 'text-red-700', 'bg-green-50', 'text-green-700', 'bg-blue-50', 'text-blue-700');
+            if (type === 'error') {
+                box.classList.add('bg-red-50', 'text-red-700');
+            } else if (type === 'success') {
+                box.classList.add('bg-green-50', 'text-green-700');
+            } else {
+                box.classList.add('bg-blue-50', 'text-blue-700');
+            }
+            box.textContent = text;
+        }
+
+        function hideMessage() {
+            document.getElementById('message-box').classList.add('hidden');
+        }
+
+        // =============================================
+        // Forgot password
+        // =============================================
+        function showForgotPassword() {
+            hideMessage();
+            document.getElementById('form-login').classList.add('hidden');
+            document.getElementById('form-register').classList.add('hidden');
+            document.getElementById('form-forgot').classList.remove('hidden');
+        }
+
+        function hideForgotPassword() {
+            hideMessage();
+            document.getElementById('form-forgot').classList.add('hidden');
+            document.getElementById('form-login').classList.remove('hidden');
+        }
+
+        // =============================================
+        // API helper
+        // =============================================
+        async function apiRequest(url, method, body) {
+            const opts = {
+                method,
+                headers: { 'Content-Type': 'application/json' },
+            };
+            if (body) opts.body = JSON.stringify(body);
+
+            const res = await fetch(API_BASE + url, opts);
+            const data = await res.json().catch(() => ({}));
+            if (!res.ok) {
+                throw new Error(data.error || data.message || 'Une erreur est survenue');
+            }
+            return data;
+        }
+
+        // =============================================
+        // Login handler
+        // =============================================
+        async function handleLogin(e) {
+            e.preventDefault();
+            hideMessage();
+            const btn = document.getElementById('btn-login');
+            btn.disabled = true;
+            btn.textContent = 'Connexion en cours...';
+
+            try {
+                const email = document.getElementById('login-email').value.trim();
+                const password = document.getElementById('login-password').value;
+
+                const data = await apiRequest('/api/client/login', 'POST', { email, password });
+
+                localStorage.setItem('token', data.token);
+                if (data.client) {
+                    localStorage.setItem('client', JSON.stringify(data.client));
+                }
+
+                showMessage('Connexion reussie ! Redirection...', 'success');
+                setTimeout(() => {
+                    window.location.href = '/portal';
+                }, 500);
+            } catch (err) {
+                showMessage(err.message, 'error');
+                btn.disabled = false;
+                btn.textContent = 'Se connecter';
+            }
+        }
+
+        // =============================================
+        // Register handler
+        // =============================================
+        async function handleRegister(e) {
+            e.preventDefault();
+            hideMessage();
+
+            const firstName = document.getElementById('reg-firstName').value.trim();
+            const lastName = document.getElementById('reg-lastName').value.trim();
+            const email = document.getElementById('reg-email').value.trim();
+            const password = document.getElementById('reg-password').value;
+            const confirmPassword = document.getElementById('reg-confirmPassword').value;
+
+            if (password.length < 8) {
+                showMessage('Le mot de passe doit contenir au moins 8 caracteres.', 'error');
+                return;
+            }
+
+            if (password !== confirmPassword) {
+                showMessage('Les mots de passe ne correspondent pas.', 'error');
+                return;
+            }
+
+            const btn = document.getElementById('btn-register');
+            btn.disabled = true;
+            btn.textContent = 'Inscription en cours...';
+
+            try {
+                const data = await apiRequest('/api/client/register', 'POST', {
+                    firstName, lastName, email, password, confirmPassword
+                });
+
+                localStorage.setItem('token', data.token);
+                if (data.client) {
+                    localStorage.setItem('client', JSON.stringify(data.client));
+                }
+
+                showMessage('Compte cree avec succes ! Redirection...', 'success');
+                setTimeout(() => {
+                    window.location.href = '/portal';
+                }, 500);
+            } catch (err) {
+                showMessage(err.message, 'error');
+                btn.disabled = false;
+                btn.textContent = 'Creer mon compte';
+            }
+        }
+
+        // =============================================
+        // Forgot password handler
+        // =============================================
+        async function handleForgotPassword(e) {
+            e.preventDefault();
+            hideMessage();
+            const btn = document.getElementById('btn-forgot');
+            btn.disabled = true;
+            btn.textContent = 'Envoi en cours...';
+
+            try {
+                const email = document.getElementById('forgot-email').value.trim();
+                await apiRequest('/api/client/forgot-password', 'POST', { email });
+                showMessage('Si un compte existe avec cette adresse, un e-mail de reinitialisation a ete envoye.', 'success');
+            } catch (err) {
+                // For security, always show the same message
+                showMessage('Si un compte existe avec cette adresse, un e-mail de reinitialisation a ete envoye.', 'success');
+            } finally {
+                btn.disabled = false;
+                btn.textContent = 'Envoyer le lien';
+            }
+        }
+
+        // =============================================
+        // On load: if already logged in, redirect
+        // =============================================
+        (function() {
+            const token = localStorage.getItem('token');
+            if (token) {
+                window.location.href = '/portal';
+            }
+        })();
+    </script>
+</body>
+</html>

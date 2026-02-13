@@ -1,0 +1,234 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Tutoriels & Guides - Rainbow by ALE</title>
+    <meta name="description" content="Apprenez a maitriser Rainbow avec nos tutoriels et guides detailles. Configuration, gestion des utilisateurs, integrations et plus encore.">
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        brand: { 50: '#eef4ff', 100: '#dce8ff', 500: '#4F6DF5', 600: '#3B5DE7', 700: '#2D4ED9' }
+                    },
+                    fontFamily: { sans: ['Inter', 'system-ui', 'sans-serif'] }
+                }
+            }
+        }
+    </script>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+</head>
+<body class="font-sans text-gray-700 antialiased bg-white">
+
+    <!-- NAV -->
+    <nav id="navbar" class="fixed top-0 w-full z-50 bg-white/80 backdrop-blur-md border-b border-gray-100">
+        <div class="max-w-6xl mx-auto px-6 flex items-center justify-between h-16">
+            <a href="/" class="flex items-center gap-2">
+                <div class="w-8 h-8 bg-brand-500 rounded-lg flex items-center justify-center">
+                    <svg class="w-5 h-5 text-white" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M13 10V3L4 14h7v7l9-11h-7z"/></svg>
+                </div>
+                <span class="text-lg font-bold text-gray-900">Rainbow</span>
+            </a>
+            <div class="hidden md:flex items-center gap-6">
+                <a href="/" class="text-sm text-gray-500 hover:text-gray-900 transition-colors">Accueil</a>
+                <a href="/product/rainbow" class="text-sm text-gray-500 hover:text-gray-900 transition-colors">Produit</a>
+                <a href="/blog" class="text-sm text-gray-500 hover:text-gray-900 transition-colors">Blog</a>
+                <a href="/reviews" class="text-sm text-gray-500 hover:text-gray-900 transition-colors">Avis</a>
+                <a href="/support" class="text-sm text-gray-500 hover:text-gray-900 transition-colors">Support</a>
+                <a href="/tutorials" class="text-sm font-medium text-brand-500 transition-colors">Tutoriels</a>
+                <a href="/login" class="text-sm text-gray-500 hover:text-gray-900 transition-colors">Se connecter</a>
+                <a href="/" class="px-5 py-2 rounded-lg bg-brand-500 text-white text-sm font-medium hover:bg-brand-600 transition-colors">Demarrer</a>
+            </div>
+            <button id="mobile-menu-btn" class="md:hidden p-2" aria-label="Menu">
+                <svg class="w-6 h-6 text-gray-600" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M4 6h16M4 12h16M4 18h16"/></svg>
+            </button>
+        </div>
+        <div id="mobile-menu" class="md:hidden hidden border-t border-gray-100 bg-white px-6 py-4 space-y-3">
+            <a href="/" class="block text-sm text-gray-600 py-2">Accueil</a>
+            <a href="/product/rainbow" class="block text-sm text-gray-600 py-2">Produit</a>
+            <a href="/blog" class="block text-sm text-gray-600 py-2">Blog</a>
+            <a href="/reviews" class="block text-sm text-gray-600 py-2">Avis</a>
+            <a href="/support" class="block text-sm text-gray-600 py-2">Support</a>
+            <a href="/tutorials" class="block text-sm font-medium text-brand-500 py-2">Tutoriels</a>
+            <a href="/login" class="block text-sm text-gray-600 py-2">Se connecter</a>
+            <a href="/" class="block w-full text-center text-sm font-medium text-white bg-brand-500 rounded-lg py-2.5">Demarrer</a>
+        </div>
+    </nav>
+
+    <!-- HERO -->
+    <header class="pt-28 pb-16 px-6 bg-gradient-to-br from-brand-100 via-white to-white">
+        <div class="max-w-5xl mx-auto text-center">
+            <div class="w-16 h-16 bg-brand-500 rounded-2xl flex items-center justify-center mx-auto mb-6">
+                <svg class="w-8 h-8 text-white" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M4.26 10.147a60.438 60.438 0 00-.491 6.347A48.62 48.62 0 0112 20.904a48.62 48.62 0 018.232-4.41 60.46 60.46 0 00-.491-6.347m-15.482 0a50.636 50.636 0 00-2.658-.813A59.906 59.906 0 0112 3.493a59.903 59.903 0 0110.399 5.84c-.896.248-1.783.52-2.658.814m-15.482 0A50.717 50.717 0 0112 13.489a50.702 50.702 0 017.74-3.342M6.75 15a.75.75 0 100-1.5.75.75 0 000 1.5zm0 0v-3.675A55.378 55.378 0 0112 8.443m-7.007 11.55A5.981 5.981 0 006.75 15.75v-1.5"/></svg>
+            </div>
+            <h1 class="text-4xl sm:text-5xl font-bold text-gray-900 leading-tight">Tutoriels & Guides</h1>
+            <p class="mt-4 text-lg text-gray-500 max-w-2xl mx-auto">Apprenez a maitriser Rainbow etape par etape avec nos guides complets et nos tutoriels detailles.</p>
+        </div>
+    </header>
+
+    <!-- TUTORIALS GRID -->
+    <section class="px-6 pb-20">
+        <div class="max-w-5xl mx-auto">
+            <div class="grid sm:grid-cols-2 lg:grid-cols-3 gap-8">
+
+                <!-- Tutorial 1: Getting Started -->
+                <a href="#" class="group bg-white rounded-xl border border-gray-100 p-6 hover:shadow-lg hover:border-gray-200 transition-all duration-300">
+                    <div class="w-12 h-12 bg-brand-50 rounded-xl flex items-center justify-center mb-5 group-hover:bg-brand-100 transition-colors">
+                        <svg class="w-6 h-6 text-brand-500" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M15.59 14.37a6 6 0 01-5.84 7.38v-4.8m5.84-2.58a14.98 14.98 0 006.16-12.12A14.98 14.98 0 009.631 8.41m5.96 5.96a14.926 14.926 0 01-5.841 2.58m-.119-8.54a6 6 0 00-7.381 5.84h4.8m2.581-5.84a14.927 14.927 0 00-2.58 5.84m2.699 2.7c-.103.021-.207.041-.311.06a15.09 15.09 0 01-2.448-2.448 14.9 14.9 0 01.06-.312m-2.24 2.39a4.493 4.493 0 00-1.757 4.306 4.493 4.493 0 004.306-1.758M16.5 9a1.5 1.5 0 11-3 0 1.5 1.5 0 013 0z"/></svg>
+                    </div>
+                    <div class="flex items-center gap-2 mb-2">
+                        <span class="px-2 py-0.5 rounded-full text-xs font-medium bg-green-50 text-green-600">Debutant</span>
+                        <span class="text-xs text-gray-400">10 min</span>
+                    </div>
+                    <h3 class="text-lg font-semibold text-gray-900 group-hover:text-brand-500 transition-colors mb-2">Premiers pas avec Rainbow</h3>
+                    <p class="text-sm text-gray-500 leading-relaxed mb-4">Decouvrez comment creer votre compte, personnaliser votre profil et envoyer votre premier message avec Rainbow. Un guide complet pour bien demarrer.</p>
+                    <span class="text-sm font-medium text-brand-500 group-hover:translate-x-1 transition-transform inline-flex items-center gap-1">En savoir plus <span>&rarr;</span></span>
+                </a>
+
+                <!-- Tutorial 2: Workspace Setup -->
+                <a href="#" class="group bg-white rounded-xl border border-gray-100 p-6 hover:shadow-lg hover:border-gray-200 transition-all duration-300">
+                    <div class="w-12 h-12 bg-purple-50 rounded-xl flex items-center justify-center mb-5 group-hover:bg-purple-100 transition-colors">
+                        <svg class="w-6 h-6 text-purple-500" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M10.5 6h9.75M10.5 6a1.5 1.5 0 11-3 0m3 0a1.5 1.5 0 10-3 0M3.75 6H7.5m3 12h9.75m-9.75 0a1.5 1.5 0 01-3 0m3 0a1.5 1.5 0 00-3 0m-3.75 0H7.5m9-6h3.75m-3.75 0a1.5 1.5 0 01-3 0m3 0a1.5 1.5 0 00-3 0m-9.75 0h9.75"/></svg>
+                    </div>
+                    <div class="flex items-center gap-2 mb-2">
+                        <span class="px-2 py-0.5 rounded-full text-xs font-medium bg-green-50 text-green-600">Debutant</span>
+                        <span class="text-xs text-gray-400">15 min</span>
+                    </div>
+                    <h3 class="text-lg font-semibold text-gray-900 group-hover:text-brand-500 transition-colors mb-2">Configurer votre espace de travail</h3>
+                    <p class="text-sm text-gray-500 leading-relaxed mb-4">Apprenez a configurer votre espace de travail Rainbow : canaux de communication, groupes, notifications et preferences de l'equipe.</p>
+                    <span class="text-sm font-medium text-brand-500 group-hover:translate-x-1 transition-transform inline-flex items-center gap-1">En savoir plus <span>&rarr;</span></span>
+                </a>
+
+                <!-- Tutorial 3: User Management -->
+                <a href="#" class="group bg-white rounded-xl border border-gray-100 p-6 hover:shadow-lg hover:border-gray-200 transition-all duration-300">
+                    <div class="w-12 h-12 bg-teal-50 rounded-xl flex items-center justify-center mb-5 group-hover:bg-teal-100 transition-colors">
+                        <svg class="w-6 h-6 text-teal-500" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M15 19.128a9.38 9.38 0 002.625.372 9.337 9.337 0 004.121-.952 4.125 4.125 0 00-7.533-2.493M15 19.128v-.003c0-1.113-.285-2.16-.786-3.07M15 19.128v.106A12.318 12.318 0 018.624 21c-2.331 0-4.512-.645-6.374-1.766l-.001-.109a6.375 6.375 0 0111.964-3.07M12 6.375a3.375 3.375 0 11-6.75 0 3.375 3.375 0 016.75 0zm8.25 2.25a2.625 2.625 0 11-5.25 0 2.625 2.625 0 015.25 0z"/></svg>
+                    </div>
+                    <div class="flex items-center gap-2 mb-2">
+                        <span class="px-2 py-0.5 rounded-full text-xs font-medium bg-yellow-50 text-yellow-600">Intermediaire</span>
+                        <span class="text-xs text-gray-400">20 min</span>
+                    </div>
+                    <h3 class="text-lg font-semibold text-gray-900 group-hover:text-brand-500 transition-colors mb-2">Gerer vos utilisateurs</h3>
+                    <p class="text-sm text-gray-500 leading-relaxed mb-4">Guide complet pour gerer les utilisateurs : invitations, roles et permissions, groupes d'equipe et parametres d'administration.</p>
+                    <span class="text-sm font-medium text-brand-500 group-hover:translate-x-1 transition-transform inline-flex items-center gap-1">En savoir plus <span>&rarr;</span></span>
+                </a>
+
+                <!-- Tutorial 4: CRM Integrations -->
+                <a href="#" class="group bg-white rounded-xl border border-gray-100 p-6 hover:shadow-lg hover:border-gray-200 transition-all duration-300">
+                    <div class="w-12 h-12 bg-orange-50 rounded-xl flex items-center justify-center mb-5 group-hover:bg-orange-100 transition-colors">
+                        <svg class="w-6 h-6 text-orange-500" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M13.19 8.688a4.5 4.5 0 011.242 7.244l-4.5 4.5a4.5 4.5 0 01-6.364-6.364l1.757-1.757m9.193-9.193a4.5 4.5 0 016.364 6.364l-4.5 4.5a4.5 4.5 0 01-7.244-1.242M15 12H9"/></svg>
+                    </div>
+                    <div class="flex items-center gap-2 mb-2">
+                        <span class="px-2 py-0.5 rounded-full text-xs font-medium bg-yellow-50 text-yellow-600">Intermediaire</span>
+                        <span class="text-xs text-gray-400">25 min</span>
+                    </div>
+                    <h3 class="text-lg font-semibold text-gray-900 group-hover:text-brand-500 transition-colors mb-2">Integrations CRM</h3>
+                    <p class="text-sm text-gray-500 leading-relaxed mb-4">Connectez Rainbow a vos outils CRM favoris : Salesforce, HubSpot, Microsoft Dynamics. Synchronisez vos contacts et historiques d'appels.</p>
+                    <span class="text-sm font-medium text-brand-500 group-hover:translate-x-1 transition-transform inline-flex items-center gap-1">En savoir plus <span>&rarr;</span></span>
+                </a>
+
+                <!-- Tutorial 5: Advanced Video Conferencing -->
+                <a href="#" class="group bg-white rounded-xl border border-gray-100 p-6 hover:shadow-lg hover:border-gray-200 transition-all duration-300">
+                    <div class="w-12 h-12 bg-pink-50 rounded-xl flex items-center justify-center mb-5 group-hover:bg-pink-100 transition-colors">
+                        <svg class="w-6 h-6 text-pink-500" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" d="M15.75 10.5l4.72-4.72a.75.75 0 011.28.53v11.38a.75.75 0 01-1.28.53l-4.72-4.72M4.5 18.75h9a2.25 2.25 0 002.25-2.25v-9a2.25 2.25 0 00-2.25-2.25h-9A2.25 2.25 0 002.25 7.5v9a2.25 2.25 0 002.25 2.25z"/></svg>
+                    </div>
+                    <div class="flex items-center gap-2 mb-2">
+                        <span class="px-2 py-0.5 rounded-full text-xs font-medium bg-red-50 text-red-600">Avance</span>
+                        <span class="text-xs text-gray-400">30 min</span>
+                    </div>
+                    <h3 class="text-lg font-semibold text-gray-900 group-hover:text-brand-500 transition-colors mb-2">Visioconference avancee</h3>
+                    <p class="text-sm text-gray-500 leading-relaxed mb-4">Maitrisez les fonctionnalites avancees de visioconference : partage d'ecran, enregistrement, salles de reunion virtuelles et webinaires.</p>
+                    <span class="text-sm font-medium text-brand-500 group-hover:translate-x-1 transition-transform inline-flex items-center gap-1">En savoir plus <span>&rarr;</span></span>
+                </a>
+
+                <!-- Tutorial 6: API & SDK -->
+                <a href="#" class="group bg-white rounded-xl border border-gray-100 p-6 hover:shadow-lg hover:border-gray-200 transition-all duration-300">
+                    <div class="w-12 h-12 bg-indigo-50 rounded-xl flex items-center justify-center mb-5 group-hover:bg-indigo-100 transition-colors">
+                        <svg class="w-6 h-6 text-indigo-500" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M17.25 6.75L22.5 12l-5.25 5.25m-10.5 0L1.5 12l5.25-5.25m7.5-3l-4.5 16.5"/></svg>
+                    </div>
+                    <div class="flex items-center gap-2 mb-2">
+                        <span class="px-2 py-0.5 rounded-full text-xs font-medium bg-red-50 text-red-600">Avance</span>
+                        <span class="text-xs text-gray-400">45 min</span>
+                    </div>
+                    <h3 class="text-lg font-semibold text-gray-900 group-hover:text-brand-500 transition-colors mb-2">API & SDK Developpeur</h3>
+                    <p class="text-sm text-gray-500 leading-relaxed mb-4">Explorez l'API Rainbow et les SDK disponibles pour integrer la communication dans vos applications : authentification, webhooks, bots et plus.</p>
+                    <span class="text-sm font-medium text-brand-500 group-hover:translate-x-1 transition-transform inline-flex items-center gap-1">En savoir plus <span>&rarr;</span></span>
+                </a>
+
+            </div>
+        </div>
+    </section>
+
+    <!-- RESOURCES BANNER -->
+    <section class="px-6 pb-20">
+        <div class="max-w-5xl mx-auto">
+            <div class="bg-gradient-to-r from-brand-600 via-brand-500 to-indigo-500 rounded-2xl p-10 sm:p-12 text-center">
+                <h2 class="text-2xl font-bold text-white mb-3">Besoin d'aide supplementaire ?</h2>
+                <p class="text-blue-100 text-sm max-w-xl mx-auto mb-6">Notre equipe de support est disponible pour repondre a toutes vos questions et vous accompagner dans la prise en main de Rainbow.</p>
+                <div class="flex flex-col sm:flex-row gap-3 justify-center">
+                    <a href="/support" class="px-7 py-3 rounded-lg bg-white text-brand-600 font-medium text-sm hover:bg-blue-50 transition-colors">Contacter le support</a>
+                    <a href="/blog" class="px-7 py-3 rounded-lg bg-white/15 text-white font-medium text-sm hover:bg-white/25 transition-colors">Lire le blog</a>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- FOOTER -->
+    <footer class="bg-gray-900 text-gray-400 pt-16 pb-8 px-6">
+        <div class="max-w-6xl mx-auto">
+            <div class="grid sm:grid-cols-2 lg:grid-cols-4 gap-10 mb-12">
+                <div>
+                    <h4 class="text-white font-semibold text-sm mb-4">Produit</h4>
+                    <ul class="space-y-2 text-sm">
+                        <li><a href="/product/rainbow" class="hover:text-white transition-colors">Rainbow</a></li>
+                        <li><a href="/#features" class="hover:text-white transition-colors">Fonctionnalites</a></li>
+                        <li><a href="/#pricing" class="hover:text-white transition-colors">Tarifs</a></li>
+                        <li><a href="/#demo" class="hover:text-white transition-colors">Demo</a></li>
+                    </ul>
+                </div>
+                <div>
+                    <h4 class="text-white font-semibold text-sm mb-4">Ressources</h4>
+                    <ul class="space-y-2 text-sm">
+                        <li><a href="/blog" class="hover:text-white transition-colors">Blog</a></li>
+                        <li><a href="/tutorials" class="hover:text-white transition-colors">Tutoriels</a></li>
+                        <li><a href="#" class="hover:text-white transition-colors">Documentation API</a></li>
+                        <li><a href="#" class="hover:text-white transition-colors">Changelog</a></li>
+                    </ul>
+                </div>
+                <div>
+                    <h4 class="text-white font-semibold text-sm mb-4">Support</h4>
+                    <ul class="space-y-2 text-sm">
+                        <li><a href="/support" class="hover:text-white transition-colors">Centre d'aide</a></li>
+                        <li><a href="/support" class="hover:text-white transition-colors">Contactez-nous</a></li>
+                        <li><a href="#" class="hover:text-white transition-colors">Statut du service</a></li>
+                        <li><a href="/reviews" class="hover:text-white transition-colors">Avis clients</a></li>
+                    </ul>
+                </div>
+                <div>
+                    <h4 class="text-white font-semibold text-sm mb-4">Entreprise</h4>
+                    <ul class="space-y-2 text-sm">
+                        <li><a href="#" class="hover:text-white transition-colors">A propos</a></li>
+                        <li><a href="#" class="hover:text-white transition-colors">Carrieres</a></li>
+                        <li><a href="#" class="hover:text-white transition-colors">Mentions legales</a></li>
+                        <li><a href="#" class="hover:text-white transition-colors">Politique de confidentialite</a></li>
+                    </ul>
+                </div>
+            </div>
+            <div class="border-t border-gray-800 pt-6 text-center text-xs text-gray-500">
+                &copy; 2024 Rainbow by ALE. Tous droits reserves.
+            </div>
+        </div>
+    </footer>
+
+    <script>
+        // Mobile menu toggle
+        document.getElementById('mobile-menu-btn').addEventListener('click', function() {
+            document.getElementById('mobile-menu').classList.toggle('hidden');
+        });
+    </script>
+</body>
+</html>

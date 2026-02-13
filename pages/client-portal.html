@@ -1,0 +1,1232 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Mon Espace Rainbow</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+    <script src="https://js.stripe.com/v3/"></script>
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        rainbow: {
+                            50: '#eef1fe',
+                            100: '#d9dffe',
+                            200: '#b8c3fd',
+                            300: '#8da0fb',
+                            400: '#6e83f8',
+                            500: '#4F6DF5',
+                            600: '#3a54e0',
+                            700: '#2d42b8',
+                            800: '#243591',
+                            900: '#1e2d76',
+                        }
+                    },
+                    fontFamily: {
+                        sans: ['Inter', 'sans-serif'],
+                    }
+                }
+            }
+        }
+    </script>
+    <style>
+        body { font-family: 'Inter', sans-serif; }
+        .sidebar-link {
+            transition: all 0.15s ease;
+        }
+        .sidebar-link:hover {
+            background-color: rgba(79, 109, 245, 0.08);
+        }
+        .sidebar-link.active {
+            background-color: rgba(79, 109, 245, 0.1);
+            color: #4F6DF5;
+            font-weight: 600;
+        }
+        .sidebar-link.active .sidebar-icon {
+            color: #4F6DF5;
+        }
+        .fade-in {
+            animation: fadeIn 0.25s ease-in-out;
+        }
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(6px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        .modal-backdrop {
+            background: rgba(0, 0, 0, 0.5);
+            backdrop-filter: blur(4px);
+        }
+        .input-focus:focus {
+            border-color: #4F6DF5;
+            box-shadow: 0 0 0 3px rgba(79, 109, 245, 0.15);
+        }
+        .stripe-element {
+            padding: 10px 14px;
+            border: 1px solid #D1D5DB;
+            border-radius: 0.5rem;
+            transition: border-color 0.15s, box-shadow 0.15s;
+        }
+        .stripe-element--focus {
+            border-color: #4F6DF5;
+            box-shadow: 0 0 0 3px rgba(79, 109, 245, 0.15);
+        }
+        /* Hide scrollbar for sidebar on small screens */
+        .sidebar-scroll::-webkit-scrollbar { width: 4px; }
+        .sidebar-scroll::-webkit-scrollbar-thumb { background: #e5e7eb; border-radius: 4px; }
+    </style>
+</head>
+<body class="bg-gray-50 min-h-screen">
+
+    <!-- Mobile menu overlay -->
+    <div id="mobile-overlay" class="fixed inset-0 bg-black/40 z-40 hidden lg:hidden" onclick="toggleMobileSidebar()"></div>
+
+    <!-- Sidebar -->
+    <aside id="sidebar" class="fixed top-0 left-0 h-full w-64 bg-white border-r border-gray-200 z-50 transform -translate-x-full lg:translate-x-0 transition-transform duration-200">
+        <!-- Brand -->
+        <div class="h-16 flex items-center gap-3 px-5 border-b border-gray-100">
+            <div class="w-8 h-8 bg-rainbow-500 rounded-lg flex items-center justify-center flex-shrink-0">
+                <svg class="w-5 h-5 text-white" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" d="M3.055 11H5a2 2 0 012 2v1a2 2 0 002 2 2 2 0 012 2v2.945M8 3.935V5.5A2.5 2.5 0 0010.5 8h.5a2 2 0 012 2 2 2 0 104 0 2 2 0 012-2h1.064M15 20.488V18a2 2 0 012-2h3.064M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/>
+                </svg>
+            </div>
+            <div>
+                <span class="text-lg font-bold text-gray-900">Rainbow</span>
+                <p class="text-[10px] text-gray-400 -mt-0.5">Mon Espace Client</p>
+            </div>
+        </div>
+
+        <!-- Navigation -->
+        <nav class="p-3 space-y-1 sidebar-scroll overflow-y-auto" style="height: calc(100% - 4rem - 4rem);">
+            <button onclick="navigateTo('dashboard')" data-nav="dashboard" class="sidebar-link active w-full flex items-center gap-3 px-3 py-2.5 rounded-lg text-sm text-gray-700">
+                <svg class="sidebar-icon w-5 h-5 text-gray-400" fill="none" stroke="currentColor" stroke-width="1.5" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M2.25 12l8.954-8.955c.44-.439 1.152-.439 1.591 0L21.75 12M4.5 9.75v10.125c0 .621.504 1.125 1.125 1.125H9.75v-4.875c0-.621.504-1.125 1.125-1.125h2.25c.621 0 1.125.504 1.125 1.125V21h4.125c.621 0 1.125-.504 1.125-1.125V9.75M8.25 21h8.25"/></svg>
+                Tableau de bord
+            </button>
+            <button onclick="navigateTo('subscriptions')" data-nav="subscriptions" class="sidebar-link w-full flex items-center gap-3 px-3 py-2.5 rounded-lg text-sm text-gray-700">
+                <svg class="sidebar-icon w-5 h-5 text-gray-400" fill="none" stroke="currentColor" stroke-width="1.5" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M20.25 6.375c0 2.278-3.694 4.125-8.25 4.125S3.75 8.653 3.75 6.375m16.5 0c0-2.278-3.694-4.125-8.25-4.125S3.75 4.097 3.75 6.375m16.5 0v11.25c0 2.278-3.694 4.125-8.25 4.125s-8.25-1.847-8.25-4.125V6.375m16.5 0v3.75m-16.5-3.75v3.75m16.5 0v3.75C20.25 16.153 16.556 18 12 18s-8.25-1.847-8.25-4.125v-3.75m16.5 0c0 2.278-3.694 4.125-8.25 4.125s-8.25-1.847-8.25-4.125"/></svg>
+                Mes abonnements
+            </button>
+            <button onclick="navigateTo('profile')" data-nav="profile" class="sidebar-link w-full flex items-center gap-3 px-3 py-2.5 rounded-lg text-sm text-gray-700">
+                <svg class="sidebar-icon w-5 h-5 text-gray-400" fill="none" stroke="currentColor" stroke-width="1.5" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M15.75 6a3.75 3.75 0 11-7.5 0 3.75 3.75 0 017.5 0zM4.501 20.118a7.5 7.5 0 0114.998 0A17.933 17.933 0 0112 21.75c-2.676 0-5.216-.584-7.499-1.632z"/></svg>
+                Mes informations
+            </button>
+            <button onclick="navigateTo('password')" data-nav="password" class="sidebar-link w-full flex items-center gap-3 px-3 py-2.5 rounded-lg text-sm text-gray-700">
+                <svg class="sidebar-icon w-5 h-5 text-gray-400" fill="none" stroke="currentColor" stroke-width="1.5" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M16.5 10.5V6.75a4.5 4.5 0 10-9 0v3.75m-.75 11.25h10.5a2.25 2.25 0 002.25-2.25v-6.75a2.25 2.25 0 00-2.25-2.25H6.75a2.25 2.25 0 00-2.25 2.25v6.75a2.25 2.25 0 002.25 2.25z"/></svg>
+                Changer le mot de passe
+            </button>
+            <button onclick="navigateTo('payment')" data-nav="payment" class="sidebar-link w-full flex items-center gap-3 px-3 py-2.5 rounded-lg text-sm text-gray-700">
+                <svg class="sidebar-icon w-5 h-5 text-gray-400" fill="none" stroke="currentColor" stroke-width="1.5" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M2.25 8.25h19.5M2.25 9h19.5m-16.5 5.25h6m-6 2.25h3m-3.75 3h15a2.25 2.25 0 002.25-2.25V6.75A2.25 2.25 0 0019.5 4.5h-15a2.25 2.25 0 00-2.25 2.25v10.5A2.25 2.25 0 004.5 19.5z"/></svg>
+                Moyens de paiement
+            </button>
+            <button onclick="navigateTo('invoices')" data-nav="invoices" class="sidebar-link w-full flex items-center gap-3 px-3 py-2.5 rounded-lg text-sm text-gray-700">
+                <svg class="sidebar-icon w-5 h-5 text-gray-400" fill="none" stroke="currentColor" stroke-width="1.5" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M19.5 14.25v-2.625a3.375 3.375 0 00-3.375-3.375h-1.5A1.125 1.125 0 0113.5 7.125v-1.5a3.375 3.375 0 00-3.375-3.375H8.25m0 12.75h7.5m-7.5 3H12M10.5 2.25H5.625c-.621 0-1.125.504-1.125 1.125v17.25c0 .621.504 1.125 1.125 1.125h12.75c.621 0 1.125-.504 1.125-1.125V11.25a9 9 0 00-9-9z"/></svg>
+                Factures
+            </button>
+        </nav>
+
+        <!-- User info at bottom -->
+        <div class="absolute bottom-0 left-0 right-0 h-16 border-t border-gray-100 flex items-center px-4 bg-white">
+            <div class="w-8 h-8 bg-rainbow-100 rounded-full flex items-center justify-center text-rainbow-600 font-semibold text-xs mr-3" id="sidebar-avatar">--</div>
+            <div class="flex-1 min-w-0">
+                <p class="text-sm font-medium text-gray-800 truncate" id="sidebar-username">Chargement...</p>
+                <p class="text-xs text-gray-400 truncate" id="sidebar-email">...</p>
+            </div>
+        </div>
+    </aside>
+
+    <!-- Main content area -->
+    <div class="lg:ml-64 min-h-screen">
+        <!-- Header -->
+        <header class="h-16 bg-white border-b border-gray-200 flex items-center justify-between px-4 sm:px-6 sticky top-0 z-30">
+            <div class="flex items-center gap-3">
+                <button onclick="toggleMobileSidebar()" class="lg:hidden p-2 -ml-2 text-gray-500 hover:text-gray-700 rounded-lg hover:bg-gray-100">
+                    <svg class="w-5 h-5" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M3.75 6.75h16.5M3.75 12h16.5m-16.5 5.25h16.5"/></svg>
+                </button>
+                <h1 class="text-lg font-semibold text-gray-900" id="page-title">Tableau de bord</h1>
+            </div>
+            <div class="flex items-center gap-3">
+                <span class="hidden sm:block text-sm text-gray-500" id="header-name"></span>
+                <button onclick="logout()" class="flex items-center gap-2 px-3 py-2 text-sm text-gray-600 hover:text-red-600 hover:bg-red-50 rounded-lg transition-colors">
+                    <svg class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M15.75 9V5.25A2.25 2.25 0 0013.5 3h-6a2.25 2.25 0 00-2.25 2.25v13.5A2.25 2.25 0 007.5 21h6a2.25 2.25 0 002.25-2.25V15m3 0l3-3m0 0l-3-3m3 3H9"/></svg>
+                    Deconnexion
+                </button>
+            </div>
+        </header>
+
+        <!-- Page content -->
+        <main class="p-4 sm:p-6 lg:p-8" id="main-content">
+            <!-- Content dynamically injected here -->
+        </main>
+    </div>
+
+    <!-- ============================================= -->
+    <!-- Modals -->
+    <!-- ============================================= -->
+
+    <!-- Change Plan Modal -->
+    <div id="modal-change-plan" class="fixed inset-0 z-50 hidden">
+        <div class="modal-backdrop absolute inset-0" onclick="closeModal('modal-change-plan')"></div>
+        <div class="relative z-10 flex items-center justify-center min-h-screen p-4">
+            <div class="bg-white rounded-2xl shadow-xl max-w-lg w-full max-h-[80vh] overflow-y-auto">
+                <div class="p-6 border-b border-gray-100 flex items-center justify-between">
+                    <h3 class="text-lg font-semibold text-gray-900">Changer de plan</h3>
+                    <button onclick="closeModal('modal-change-plan')" class="text-gray-400 hover:text-gray-600">
+                        <svg class="w-5 h-5" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M6 18L18 6M6 6l12 12"/></svg>
+                    </button>
+                </div>
+                <div class="p-6" id="change-plan-content">
+                    <div class="text-center py-8 text-gray-400">Chargement des plans...</div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- New Subscription Modal -->
+    <div id="modal-new-sub" class="fixed inset-0 z-50 hidden">
+        <div class="modal-backdrop absolute inset-0" onclick="closeModal('modal-new-sub')"></div>
+        <div class="relative z-10 flex items-center justify-center min-h-screen p-4">
+            <div class="bg-white rounded-2xl shadow-xl max-w-2xl w-full max-h-[85vh] overflow-y-auto">
+                <div class="p-6 border-b border-gray-100 flex items-center justify-between">
+                    <h3 class="text-lg font-semibold text-gray-900">Nouvel abonnement</h3>
+                    <button onclick="closeModal('modal-new-sub')" class="text-gray-400 hover:text-gray-600">
+                        <svg class="w-5 h-5" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M6 18L18 6M6 6l12 12"/></svg>
+                    </button>
+                </div>
+                <div class="p-6" id="new-sub-content">
+                    <div class="text-center py-8 text-gray-400">Chargement des plans...</div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Add Payment Method Modal -->
+    <div id="modal-add-card" class="fixed inset-0 z-50 hidden">
+        <div class="modal-backdrop absolute inset-0" onclick="closeModal('modal-add-card')"></div>
+        <div class="relative z-10 flex items-center justify-center min-h-screen p-4">
+            <div class="bg-white rounded-2xl shadow-xl max-w-md w-full">
+                <div class="p-6 border-b border-gray-100 flex items-center justify-between">
+                    <h3 class="text-lg font-semibold text-gray-900">Ajouter une carte</h3>
+                    <button onclick="closeModal('modal-add-card')" class="text-gray-400 hover:text-gray-600">
+                        <svg class="w-5 h-5" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M6 18L18 6M6 6l12 12"/></svg>
+                    </button>
+                </div>
+                <div class="p-6">
+                    <div id="card-element" class="stripe-element mb-4"></div>
+                    <div id="card-errors" class="text-sm text-red-600 mb-4 hidden"></div>
+                    <button onclick="handleAddCard()" id="btn-add-card"
+                        class="w-full py-2.5 px-4 bg-rainbow-500 hover:bg-rainbow-600 text-white font-semibold rounded-lg text-sm transition-colors disabled:opacity-60 disabled:cursor-not-allowed">
+                        Ajouter la carte
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // =============================================
+        // Configuration & State
+        // =============================================
+        const API_BASE = window.location.origin;
+        let token = localStorage.getItem('token');
+        let clientData = null;
+        let stripe = null;
+        let cardElement = null;
+        let currentSubscriptionIdForChange = null;
+        let cachedPlans = null;
+
+        // =============================================
+        // Auth guard
+        // =============================================
+        if (!token) {
+            window.location.href = '/login';
+        }
+
+        // =============================================
+        // API helper
+        // =============================================
+        async function api(url, method = 'GET', body = null) {
+            const opts = {
+                method,
+                headers: {
+                    'Content-Type': 'application/json',
+                    'Authorization': 'Bearer ' + token,
+                },
+            };
+            if (body) opts.body = JSON.stringify(body);
+
+            const res = await fetch(API_BASE + url, opts);
+
+            if (res.status === 401) {
+                localStorage.removeItem('token');
+                localStorage.removeItem('client');
+                window.location.href = '/login';
+                return;
+            }
+
+            const data = await res.json().catch(() => ({}));
+            if (!res.ok) {
+                throw new Error(data.error || data.message || 'Une erreur est survenue');
+            }
+            return data;
+        }
+
+        // =============================================
+        // Mobile sidebar toggle
+        // =============================================
+        function toggleMobileSidebar() {
+            const sidebar = document.getElementById('sidebar');
+            const overlay = document.getElementById('mobile-overlay');
+            sidebar.classList.toggle('-translate-x-full');
+            overlay.classList.toggle('hidden');
+        }
+
+        // =============================================
+        // Navigation
+        // =============================================
+        const pageTitles = {
+            dashboard: 'Tableau de bord',
+            subscriptions: 'Mes abonnements',
+            profile: 'Mes informations',
+            password: 'Changer le mot de passe',
+            payment: 'Moyens de paiement',
+            invoices: 'Factures',
+        };
+
+        function navigateTo(page) {
+            // Update sidebar active state
+            document.querySelectorAll('[data-nav]').forEach(el => {
+                el.classList.remove('active');
+                if (el.dataset.nav === page) el.classList.add('active');
+            });
+            // Update title
+            document.getElementById('page-title').textContent = pageTitles[page] || '';
+            // Close mobile sidebar
+            const sidebar = document.getElementById('sidebar');
+            if (!sidebar.classList.contains('-translate-x-full') && window.innerWidth < 1024) {
+                toggleMobileSidebar();
+            }
+            // Render page
+            renderPage(page);
+        }
+
+        function renderPage(page) {
+            const main = document.getElementById('main-content');
+            switch (page) {
+                case 'dashboard': renderDashboard(main); break;
+                case 'subscriptions': renderSubscriptions(main); break;
+                case 'profile': renderProfile(main); break;
+                case 'password': renderPassword(main); break;
+                case 'payment': renderPayment(main); break;
+                case 'invoices': renderInvoices(main); break;
+                default: renderDashboard(main);
+            }
+        }
+
+        // =============================================
+        // Logout
+        // =============================================
+        function logout() {
+            localStorage.removeItem('token');
+            localStorage.removeItem('client');
+            window.location.href = '/login';
+        }
+
+        // =============================================
+        // Modal helpers
+        // =============================================
+        function openModal(id) {
+            document.getElementById(id).classList.remove('hidden');
+            document.body.style.overflow = 'hidden';
+        }
+
+        function closeModal(id) {
+            document.getElementById(id).classList.add('hidden');
+            document.body.style.overflow = '';
+        }
+
+        // =============================================
+        // Toast notification
+        // =============================================
+        function showToast(message, type = 'success') {
+            const existing = document.getElementById('toast');
+            if (existing) existing.remove();
+
+            const toast = document.createElement('div');
+            toast.id = 'toast';
+            toast.className = `fixed top-20 right-4 z-[60] px-4 py-3 rounded-lg shadow-lg text-sm font-medium transition-all transform translate-x-0 ${
+                type === 'success' ? 'bg-green-600 text-white' :
+                type === 'error' ? 'bg-red-600 text-white' :
+                'bg-blue-600 text-white'
+            }`;
+            toast.textContent = message;
+            document.body.appendChild(toast);
+
+            setTimeout(() => {
+                toast.style.opacity = '0';
+                setTimeout(() => toast.remove(), 300);
+            }, 3500);
+        }
+
+        // =============================================
+        // Format helpers
+        // =============================================
+        function formatPrice(cents) {
+            return (cents / 100).toFixed(2).replace('.', ',') + ' EUR';
+        }
+
+        function formatDate(dateStr) {
+            if (!dateStr) return '-';
+            const d = new Date(dateStr);
+            return d.toLocaleDateString('fr-FR', { day: '2-digit', month: '2-digit', year: 'numeric' });
+        }
+
+        function statusBadge(status) {
+            const map = {
+                active: { label: 'Actif', class: 'bg-green-100 text-green-700' },
+                trialing: { label: 'Essai', class: 'bg-blue-100 text-blue-700' },
+                past_due: { label: 'En retard', class: 'bg-yellow-100 text-yellow-700' },
+                canceled: { label: 'Annule', class: 'bg-gray-100 text-gray-600' },
+                unpaid: { label: 'Impaye', class: 'bg-red-100 text-red-700' },
+            };
+            const s = map[status] || { label: status, class: 'bg-gray-100 text-gray-600' };
+            return `<span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium ${s.class}">${s.label}</span>`;
+        }
+
+        // =============================================
+        // PAGE: Dashboard
+        // =============================================
+        async function renderDashboard(container) {
+            container.innerHTML = `
+                <div class="fade-in">
+                    <div class="mb-8">
+                        <h2 class="text-2xl font-bold text-gray-900 mb-1">Bienvenue, <span id="dash-name" class="text-rainbow-500">...</span></h2>
+                        <p class="text-gray-500">Voici un resume de votre compte Rainbow.</p>
+                    </div>
+                    <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-5" id="dash-cards">
+                        <div class="bg-white rounded-xl border border-gray-200 p-5 animate-pulse">
+                            <div class="h-4 bg-gray-200 rounded w-1/2 mb-3"></div>
+                            <div class="h-8 bg-gray-200 rounded w-1/3"></div>
+                        </div>
+                        <div class="bg-white rounded-xl border border-gray-200 p-5 animate-pulse">
+                            <div class="h-4 bg-gray-200 rounded w-1/2 mb-3"></div>
+                            <div class="h-8 bg-gray-200 rounded w-1/3"></div>
+                        </div>
+                        <div class="bg-white rounded-xl border border-gray-200 p-5 animate-pulse">
+                            <div class="h-4 bg-gray-200 rounded w-1/2 mb-3"></div>
+                            <div class="h-8 bg-gray-200 rounded w-1/3"></div>
+                        </div>
+                    </div>
+                </div>
+            `;
+
+            try {
+                if (!clientData) {
+                    clientData = await api('/api/client/me');
+                }
+                document.getElementById('dash-name').textContent = clientData.firstName || clientData.email;
+
+                const subs = await api('/api/client/subscriptions');
+                const activeSubs = (subs || []).filter(s => s.status === 'active' || s.status === 'trialing');
+                const totalLicenses = activeSubs.reduce((sum, s) => sum + (s.licenseCount || s.quantity || 0), 0);
+
+                document.getElementById('dash-cards').innerHTML = `
+                    <div class="bg-white rounded-xl border border-gray-200 p-5 hover:shadow-md transition-shadow">
+                        <div class="flex items-center gap-3 mb-3">
+                            <div class="w-10 h-10 bg-rainbow-50 rounded-lg flex items-center justify-center">
+                                <svg class="w-5 h-5 text-rainbow-500" fill="none" stroke="currentColor" stroke-width="1.5" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M20.25 6.375c0 2.278-3.694 4.125-8.25 4.125S3.75 8.653 3.75 6.375m16.5 0c0-2.278-3.694-4.125-8.25-4.125S3.75 4.097 3.75 6.375m16.5 0v11.25c0 2.278-3.694 4.125-8.25 4.125s-8.25-1.847-8.25-4.125V6.375"/></svg>
+                            </div>
+                            <p class="text-sm text-gray-500">Abonnements actifs</p>
+                        </div>
+                        <p class="text-3xl font-bold text-gray-900">${activeSubs.length}</p>
+                    </div>
+                    <div class="bg-white rounded-xl border border-gray-200 p-5 hover:shadow-md transition-shadow">
+                        <div class="flex items-center gap-3 mb-3">
+                            <div class="w-10 h-10 bg-green-50 rounded-lg flex items-center justify-center">
+                                <svg class="w-5 h-5 text-green-500" fill="none" stroke="currentColor" stroke-width="1.5" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M15 19.128a9.38 9.38 0 002.625.372 9.337 9.337 0 004.121-.952 4.125 4.125 0 00-7.533-2.493M15 19.128v-.003c0-1.113-.285-2.16-.786-3.07M15 19.128v.106A12.318 12.318 0 018.624 21c-2.331 0-4.512-.645-6.374-1.766l-.001-.109a6.375 6.375 0 0111.964-3.07M12 6.375a3.375 3.375 0 11-6.75 0 3.375 3.375 0 016.75 0zm8.25 2.25a2.625 2.625 0 11-5.25 0 2.625 2.625 0 015.25 0z"/></svg>
+                            </div>
+                            <p class="text-sm text-gray-500">Licences totales</p>
+                        </div>
+                        <p class="text-3xl font-bold text-gray-900">${totalLicenses}</p>
+                    </div>
+                    <div class="bg-white rounded-xl border border-gray-200 p-5 hover:shadow-md transition-shadow">
+                        <div class="flex items-center gap-3 mb-3">
+                            <div class="w-10 h-10 bg-purple-50 rounded-lg flex items-center justify-center">
+                                <svg class="w-5 h-5 text-purple-500" fill="none" stroke="currentColor" stroke-width="1.5" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M9 12.75L11.25 15 15 9.75m-3-7.036A11.959 11.959 0 013.598 6 11.99 11.99 0 003 9.749c0 5.592 3.824 10.29 9 11.623 5.176-1.332 9-6.03 9-11.622 0-1.31-.21-2.571-.598-3.751h-.152c-3.196 0-6.1-1.248-8.25-3.285z"/></svg>
+                            </div>
+                            <p class="text-sm text-gray-500">Statut du compte</p>
+                        </div>
+                        <p class="text-lg font-semibold text-green-600">${activeSubs.length > 0 ? 'Actif' : 'Aucun abonnement'}</p>
+                    </div>
+                `;
+
+                // Show subscription summary below
+                if (activeSubs.length > 0) {
+                    let summaryHTML = `
+                        <div class="mt-8">
+                            <h3 class="text-base font-semibold text-gray-900 mb-4">Resume des abonnements</h3>
+                            <div class="bg-white rounded-xl border border-gray-200 overflow-hidden">
+                                <table class="w-full text-sm">
+                                    <thead class="bg-gray-50 text-gray-500">
+                                        <tr>
+                                            <th class="text-left py-3 px-4 font-medium">Plan</th>
+                                            <th class="text-left py-3 px-4 font-medium">Licences</th>
+                                            <th class="text-left py-3 px-4 font-medium">Statut</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody class="divide-y divide-gray-100">
+                    `;
+                    activeSubs.forEach(sub => {
+                        summaryHTML += `
+                            <tr>
+                                <td class="py-3 px-4 font-medium text-gray-900">${sub.planName || sub.plan || '-'}</td>
+                                <td class="py-3 px-4 text-gray-600">${sub.licenseCount || sub.quantity || '-'}</td>
+                                <td class="py-3 px-4">${statusBadge(sub.status)}</td>
+                            </tr>
+                        `;
+                    });
+                    summaryHTML += `</tbody></table></div></div>`;
+                    document.getElementById('dash-cards').insertAdjacentHTML('afterend', summaryHTML);
+                }
+
+            } catch (err) {
+                console.error('Dashboard error:', err);
+            }
+        }
+
+        // =============================================
+        // PAGE: Subscriptions
+        // =============================================
+        async function renderSubscriptions(container) {
+            container.innerHTML = `
+                <div class="fade-in">
+                    <div class="flex flex-col sm:flex-row sm:items-center justify-between mb-6 gap-3">
+                        <div>
+                            <h2 class="text-xl font-bold text-gray-900">Mes abonnements</h2>
+                            <p class="text-sm text-gray-500 mt-0.5">Gerez vos abonnements Rainbow</p>
+                        </div>
+                        <button onclick="openNewSubscriptionModal()" class="inline-flex items-center gap-2 px-4 py-2.5 bg-rainbow-500 hover:bg-rainbow-600 text-white text-sm font-semibold rounded-lg transition-colors">
+                            <svg class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M12 4.5v15m7.5-7.5h-15"/></svg>
+                            Nouvel abonnement
+                        </button>
+                    </div>
+                    <div id="subs-list" class="space-y-4">
+                        <div class="bg-white rounded-xl border border-gray-200 p-6 animate-pulse">
+                            <div class="h-5 bg-gray-200 rounded w-1/3 mb-3"></div>
+                            <div class="h-4 bg-gray-200 rounded w-1/2"></div>
+                        </div>
+                    </div>
+                </div>
+            `;
+
+            try {
+                const subs = await api('/api/client/subscriptions');
+                const listEl = document.getElementById('subs-list');
+
+                if (!subs || subs.length === 0) {
+                    listEl.innerHTML = `
+                        <div class="bg-white rounded-xl border border-gray-200 p-12 text-center">
+                            <div class="w-16 h-16 bg-gray-100 rounded-full flex items-center justify-center mx-auto mb-4">
+                                <svg class="w-8 h-8 text-gray-400" fill="none" stroke="currentColor" stroke-width="1.5" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M20.25 6.375c0 2.278-3.694 4.125-8.25 4.125S3.75 8.653 3.75 6.375m16.5 0c0-2.278-3.694-4.125-8.25-4.125S3.75 4.097 3.75 6.375m16.5 0v11.25c0 2.278-3.694 4.125-8.25 4.125s-8.25-1.847-8.25-4.125V6.375"/></svg>
+                            </div>
+                            <h3 class="text-lg font-semibold text-gray-900 mb-1">Aucun abonnement</h3>
+                            <p class="text-gray-500 text-sm mb-4">Vous n'avez pas encore d'abonnement actif.</p>
+                            <button onclick="openNewSubscriptionModal()" class="inline-flex items-center gap-2 px-4 py-2 bg-rainbow-500 hover:bg-rainbow-600 text-white text-sm font-semibold rounded-lg transition-colors">
+                                <svg class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M12 4.5v15m7.5-7.5h-15"/></svg>
+                                Souscrire maintenant
+                            </button>
+                        </div>
+                    `;
+                    return;
+                }
+
+                listEl.innerHTML = subs.map(sub => `
+                    <div class="bg-white rounded-xl border border-gray-200 p-5 hover:shadow-md transition-shadow">
+                        <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
+                            <div class="flex-1">
+                                <div class="flex items-center gap-3 mb-2">
+                                    <h3 class="text-base font-semibold text-gray-900">${sub.planName || sub.plan || 'Plan Rainbow'}</h3>
+                                    ${statusBadge(sub.status)}
+                                </div>
+                                <div class="flex flex-wrap gap-x-6 gap-y-1 text-sm text-gray-500">
+                                    <span>Licences : <strong class="text-gray-700">${sub.licenseCount || sub.quantity || '-'}</strong></span>
+                                    <span>Prix : <strong class="text-gray-700">${sub.price ? formatPrice(sub.price) : '-'}</strong></span>
+                                    ${sub.currentPeriodEnd ? `<span>Renouvellement : <strong class="text-gray-700">${formatDate(sub.currentPeriodEnd)}</strong></span>` : ''}
+                                </div>
+                            </div>
+                            <div class="flex items-center gap-2">
+                                ${sub.status === 'active' || sub.status === 'trialing' ? `
+                                    <button onclick="openChangePlanModal('${sub.id}')" class="px-3 py-2 text-sm font-medium text-rainbow-600 hover:bg-rainbow-50 border border-rainbow-200 rounded-lg transition-colors">
+                                        Changer de plan
+                                    </button>
+                                    <button onclick="cancelSubscription('${sub.id}')" class="px-3 py-2 text-sm font-medium text-red-600 hover:bg-red-50 border border-red-200 rounded-lg transition-colors">
+                                        Annuler
+                                    </button>
+                                ` : ''}
+                            </div>
+                        </div>
+                    </div>
+                `).join('');
+
+            } catch (err) {
+                document.getElementById('subs-list').innerHTML = `
+                    <div class="bg-red-50 border border-red-200 rounded-xl p-4 text-sm text-red-700">Erreur : ${err.message}</div>
+                `;
+            }
+        }
+
+        // =============================================
+        // Change plan modal
+        // =============================================
+        async function openChangePlanModal(subscriptionId) {
+            currentSubscriptionIdForChange = subscriptionId;
+            openModal('modal-change-plan');
+            const content = document.getElementById('change-plan-content');
+            content.innerHTML = '<div class="text-center py-8 text-gray-400">Chargement des plans...</div>';
+
+            try {
+                const plans = await fetchPlans();
+                if (!plans || plans.length === 0) {
+                    content.innerHTML = '<div class="text-center py-8 text-gray-500">Aucun plan disponible.</div>';
+                    return;
+                }
+
+                content.innerHTML = `
+                    <div class="space-y-3">
+                        ${plans.map(plan => `
+                            <button onclick="changePlan('${subscriptionId}', '${plan.id}')"
+                                class="w-full text-left p-4 border border-gray-200 rounded-lg hover:border-rainbow-300 hover:bg-rainbow-50/50 transition-all">
+                                <div class="flex items-center justify-between">
+                                    <div>
+                                        <p class="font-semibold text-gray-900">${plan.name}</p>
+                                        <p class="text-sm text-gray-500 mt-0.5">${plan.description || ''}</p>
+                                    </div>
+                                    <span class="text-rainbow-600 font-bold">${plan.price ? formatPrice(plan.price) : '-'}<span class="text-xs font-normal text-gray-400">/mois</span></span>
+                                </div>
+                            </button>
+                        `).join('')}
+                    </div>
+                `;
+            } catch (err) {
+                content.innerHTML = `<div class="text-red-600 text-sm">${err.message}</div>`;
+            }
+        }
+
+        async function changePlan(subscriptionId, planId) {
+            if (!confirm('Confirmer le changement de plan ?')) return;
+            try {
+                await api(`/api/client/subscriptions/${subscriptionId}`, 'PUT', { planId });
+                closeModal('modal-change-plan');
+                showToast('Plan modifie avec succes');
+                navigateTo('subscriptions');
+            } catch (err) {
+                showToast(err.message, 'error');
+            }
+        }
+
+        // =============================================
+        // New subscription modal
+        // =============================================
+        async function openNewSubscriptionModal() {
+            openModal('modal-new-sub');
+            const content = document.getElementById('new-sub-content');
+            content.innerHTML = '<div class="text-center py-8 text-gray-400">Chargement des plans...</div>';
+
+            try {
+                const plans = await fetchPlans();
+                if (!plans || plans.length === 0) {
+                    content.innerHTML = '<div class="text-center py-8 text-gray-500">Aucun plan disponible.</div>';
+                    return;
+                }
+
+                content.innerHTML = `
+                    <p class="text-sm text-gray-500 mb-4">Selectionnez un plan et le nombre de licences souhaitees.</p>
+                    <div class="grid grid-cols-1 sm:grid-cols-2 gap-3 mb-6" id="plan-cards">
+                        ${plans.map((plan, i) => `
+                            <button onclick="selectPlan(this, '${plan.id}')"
+                                data-plan-id="${plan.id}"
+                                class="plan-card text-left p-4 border-2 ${i === 0 ? 'border-rainbow-500 bg-rainbow-50/30' : 'border-gray-200'} rounded-xl hover:border-rainbow-400 transition-all">
+                                <p class="font-semibold text-gray-900 text-sm">${plan.name}</p>
+                                <p class="text-xs text-gray-500 mt-1 mb-3">${plan.description || ''}</p>
+                                <p class="text-lg font-bold text-rainbow-600">${plan.price ? formatPrice(plan.price) : '-'}<span class="text-xs font-normal text-gray-400">/mois/licence</span></p>
+                            </button>
+                        `).join('')}
+                    </div>
+                    <div class="mb-6">
+                        <label class="block text-sm font-medium text-gray-700 mb-1.5">Nombre de licences</label>
+                        <input type="number" id="new-sub-licenses" min="1" value="1"
+                            class="input-focus w-full px-4 py-2.5 border border-gray-300 rounded-lg text-sm text-gray-900 outline-none transition-all">
+                    </div>
+                    <input type="hidden" id="selected-plan-id" value="${plans[0]?.id || ''}">
+                    <button onclick="createSubscription()" id="btn-create-sub"
+                        class="w-full py-2.5 px-4 bg-rainbow-500 hover:bg-rainbow-600 text-white font-semibold rounded-lg text-sm transition-colors disabled:opacity-60 disabled:cursor-not-allowed">
+                        Souscrire
+                    </button>
+                `;
+            } catch (err) {
+                content.innerHTML = `<div class="text-red-600 text-sm">${err.message}</div>`;
+            }
+        }
+
+        function selectPlan(el, planId) {
+            document.querySelectorAll('.plan-card').forEach(c => {
+                c.classList.remove('border-rainbow-500', 'bg-rainbow-50/30');
+                c.classList.add('border-gray-200');
+            });
+            el.classList.remove('border-gray-200');
+            el.classList.add('border-rainbow-500', 'bg-rainbow-50/30');
+            document.getElementById('selected-plan-id').value = planId;
+        }
+
+        async function createSubscription() {
+            const planId = document.getElementById('selected-plan-id').value;
+            const licenseCount = parseInt(document.getElementById('new-sub-licenses').value) || 1;
+            const btn = document.getElementById('btn-create-sub');
+            btn.disabled = true;
+            btn.textContent = 'Traitement...';
+
+            try {
+                await api('/api/client/subscriptions', 'POST', { planId, licenseCount });
+                closeModal('modal-new-sub');
+                showToast('Abonnement cree avec succes !');
+                navigateTo('subscriptions');
+            } catch (err) {
+                showToast(err.message, 'error');
+            } finally {
+                btn.disabled = false;
+                btn.textContent = 'Souscrire';
+            }
+        }
+
+        // =============================================
+        // Cancel subscription
+        // =============================================
+        async function cancelSubscription(subscriptionId) {
+            if (!confirm('Etes-vous sur de vouloir annuler cet abonnement ? Cette action prendra effet a la fin de la periode de facturation en cours.')) return;
+            try {
+                await api(`/api/client/subscriptions/${subscriptionId}/cancel`, 'POST');
+                showToast('Abonnement annule.');
+                navigateTo('subscriptions');
+            } catch (err) {
+                showToast(err.message, 'error');
+            }
+        }
+
+        // =============================================
+        // Fetch plans
+        // =============================================
+        async function fetchPlans() {
+            if (cachedPlans) return cachedPlans;
+            const data = await api('/api/products/rainbow');
+            cachedPlans = data.plans || data || [];
+            return cachedPlans;
+        }
+
+        // =============================================
+        // PAGE: Profile
+        // =============================================
+        async function renderProfile(container) {
+            container.innerHTML = `
+                <div class="fade-in">
+                    <div class="mb-6">
+                        <h2 class="text-xl font-bold text-gray-900">Mes informations</h2>
+                        <p class="text-sm text-gray-500 mt-0.5">Mettez a jour vos informations personnelles et professionnelles</p>
+                    </div>
+                    <div class="bg-white rounded-xl border border-gray-200 p-6" id="profile-form-container">
+                        <div class="animate-pulse space-y-4">
+                            <div class="h-4 bg-gray-200 rounded w-1/3"></div>
+                            <div class="h-10 bg-gray-200 rounded"></div>
+                            <div class="h-4 bg-gray-200 rounded w-1/3"></div>
+                            <div class="h-10 bg-gray-200 rounded"></div>
+                        </div>
+                    </div>
+                </div>
+            `;
+
+            try {
+                const profile = await api('/api/client/me');
+                clientData = profile;
+                const fc = document.getElementById('profile-form-container');
+
+                fc.innerHTML = `
+                    <form onsubmit="handleSaveProfile(event)" class="space-y-5">
+                        <div id="profile-msg" class="hidden p-3 rounded-lg text-sm font-medium mb-2"></div>
+                        <div class="grid grid-cols-1 sm:grid-cols-2 gap-5">
+                            <div>
+                                <label class="block text-sm font-medium text-gray-700 mb-1.5">Prenom</label>
+                                <input type="text" id="prof-firstName" value="${profile.firstName || ''}"
+                                    class="input-focus w-full px-4 py-2.5 border border-gray-300 rounded-lg text-sm text-gray-900 outline-none transition-all">
+                            </div>
+                            <div>
+                                <label class="block text-sm font-medium text-gray-700 mb-1.5">Nom</label>
+                                <input type="text" id="prof-lastName" value="${profile.lastName || ''}"
+                                    class="input-focus w-full px-4 py-2.5 border border-gray-300 rounded-lg text-sm text-gray-900 outline-none transition-all">
+                            </div>
+                        </div>
+                        <div>
+                            <label class="block text-sm font-medium text-gray-700 mb-1.5">Entreprise</label>
+                            <input type="text" id="prof-company" value="${profile.company || ''}"
+                                class="input-focus w-full px-4 py-2.5 border border-gray-300 rounded-lg text-sm text-gray-900 outline-none transition-all">
+                        </div>
+                        <div class="grid grid-cols-1 sm:grid-cols-2 gap-5">
+                            <div>
+                                <label class="block text-sm font-medium text-gray-700 mb-1.5">Taille de l'entreprise</label>
+                                <select id="prof-companySize"
+                                    class="input-focus w-full px-4 py-2.5 border border-gray-300 rounded-lg text-sm text-gray-900 outline-none transition-all bg-white">
+                                    <option value="">Selectionnez</option>
+                                    <option value="1-10" ${profile.companySize === '1-10' ? 'selected' : ''}>1-10 employes</option>
+                                    <option value="11-50" ${profile.companySize === '11-50' ? 'selected' : ''}>11-50 employes</option>
+                                    <option value="51-200" ${profile.companySize === '51-200' ? 'selected' : ''}>51-200 employes</option>
+                                    <option value="201-500" ${profile.companySize === '201-500' ? 'selected' : ''}>201-500 employes</option>
+                                    <option value="501+" ${profile.companySize === '501+' ? 'selected' : ''}>501+ employes</option>
+                                </select>
+                            </div>
+                            <div>
+                                <label class="block text-sm font-medium text-gray-700 mb-1.5">Telephone</label>
+                                <input type="tel" id="prof-phone" value="${profile.phone || ''}"
+                                    class="input-focus w-full px-4 py-2.5 border border-gray-300 rounded-lg text-sm text-gray-900 outline-none transition-all">
+                            </div>
+                        </div>
+                        <div>
+                            <label class="block text-sm font-medium text-gray-700 mb-1.5">Adresse</label>
+                            <input type="text" id="prof-address" value="${profile.address || ''}"
+                                class="input-focus w-full px-4 py-2.5 border border-gray-300 rounded-lg text-sm text-gray-900 outline-none transition-all">
+                        </div>
+                        <div class="grid grid-cols-1 sm:grid-cols-3 gap-5">
+                            <div>
+                                <label class="block text-sm font-medium text-gray-700 mb-1.5">Ville</label>
+                                <input type="text" id="prof-city" value="${profile.city || ''}"
+                                    class="input-focus w-full px-4 py-2.5 border border-gray-300 rounded-lg text-sm text-gray-900 outline-none transition-all">
+                            </div>
+                            <div>
+                                <label class="block text-sm font-medium text-gray-700 mb-1.5">Code postal</label>
+                                <input type="text" id="prof-postalCode" value="${profile.postalCode || ''}"
+                                    class="input-focus w-full px-4 py-2.5 border border-gray-300 rounded-lg text-sm text-gray-900 outline-none transition-all">
+                            </div>
+                            <div>
+                                <label class="block text-sm font-medium text-gray-700 mb-1.5">Pays</label>
+                                <input type="text" id="prof-country" value="${profile.country || ''}"
+                                    class="input-focus w-full px-4 py-2.5 border border-gray-300 rounded-lg text-sm text-gray-900 outline-none transition-all">
+                            </div>
+                        </div>
+                        <div class="pt-2">
+                            <button type="submit" id="btn-save-profile"
+                                class="px-6 py-2.5 bg-rainbow-500 hover:bg-rainbow-600 text-white font-semibold rounded-lg text-sm transition-colors disabled:opacity-60 disabled:cursor-not-allowed">
+                                Enregistrer les modifications
+                            </button>
+                        </div>
+                    </form>
+                `;
+            } catch (err) {
+                document.getElementById('profile-form-container').innerHTML = `
+                    <div class="text-red-600 text-sm">${err.message}</div>
+                `;
+            }
+        }
+
+        async function handleSaveProfile(e) {
+            e.preventDefault();
+            const btn = document.getElementById('btn-save-profile');
+            btn.disabled = true;
+            btn.textContent = 'Enregistrement...';
+
+            try {
+                const body = {
+                    firstName: document.getElementById('prof-firstName').value.trim(),
+                    lastName: document.getElementById('prof-lastName').value.trim(),
+                    company: document.getElementById('prof-company').value.trim(),
+                    companySize: document.getElementById('prof-companySize').value,
+                    phone: document.getElementById('prof-phone').value.trim(),
+                    address: document.getElementById('prof-address').value.trim(),
+                    city: document.getElementById('prof-city').value.trim(),
+                    postalCode: document.getElementById('prof-postalCode').value.trim(),
+                    country: document.getElementById('prof-country').value.trim(),
+                };
+
+                clientData = await api('/api/client/me', 'PUT', body);
+                updateSidebarUser();
+                showToast('Informations mises a jour avec succes');
+            } catch (err) {
+                showToast(err.message, 'error');
+            } finally {
+                btn.disabled = false;
+                btn.textContent = 'Enregistrer les modifications';
+            }
+        }
+
+        // =============================================
+        // PAGE: Change password
+        // =============================================
+        function renderPassword(container) {
+            container.innerHTML = `
+                <div class="fade-in">
+                    <div class="mb-6">
+                        <h2 class="text-xl font-bold text-gray-900">Changer le mot de passe</h2>
+                        <p class="text-sm text-gray-500 mt-0.5">Mettez a jour votre mot de passe pour securiser votre compte</p>
+                    </div>
+                    <div class="bg-white rounded-xl border border-gray-200 p-6 max-w-lg">
+                        <form onsubmit="handleChangePassword(event)" class="space-y-5">
+                            <div>
+                                <label class="block text-sm font-medium text-gray-700 mb-1.5">Mot de passe actuel</label>
+                                <input type="password" id="pw-current" required
+                                    class="input-focus w-full px-4 py-2.5 border border-gray-300 rounded-lg text-sm text-gray-900 outline-none transition-all">
+                            </div>
+                            <div>
+                                <label class="block text-sm font-medium text-gray-700 mb-1.5">Nouveau mot de passe</label>
+                                <input type="password" id="pw-new" required placeholder="Min. 8 caracteres"
+                                    class="input-focus w-full px-4 py-2.5 border border-gray-300 rounded-lg text-sm text-gray-900 outline-none transition-all">
+                            </div>
+                            <div>
+                                <label class="block text-sm font-medium text-gray-700 mb-1.5">Confirmer le nouveau mot de passe</label>
+                                <input type="password" id="pw-confirm" required
+                                    class="input-focus w-full px-4 py-2.5 border border-gray-300 rounded-lg text-sm text-gray-900 outline-none transition-all">
+                            </div>
+                            <button type="submit" id="btn-change-pw"
+                                class="px-6 py-2.5 bg-rainbow-500 hover:bg-rainbow-600 text-white font-semibold rounded-lg text-sm transition-colors disabled:opacity-60 disabled:cursor-not-allowed">
+                                Modifier le mot de passe
+                            </button>
+                        </form>
+                    </div>
+                </div>
+            `;
+        }
+
+        async function handleChangePassword(e) {
+            e.preventDefault();
+            const currentPassword = document.getElementById('pw-current').value;
+            const newPassword = document.getElementById('pw-new').value;
+            const confirmPassword = document.getElementById('pw-confirm').value;
+
+            if (newPassword.length < 8) {
+                showToast('Le nouveau mot de passe doit contenir au moins 8 caracteres.', 'error');
+                return;
+            }
+            if (newPassword !== confirmPassword) {
+                showToast('Les mots de passe ne correspondent pas.', 'error');
+                return;
+            }
+
+            const btn = document.getElementById('btn-change-pw');
+            btn.disabled = true;
+            btn.textContent = 'Modification...';
+
+            try {
+                await api('/api/client/change-password', 'POST', { currentPassword, newPassword, confirmPassword });
+                showToast('Mot de passe modifie avec succes');
+                document.getElementById('pw-current').value = '';
+                document.getElementById('pw-new').value = '';
+                document.getElementById('pw-confirm').value = '';
+            } catch (err) {
+                showToast(err.message, 'error');
+            } finally {
+                btn.disabled = false;
+                btn.textContent = 'Modifier le mot de passe';
+            }
+        }
+
+        // =============================================
+        // PAGE: Payment methods
+        // =============================================
+        async function renderPayment(container) {
+            container.innerHTML = `
+                <div class="fade-in">
+                    <div class="flex flex-col sm:flex-row sm:items-center justify-between mb-6 gap-3">
+                        <div>
+                            <h2 class="text-xl font-bold text-gray-900">Moyens de paiement</h2>
+                            <p class="text-sm text-gray-500 mt-0.5">Gerez vos cartes bancaires</p>
+                        </div>
+                        <button onclick="openAddCardModal()" class="inline-flex items-center gap-2 px-4 py-2.5 bg-rainbow-500 hover:bg-rainbow-600 text-white text-sm font-semibold rounded-lg transition-colors">
+                            <svg class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M12 4.5v15m7.5-7.5h-15"/></svg>
+                            Ajouter une carte
+                        </button>
+                    </div>
+                    <div id="cards-list" class="space-y-3">
+                        <div class="bg-white rounded-xl border border-gray-200 p-6 animate-pulse">
+                            <div class="h-5 bg-gray-200 rounded w-1/3 mb-3"></div>
+                            <div class="h-4 bg-gray-200 rounded w-1/2"></div>
+                        </div>
+                    </div>
+                </div>
+            `;
+
+            try {
+                const methods = await api('/api/client/payment-methods');
+                const listEl = document.getElementById('cards-list');
+                const cards = methods.data || methods || [];
+
+                if (cards.length === 0) {
+                    listEl.innerHTML = `
+                        <div class="bg-white rounded-xl border border-gray-200 p-12 text-center">
+                            <div class="w-16 h-16 bg-gray-100 rounded-full flex items-center justify-center mx-auto mb-4">
+                                <svg class="w-8 h-8 text-gray-400" fill="none" stroke="currentColor" stroke-width="1.5" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M2.25 8.25h19.5M2.25 9h19.5m-16.5 5.25h6m-6 2.25h3m-3.75 3h15a2.25 2.25 0 002.25-2.25V6.75A2.25 2.25 0 0019.5 4.5h-15a2.25 2.25 0 00-2.25 2.25v10.5A2.25 2.25 0 004.5 19.5z"/></svg>
+                            </div>
+                            <h3 class="text-lg font-semibold text-gray-900 mb-1">Aucune carte enregistree</h3>
+                            <p class="text-gray-500 text-sm mb-4">Ajoutez une carte bancaire pour vos paiements.</p>
+                            <button onclick="openAddCardModal()" class="inline-flex items-center gap-2 px-4 py-2 bg-rainbow-500 hover:bg-rainbow-600 text-white text-sm font-semibold rounded-lg transition-colors">
+                                <svg class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M12 4.5v15m7.5-7.5h-15"/></svg>
+                                Ajouter une carte
+                            </button>
+                        </div>
+                    `;
+                    return;
+                }
+
+                listEl.innerHTML = cards.map(card => {
+                    const c = card.card || card;
+                    const brand = (c.brand || 'carte').charAt(0).toUpperCase() + (c.brand || 'carte').slice(1);
+                    const isDefault = card.isDefault || card.is_default;
+                    return `
+                        <div class="bg-white rounded-xl border ${isDefault ? 'border-rainbow-300 ring-1 ring-rainbow-100' : 'border-gray-200'} p-5 flex flex-col sm:flex-row sm:items-center justify-between gap-4">
+                            <div class="flex items-center gap-4">
+                                <div class="w-12 h-8 bg-gray-100 rounded flex items-center justify-center text-xs font-bold text-gray-500 uppercase">${c.brand || '?'}</div>
+                                <div>
+                                    <p class="text-sm font-medium text-gray-900">${brand} **** ${c.last4 || '????'}</p>
+                                    <p class="text-xs text-gray-500">Expire ${String(c.exp_month || c.expMonth || '??').padStart(2, '0')}/${c.exp_year || c.expYear || '??'}</p>
+                                </div>
+                                ${isDefault ? '<span class="inline-flex items-center px-2 py-0.5 rounded-full text-xs font-medium bg-rainbow-100 text-rainbow-700">Par defaut</span>' : ''}
+                            </div>
+                            <div class="flex items-center gap-2">
+                                ${!isDefault ? `
+                                    <button onclick="setDefaultCard('${card.id}')" class="px-3 py-1.5 text-xs font-medium text-gray-600 hover:bg-gray-100 border border-gray-200 rounded-lg transition-colors">
+                                        Definir par defaut
+                                    </button>
+                                ` : ''}
+                                <button onclick="deleteCard('${card.id}')" class="px-3 py-1.5 text-xs font-medium text-red-600 hover:bg-red-50 border border-red-200 rounded-lg transition-colors">
+                                    Supprimer
+                                </button>
+                            </div>
+                        </div>
+                    `;
+                }).join('');
+
+            } catch (err) {
+                document.getElementById('cards-list').innerHTML = `
+                    <div class="bg-red-50 border border-red-200 rounded-xl p-4 text-sm text-red-700">Erreur : ${err.message}</div>
+                `;
+            }
+        }
+
+        // =============================================
+        // Add card (Stripe Elements)
+        // =============================================
+        async function openAddCardModal() {
+            openModal('modal-add-card');
+            document.getElementById('card-errors').classList.add('hidden');
+
+            try {
+                // Get setup intent client secret
+                const { clientSecret, publishableKey } = await api('/api/client/payment-methods/setup-intent', 'POST');
+
+                if (!stripe) {
+                    stripe = Stripe(publishableKey);
+                }
+
+                const elements = stripe.elements({ clientSecret });
+
+                // Unmount any previous card element
+                if (cardElement) {
+                    cardElement.unmount();
+                }
+
+                cardElement = elements.create('card', {
+                    style: {
+                        base: {
+                            fontSize: '14px',
+                            color: '#1F2937',
+                            fontFamily: 'Inter, sans-serif',
+                            '::placeholder': { color: '#9CA3AF' },
+                        },
+                        invalid: { color: '#EF4444' },
+                    }
+                });
+                cardElement.mount('#card-element');
+
+                // Store for confirmation
+                window._stripeElements = elements;
+                window._clientSecret = clientSecret;
+
+            } catch (err) {
+                const errEl = document.getElementById('card-errors');
+                errEl.textContent = err.message;
+                errEl.classList.remove('hidden');
+            }
+        }
+
+        async function handleAddCard() {
+            const btn = document.getElementById('btn-add-card');
+            btn.disabled = true;
+            btn.textContent = 'Traitement...';
+            document.getElementById('card-errors').classList.add('hidden');
+
+            try {
+                const { error, setupIntent } = await stripe.confirmCardSetup(
+                    window._clientSecret,
+                    {
+                        payment_method: {
+                            card: cardElement,
+                        }
+                    }
+                );
+
+                if (error) {
+                    throw new Error(error.message);
+                }
+
+                closeModal('modal-add-card');
+                showToast('Carte ajoutee avec succes');
+                navigateTo('payment');
+            } catch (err) {
+                const errEl = document.getElementById('card-errors');
+                errEl.textContent = err.message;
+                errEl.classList.remove('hidden');
+            } finally {
+                btn.disabled = false;
+                btn.textContent = 'Ajouter la carte';
+            }
+        }
+
+        async function setDefaultCard(paymentMethodId) {
+            try {
+                await api(`/api/client/payment-methods/${paymentMethodId}/default`, 'POST');
+                showToast('Carte par defaut mise a jour');
+                navigateTo('payment');
+            } catch (err) {
+                showToast(err.message, 'error');
+            }
+        }
+
+        async function deleteCard(paymentMethodId) {
+            if (!confirm('Supprimer cette carte ?')) return;
+            try {
+                await api(`/api/client/payment-methods/${paymentMethodId}`, 'DELETE');
+                showToast('Carte supprimee');
+                navigateTo('payment');
+            } catch (err) {
+                showToast(err.message, 'error');
+            }
+        }
+
+        // =============================================
+        // PAGE: Invoices
+        // =============================================
+        async function renderInvoices(container) {
+            container.innerHTML = `
+                <div class="fade-in">
+                    <div class="mb-6">
+                        <h2 class="text-xl font-bold text-gray-900">Factures</h2>
+                        <p class="text-sm text-gray-500 mt-0.5">Consultez et telechargez vos factures</p>
+                    </div>
+                    <div class="bg-white rounded-xl border border-gray-200 overflow-hidden" id="invoices-container">
+                        <div class="p-6 animate-pulse">
+                            <div class="h-5 bg-gray-200 rounded w-1/3 mb-3"></div>
+                            <div class="h-4 bg-gray-200 rounded w-full mb-2"></div>
+                            <div class="h-4 bg-gray-200 rounded w-2/3"></div>
+                        </div>
+                    </div>
+                </div>
+            `;
+
+            try {
+                const invoices = await api('/api/client/invoices');
+                const ic = document.getElementById('invoices-container');
+                const list = invoices.data || invoices || [];
+
+                if (list.length === 0) {
+                    ic.innerHTML = `
+                        <div class="p-12 text-center">
+                            <div class="w-16 h-16 bg-gray-100 rounded-full flex items-center justify-center mx-auto mb-4">
+                                <svg class="w-8 h-8 text-gray-400" fill="none" stroke="currentColor" stroke-width="1.5" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M19.5 14.25v-2.625a3.375 3.375 0 00-3.375-3.375h-1.5A1.125 1.125 0 0113.5 7.125v-1.5a3.375 3.375 0 00-3.375-3.375H8.25m0 12.75h7.5m-7.5 3H12M10.5 2.25H5.625c-.621 0-1.125.504-1.125 1.125v17.25c0 .621.504 1.125 1.125 1.125h12.75c.621 0 1.125-.504 1.125-1.125V11.25a9 9 0 00-9-9z"/></svg>
+                            </div>
+                            <h3 class="text-lg font-semibold text-gray-900 mb-1">Aucune facture</h3>
+                            <p class="text-gray-500 text-sm">Vos factures apparaitront ici une fois generees.</p>
+                        </div>
+                    `;
+                    return;
+                }
+
+                const invoiceStatusBadge = (status) => {
+                    const map = {
+                        paid: { label: 'Payee', class: 'bg-green-100 text-green-700' },
+                        open: { label: 'En attente', class: 'bg-yellow-100 text-yellow-700' },
+                        draft: { label: 'Brouillon', class: 'bg-gray-100 text-gray-600' },
+                        void: { label: 'Annulee', class: 'bg-red-100 text-red-700' },
+                        uncollectible: { label: 'Irrecouvrable', class: 'bg-red-100 text-red-700' },
+                    };
+                    const s = map[status] || { label: status, class: 'bg-gray-100 text-gray-600' };
+                    return `<span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium ${s.class}">${s.label}</span>`;
+                };
+
+                ic.innerHTML = `
+                    <div class="overflow-x-auto">
+                        <table class="w-full text-sm">
+                            <thead class="bg-gray-50 text-gray-500 text-xs uppercase tracking-wider">
+                                <tr>
+                                    <th class="text-left py-3 px-5 font-medium">Numero</th>
+                                    <th class="text-left py-3 px-5 font-medium">Date</th>
+                                    <th class="text-left py-3 px-5 font-medium">Montant</th>
+                                    <th class="text-left py-3 px-5 font-medium">Statut</th>
+                                    <th class="text-right py-3 px-5 font-medium">Action</th>
+                                </tr>
+                            </thead>
+                            <tbody class="divide-y divide-gray-100">
+                                ${list.map(inv => `
+                                    <tr class="hover:bg-gray-50 transition-colors">
+                                        <td class="py-3.5 px-5 font-medium text-gray-900">${inv.number || inv.id || '-'}</td>
+                                        <td class="py-3.5 px-5 text-gray-600">${formatDate(inv.date || inv.created)}</td>
+                                        <td class="py-3.5 px-5 text-gray-900 font-medium">${inv.amount != null ? formatPrice(inv.amount) : (inv.total != null ? formatPrice(inv.total) : '-')}</td>
+                                        <td class="py-3.5 px-5">${invoiceStatusBadge(inv.status)}</td>
+                                        <td class="py-3.5 px-5 text-right">
+                                            ${inv.invoicePdf || inv.invoice_pdf || inv.pdf ? `
+                                                <a href="${inv.invoicePdf || inv.invoice_pdf || inv.pdf}" target="_blank"
+                                                    class="inline-flex items-center gap-1.5 text-rainbow-600 hover:text-rainbow-700 text-xs font-medium">
+                                                    <svg class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M3 16.5v2.25A2.25 2.25 0 005.25 21h13.5A2.25 2.25 0 0021 18.75V16.5M16.5 12L12 16.5m0 0L7.5 12m4.5 4.5V3"/></svg>
+                                                    PDF
+                                                </a>
+                                            ` : '-'}
+                                        </td>
+                                    </tr>
+                                `).join('')}
+                            </tbody>
+                        </table>
+                    </div>
+                `;
+            } catch (err) {
+                document.getElementById('invoices-container').innerHTML = `
+                    <div class="p-4 text-red-600 text-sm">Erreur : ${err.message}</div>
+                `;
+            }
+        }
+
+        // =============================================
+        // Update sidebar user info
+        // =============================================
+        function updateSidebarUser() {
+            if (!clientData) return;
+            const name = [clientData.firstName, clientData.lastName].filter(Boolean).join(' ') || 'Utilisateur';
+            const initials = (clientData.firstName?.[0] || '') + (clientData.lastName?.[0] || '');
+            document.getElementById('sidebar-username').textContent = name;
+            document.getElementById('sidebar-email').textContent = clientData.email || '';
+            document.getElementById('sidebar-avatar').textContent = initials.toUpperCase() || '--';
+            document.getElementById('header-name').textContent = name;
+        }
+
+        // =============================================
+        // Init
+        // =============================================
+        async function init() {
+            try {
+                clientData = await api('/api/client/me');
+                updateSidebarUser();
+            } catch (err) {
+                console.error('Failed to load user:', err);
+            }
+            renderPage('dashboard');
+        }
+
+        init();
+    </script>
+</body>
+</html>

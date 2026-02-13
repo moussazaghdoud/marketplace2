@@ -1,0 +1,429 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Rainbow - Plateforme de Communication Cloud</title>
+    <meta name="description" content="Decouvrez Rainbow par Alcatel-Lucent Enterprise : messagerie, visioconference, telephonie cloud et collaboration d'entreprise.">
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        brand: { 50: '#eef4ff', 100: '#dce8ff', 500: '#4F6DF5', 600: '#3B5DE7', 700: '#2D4ED9' }
+                    },
+                    fontFamily: { sans: ['Inter', 'system-ui', 'sans-serif'] }
+                }
+            }
+        }
+    </script>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+</head>
+<body class="font-sans text-gray-700 antialiased bg-white">
+
+    <!-- NAV -->
+    <nav id="navbar" class="fixed top-0 w-full z-50 bg-white/80 backdrop-blur-md border-b border-gray-100">
+        <div class="max-w-6xl mx-auto px-6 flex items-center justify-between h-16">
+            <a href="/" class="flex items-center gap-2">
+                <div class="w-8 h-8 bg-brand-500 rounded-lg flex items-center justify-center">
+                    <svg class="w-5 h-5 text-white" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M13 10V3L4 14h7v7l9-11h-7z"/></svg>
+                </div>
+                <span class="text-lg font-bold text-gray-900">Rainbow</span>
+            </a>
+            <div class="hidden md:flex items-center gap-6">
+                <a href="/" class="text-sm text-gray-500 hover:text-gray-900 transition-colors">Accueil</a>
+                <a href="/product/rainbow" class="text-sm font-medium text-brand-500 transition-colors">Produit</a>
+                <a href="/blog" class="text-sm text-gray-500 hover:text-gray-900 transition-colors">Blog</a>
+                <a href="/reviews" class="text-sm text-gray-500 hover:text-gray-900 transition-colors">Avis</a>
+                <a href="/support" class="text-sm text-gray-500 hover:text-gray-900 transition-colors">Support</a>
+                <a href="/tutorials" class="text-sm text-gray-500 hover:text-gray-900 transition-colors">Tutoriels</a>
+                <a href="/login" class="text-sm text-gray-500 hover:text-gray-900 transition-colors">Se connecter</a>
+                <a href="/" class="px-5 py-2 rounded-lg bg-brand-500 text-white text-sm font-medium hover:bg-brand-600 transition-colors">Demarrer</a>
+            </div>
+            <button id="mobile-menu-btn" class="md:hidden p-2" aria-label="Menu">
+                <svg class="w-6 h-6 text-gray-600" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M4 6h16M4 12h16M4 18h16"/></svg>
+            </button>
+        </div>
+        <div id="mobile-menu" class="md:hidden hidden border-t border-gray-100 bg-white px-6 py-4 space-y-3">
+            <a href="/" class="block text-sm text-gray-600 py-2">Accueil</a>
+            <a href="/product/rainbow" class="block text-sm font-medium text-brand-500 py-2">Produit</a>
+            <a href="/blog" class="block text-sm text-gray-600 py-2">Blog</a>
+            <a href="/reviews" class="block text-sm text-gray-600 py-2">Avis</a>
+            <a href="/support" class="block text-sm text-gray-600 py-2">Support</a>
+            <a href="/tutorials" class="block text-sm text-gray-600 py-2">Tutoriels</a>
+            <a href="/login" class="block text-sm text-gray-600 py-2">Se connecter</a>
+            <a href="/" class="block w-full text-center text-sm font-medium text-white bg-brand-500 rounded-lg py-2.5">Demarrer</a>
+        </div>
+    </nav>
+
+    <!-- LOADING -->
+    <div id="loading" class="pt-28 pb-20 px-6 text-center">
+        <div class="inline-block w-8 h-8 border-4 border-brand-500 border-t-transparent rounded-full animate-spin"></div>
+        <p class="mt-3 text-gray-400 text-sm">Chargement du produit...</p>
+    </div>
+
+    <!-- NOT FOUND -->
+    <div id="not-found" class="pt-28 pb-20 px-6 text-center hidden">
+        <svg class="w-20 h-20 mx-auto text-gray-300 mb-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.5"><path stroke-linecap="round" stroke-linejoin="round" d="M12 9v3.75m9-.75a9 9 0 11-18 0 9 9 0 0118 0zm-9 3.75h.008v.008H12v-.008z"/></svg>
+        <h1 class="text-3xl font-bold text-gray-900 mb-2">Produit introuvable</h1>
+        <p class="text-gray-500 mb-6">Le produit demande n'existe pas ou n'est plus disponible.</p>
+        <a href="/" class="inline-flex items-center gap-2 px-5 py-2.5 rounded-lg bg-brand-500 text-white text-sm font-medium hover:bg-brand-600 transition-colors">Retour a l'accueil</a>
+    </div>
+
+    <!-- PRODUCT CONTENT -->
+    <div id="product-container" class="hidden">
+
+        <!-- HERO -->
+        <header class="pt-28 pb-16 px-6 bg-gradient-to-br from-brand-100 via-white to-white">
+            <div class="max-w-5xl mx-auto">
+                <div class="grid lg:grid-cols-2 gap-12 items-center">
+                    <div class="text-center lg:text-left">
+                        <span class="inline-block px-3 py-1 rounded-full text-xs font-medium bg-brand-50 text-brand-600 mb-4">Produit</span>
+                        <h1 id="product-name" class="text-4xl sm:text-5xl font-bold text-gray-900 leading-tight"></h1>
+                        <p id="product-short-desc" class="mt-5 text-lg text-gray-500 max-w-xl leading-relaxed"></p>
+                        <div class="mt-8 flex flex-col sm:flex-row gap-3 justify-center lg:justify-start">
+                            <a href="/login" class="px-7 py-3 rounded-lg bg-brand-500 text-white font-medium hover:bg-brand-600 transition-colors text-center">Demarrer maintenant</a>
+                            <a href="#pricing-section" class="px-7 py-3 rounded-lg border border-gray-200 text-gray-700 font-medium hover:border-gray-300 transition-colors text-center">Voir les tarifs</a>
+                        </div>
+                    </div>
+                    <div id="hero-image-wrapper" class="hidden lg:block">
+                        <div class="bg-gradient-to-br from-brand-500 to-indigo-600 rounded-2xl p-8 flex items-center justify-center min-h-[300px]">
+                            <svg class="w-24 h-24 text-white/30" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.5"><path stroke-linecap="round" stroke-linejoin="round" d="M20.25 8.511c.884.284 1.5 1.128 1.5 2.097v4.286c0 1.136-.847 2.1-1.98 2.193-.34.027-.68.052-1.02.072v3.091l-3-3c-1.354 0-2.694-.055-4.02-.163a2.115 2.115 0 01-.825-.242m9.345-8.334a2.126 2.126 0 00-.476-.095 48.64 48.64 0 00-8.048 0c-1.131.094-1.976 1.057-1.976 2.192v4.286c0 .837.46 1.58 1.155 1.951m9.345-8.334V6.637c0-1.621-1.152-3.026-2.76-3.235A48.455 48.455 0 0011.25 3c-2.115 0-4.198.137-6.24.402-1.608.209-2.76 1.614-2.76 3.235v6.226c0 1.621 1.152 3.026 2.76 3.235.577.075 1.157.14 1.74.194V21l4.155-4.155"/></svg>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </header>
+
+        <!-- FULL DESCRIPTION -->
+        <section class="py-16 px-6">
+            <div class="max-w-3xl mx-auto">
+                <h2 class="text-2xl font-bold text-gray-900 mb-6">A propos de ce produit</h2>
+                <div id="product-full-desc" class="text-gray-600 leading-relaxed space-y-4"></div>
+            </div>
+        </section>
+
+        <!-- BENEFITS -->
+        <section id="benefits-section" class="py-16 px-6 bg-gray-50 hidden">
+            <div class="max-w-5xl mx-auto">
+                <h2 class="text-2xl font-bold text-gray-900 text-center mb-10">Avantages cles</h2>
+                <div id="benefits-grid" class="grid sm:grid-cols-2 lg:grid-cols-3 gap-6"></div>
+            </div>
+        </section>
+
+        <!-- IMAGE GALLERY -->
+        <section id="gallery-section" class="py-16 px-6 hidden">
+            <div class="max-w-5xl mx-auto">
+                <h2 class="text-2xl font-bold text-gray-900 text-center mb-10">Galerie</h2>
+                <div id="gallery-grid" class="grid sm:grid-cols-2 lg:grid-cols-3 gap-6"></div>
+            </div>
+        </section>
+
+        <!-- PRICING -->
+        <section id="pricing-section" class="py-20 px-6 bg-gradient-to-b from-white via-brand-50 to-white">
+            <div class="max-w-5xl mx-auto">
+                <div class="text-center mb-14">
+                    <h2 class="text-3xl font-bold text-gray-900">Tarifs & Abonnements</h2>
+                    <p class="mt-3 text-gray-500">Choisissez le plan qui correspond a vos besoins.</p>
+                </div>
+                <div id="pricing-grid" class="grid md:grid-cols-3 gap-6 max-w-4xl mx-auto"></div>
+                <p class="text-center text-xs text-gray-400 mt-8">Paiements securises via Stripe. Annulation possible a tout moment.</p>
+            </div>
+        </section>
+
+        <!-- REVIEWS -->
+        <section id="reviews-section" class="py-16 px-6 bg-gray-50 hidden">
+            <div class="max-w-5xl mx-auto">
+                <div class="text-center mb-10">
+                    <h2 class="text-2xl font-bold text-gray-900">Ce que nos clients disent</h2>
+                    <p class="mt-2 text-gray-500">Temoignages de clients verifies.</p>
+                </div>
+                <div id="reviews-grid" class="grid sm:grid-cols-2 lg:grid-cols-3 gap-6"></div>
+                <div class="text-center mt-8">
+                    <a href="/reviews" class="text-sm font-medium text-brand-500 hover:text-brand-600 transition-colors">Voir tous les avis &rarr;</a>
+                </div>
+            </div>
+        </section>
+
+        <!-- FINAL CTA -->
+        <section class="py-16 px-6 bg-gradient-to-r from-brand-600 via-brand-500 to-indigo-500">
+            <div class="max-w-2xl mx-auto text-center">
+                <h2 class="text-2xl font-bold text-white">Pret a transformer votre communication ?</h2>
+                <p class="mt-2 text-blue-100 text-sm">Rejoignez des milliers d'entreprises qui utilisent Rainbow. Commencez gratuitement des aujourd'hui.</p>
+                <a href="/login" class="inline-block mt-6 px-7 py-3 rounded-lg bg-white text-brand-600 font-medium text-sm hover:bg-blue-50 transition-colors">
+                    Demarrer maintenant
+                </a>
+            </div>
+        </section>
+    </div>
+
+    <!-- FOOTER -->
+    <footer class="bg-gray-900 text-gray-400 pt-16 pb-8 px-6">
+        <div class="max-w-6xl mx-auto">
+            <div class="grid sm:grid-cols-2 lg:grid-cols-4 gap-10 mb-12">
+                <div>
+                    <h4 class="text-white font-semibold text-sm mb-4">Produit</h4>
+                    <ul class="space-y-2 text-sm">
+                        <li><a href="/product/rainbow" class="hover:text-white transition-colors">Rainbow</a></li>
+                        <li><a href="/#features" class="hover:text-white transition-colors">Fonctionnalites</a></li>
+                        <li><a href="/#pricing" class="hover:text-white transition-colors">Tarifs</a></li>
+                        <li><a href="/#demo" class="hover:text-white transition-colors">Demo</a></li>
+                    </ul>
+                </div>
+                <div>
+                    <h4 class="text-white font-semibold text-sm mb-4">Ressources</h4>
+                    <ul class="space-y-2 text-sm">
+                        <li><a href="/blog" class="hover:text-white transition-colors">Blog</a></li>
+                        <li><a href="/tutorials" class="hover:text-white transition-colors">Tutoriels</a></li>
+                        <li><a href="#" class="hover:text-white transition-colors">Documentation API</a></li>
+                        <li><a href="#" class="hover:text-white transition-colors">Changelog</a></li>
+                    </ul>
+                </div>
+                <div>
+                    <h4 class="text-white font-semibold text-sm mb-4">Support</h4>
+                    <ul class="space-y-2 text-sm">
+                        <li><a href="/support" class="hover:text-white transition-colors">Centre d'aide</a></li>
+                        <li><a href="/support" class="hover:text-white transition-colors">Contactez-nous</a></li>
+                        <li><a href="#" class="hover:text-white transition-colors">Statut du service</a></li>
+                        <li><a href="/reviews" class="hover:text-white transition-colors">Avis clients</a></li>
+                    </ul>
+                </div>
+                <div>
+                    <h4 class="text-white font-semibold text-sm mb-4">Entreprise</h4>
+                    <ul class="space-y-2 text-sm">
+                        <li><a href="#" class="hover:text-white transition-colors">A propos</a></li>
+                        <li><a href="#" class="hover:text-white transition-colors">Carrieres</a></li>
+                        <li><a href="#" class="hover:text-white transition-colors">Mentions legales</a></li>
+                        <li><a href="#" class="hover:text-white transition-colors">Politique de confidentialite</a></li>
+                    </ul>
+                </div>
+            </div>
+            <div class="border-t border-gray-800 pt-6 text-center text-xs text-gray-500">
+                &copy; 2024 Rainbow by ALE. Tous droits reserves.
+            </div>
+        </div>
+    </footer>
+
+    <script>
+        // Mobile menu toggle
+        document.getElementById('mobile-menu-btn').addEventListener('click', function() {
+            document.getElementById('mobile-menu').classList.toggle('hidden');
+        });
+
+        // Extract slug from URL path
+        var pathParts = window.location.pathname.split('/');
+        var slug = pathParts[pathParts.length - 1] || 'rainbow';
+
+        function escapeHtml(str) {
+            if (!str) return '';
+            var div = document.createElement('div');
+            div.textContent = str;
+            return div.innerHTML;
+        }
+
+        function renderStars(rating, size) {
+            size = size || 'w-5 h-5';
+            var html = '';
+            for (var i = 1; i <= 5; i++) {
+                if (i <= Math.floor(rating)) {
+                    html += '<svg class="' + size + ' text-yellow-400" fill="currentColor" viewBox="0 0 20 20"><path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z"/></svg>';
+                } else {
+                    html += '<svg class="' + size + ' text-gray-300" fill="currentColor" viewBox="0 0 20 20"><path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z"/></svg>';
+                }
+            }
+            return html;
+        }
+
+        async function loadProduct() {
+            var loadingEl = document.getElementById('loading');
+            var notFoundEl = document.getElementById('not-found');
+            var containerEl = document.getElementById('product-container');
+
+            try {
+                var res = await fetch('/api/products/' + encodeURIComponent(slug));
+                if (!res.ok) {
+                    loadingEl.classList.add('hidden');
+                    notFoundEl.classList.remove('hidden');
+                    return;
+                }
+
+                var product = await res.json();
+
+                // Page title
+                document.title = (product.name || 'Rainbow') + ' - Rainbow by ALE';
+
+                // Hero
+                document.getElementById('product-name').textContent = product.name || 'Rainbow';
+                document.getElementById('product-short-desc').textContent = product.shortDescription || product.description || '';
+
+                // Full description
+                var fullDescEl = document.getElementById('product-full-desc');
+                if (product.fullDescription || product.description) {
+                    var descText = product.fullDescription || product.description || '';
+                    // If it looks like HTML, insert directly, otherwise wrap in paragraphs
+                    if (descText.indexOf('<') !== -1) {
+                        fullDescEl.innerHTML = descText;
+                    } else {
+                        descText.split('\n').forEach(function(para) {
+                            if (para.trim()) {
+                                var p = document.createElement('p');
+                                p.textContent = para.trim();
+                                fullDescEl.appendChild(p);
+                            }
+                        });
+                    }
+                }
+
+                // Benefits
+                var benefits = product.benefits || [];
+                if (benefits.length > 0) {
+                    var benefitsSection = document.getElementById('benefits-section');
+                    var benefitsGrid = document.getElementById('benefits-grid');
+                    benefitsSection.classList.remove('hidden');
+
+                    benefits.forEach(function(benefit) {
+                        var card = document.createElement('div');
+                        card.className = 'bg-white rounded-xl border border-gray-100 p-6 flex items-start gap-4';
+                        var text = typeof benefit === 'string' ? benefit : (benefit.text || benefit.title || '');
+                        card.innerHTML =
+                            '<div class="w-8 h-8 bg-green-100 rounded-lg flex items-center justify-center flex-shrink-0 mt-0.5">' +
+                                '<svg class="w-5 h-5 text-green-500" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M4.5 12.75l6 6 9-13.5"/></svg>' +
+                            '</div>' +
+                            '<p class="text-sm text-gray-700 leading-relaxed">' + escapeHtml(text) + '</p>';
+                        benefitsGrid.appendChild(card);
+                    });
+                }
+
+                // Gallery
+                var gallery = product.gallery || [];
+                if (gallery.length > 0) {
+                    var gallerySection = document.getElementById('gallery-section');
+                    var galleryGrid = document.getElementById('gallery-grid');
+                    gallerySection.classList.remove('hidden');
+
+                    gallery.forEach(function(imgUrl) {
+                        var wrapper = document.createElement('div');
+                        wrapper.className = 'rounded-xl overflow-hidden border border-gray-100 shadow-sm';
+                        var img = document.createElement('img');
+                        img.src = imgUrl;
+                        img.alt = product.name;
+                        img.className = 'w-full h-48 object-cover hover:scale-105 transition-transform duration-300';
+                        wrapper.appendChild(img);
+                        galleryGrid.appendChild(wrapper);
+                    });
+                }
+
+                // Pricing
+                var plans = product.plans || {};
+                var planKeys = Object.keys(plans);
+                var pricingGrid = document.getElementById('pricing-grid');
+
+                if (planKeys.length > 0) {
+                    planKeys.forEach(function(key, index) {
+                        var plan = plans[key];
+                        var isPopular = index === 1; // Middle plan is popular
+                        var price = plan.price || plan.monthlyPrice || 0;
+                        var name = plan.name || key.charAt(0).toUpperCase() + key.slice(1);
+                        var features = plan.features || [];
+
+                        var card = document.createElement('div');
+                        card.className = 'bg-white rounded-xl border ' + (isPopular ? 'border-brand-500 ring-2 ring-brand-500/20 shadow-lg relative' : 'border-gray-100') + ' p-6';
+
+                        var popularBadge = '';
+                        if (isPopular) {
+                            popularBadge = '<div class="absolute -top-3 left-1/2 -translate-x-1/2"><span class="px-3 py-1 rounded-full text-xs font-medium bg-brand-500 text-white">Populaire</span></div>';
+                        }
+
+                        var featuresHtml = '';
+                        if (Array.isArray(features)) {
+                            features.forEach(function(f) {
+                                var featureText = typeof f === 'string' ? f : (f.text || f.name || '');
+                                featuresHtml +=
+                                    '<li class="flex items-start gap-2">' +
+                                        '<svg class="w-4 h-4 text-green-500 mt-0.5 flex-shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M4.5 12.75l6 6 9-13.5"/></svg>' +
+                                        '<span>' + escapeHtml(featureText) + '</span>' +
+                                    '</li>';
+                            });
+                        }
+
+                        card.innerHTML = popularBadge +
+                            '<div class="text-center mb-6">' +
+                                '<h3 class="text-lg font-bold text-gray-900">' + escapeHtml(name) + '</h3>' +
+                                '<div class="mt-3">' +
+                                    '<span class="text-4xl font-bold text-gray-900">' + (parseFloat(price) === 0 ? 'Gratuit' : price + ' &euro;') + '</span>' +
+                                    (parseFloat(price) > 0 ? '<span class="text-sm text-gray-400"> /mois /utilisateur</span>' : '') +
+                                '</div>' +
+                            '</div>' +
+                            '<ul class="space-y-3 text-sm text-gray-600 mb-6">' + featuresHtml + '</ul>' +
+                            '<a href="/login" class="block w-full text-center py-2.5 rounded-lg text-sm font-medium transition-colors ' +
+                                (isPopular ? 'bg-brand-500 text-white hover:bg-brand-600' : 'bg-gray-100 text-gray-700 hover:bg-gray-200') +
+                            '">Choisir ce plan</a>';
+                        pricingGrid.appendChild(card);
+                    });
+                } else {
+                    document.getElementById('pricing-section').classList.add('hidden');
+                }
+
+                // Show product container
+                loadingEl.classList.add('hidden');
+                containerEl.classList.remove('hidden');
+
+                // Load reviews
+                loadReviews();
+
+            } catch(e) {
+                loadingEl.classList.add('hidden');
+                notFoundEl.classList.remove('hidden');
+            }
+        }
+
+        async function loadReviews() {
+            try {
+                var res = await fetch('/api/reviews');
+                if (!res.ok) return;
+                var reviews = await res.json();
+
+                if (!reviews || reviews.length === 0) return;
+
+                var reviewsSection = document.getElementById('reviews-section');
+                var reviewsGrid = document.getElementById('reviews-grid');
+                reviewsSection.classList.remove('hidden');
+
+                // Show top 3
+                var topReviews = reviews.slice(0, 3);
+                var colors = ['bg-brand-500', 'bg-indigo-500', 'bg-purple-500'];
+
+                topReviews.forEach(function(review, idx) {
+                    var initial = (review.authorName || review.author || 'A').charAt(0).toUpperCase();
+                    var name = review.authorName || review.author || 'Anonyme';
+                    var company = review.company || '';
+                    var text = review.text || review.content || '';
+                    var rating = review.rating || 5;
+
+                    var card = document.createElement('div');
+                    card.className = 'bg-white rounded-xl border border-gray-100 p-6';
+                    card.innerHTML =
+                        '<div class="flex items-center gap-0.5 mb-4">' + renderStars(rating, 'w-5 h-5') + '</div>' +
+                        '<p class="text-gray-600 text-sm leading-relaxed mb-6">"' + escapeHtml(text) + '"</p>' +
+                        '<div class="flex items-center gap-3 pt-4 border-t border-gray-50">' +
+                            '<div class="w-10 h-10 rounded-full ' + colors[idx % colors.length] + ' flex items-center justify-center flex-shrink-0">' +
+                                '<span class="text-white font-semibold text-sm">' + escapeHtml(initial) + '</span>' +
+                            '</div>' +
+                            '<div>' +
+                                '<p class="text-sm font-semibold text-gray-900">' + escapeHtml(name) + '</p>' +
+                                (company ? '<p class="text-xs text-gray-400">' + escapeHtml(company) + '</p>' : '') +
+                            '</div>' +
+                        '</div>';
+                    reviewsGrid.appendChild(card);
+                });
+            } catch(e) { /* silent */ }
+        }
+
+        // Init
+        loadProduct();
+    </script>
+</body>
+</html>

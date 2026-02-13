@@ -1,0 +1,276 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Article - Blog Rainbow</title>
+    <meta name="description" content="Lisez cet article sur le blog Rainbow par Alcatel-Lucent Enterprise.">
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        brand: { 50: '#eef4ff', 100: '#dce8ff', 500: '#4F6DF5', 600: '#3B5DE7', 700: '#2D4ED9' }
+                    },
+                    fontFamily: { sans: ['Inter', 'system-ui', 'sans-serif'] }
+                }
+            }
+        }
+    </script>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        .article-content h1 { font-size: 2rem; font-weight: 700; color: #111827; margin: 1.5rem 0 0.75rem; }
+        .article-content h2 { font-size: 1.5rem; font-weight: 700; color: #111827; margin: 1.5rem 0 0.75rem; }
+        .article-content h3 { font-size: 1.25rem; font-weight: 600; color: #111827; margin: 1.25rem 0 0.5rem; }
+        .article-content p { margin: 0.75rem 0; line-height: 1.75; color: #4b5563; }
+        .article-content ul, .article-content ol { margin: 0.75rem 0; padding-left: 1.5rem; color: #4b5563; }
+        .article-content ul { list-style-type: disc; }
+        .article-content ol { list-style-type: decimal; }
+        .article-content li { margin: 0.25rem 0; line-height: 1.75; }
+        .article-content a { color: #4F6DF5; text-decoration: underline; }
+        .article-content blockquote { border-left: 4px solid #4F6DF5; padding-left: 1rem; margin: 1rem 0; font-style: italic; color: #6b7280; }
+        .article-content img { border-radius: 0.75rem; margin: 1.5rem 0; max-width: 100%; }
+        .article-content pre { background: #f3f4f6; border-radius: 0.5rem; padding: 1rem; overflow-x: auto; margin: 1rem 0; }
+        .article-content code { background: #f3f4f6; padding: 0.125rem 0.375rem; border-radius: 0.25rem; font-size: 0.875rem; }
+    </style>
+</head>
+<body class="font-sans text-gray-700 antialiased bg-white">
+
+    <!-- NAV -->
+    <nav id="navbar" class="fixed top-0 w-full z-50 bg-white/80 backdrop-blur-md border-b border-gray-100">
+        <div class="max-w-6xl mx-auto px-6 flex items-center justify-between h-16">
+            <a href="/" class="flex items-center gap-2">
+                <div class="w-8 h-8 bg-brand-500 rounded-lg flex items-center justify-center">
+                    <svg class="w-5 h-5 text-white" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M13 10V3L4 14h7v7l9-11h-7z"/></svg>
+                </div>
+                <span class="text-lg font-bold text-gray-900">Rainbow</span>
+            </a>
+            <div class="hidden md:flex items-center gap-6">
+                <a href="/" class="text-sm text-gray-500 hover:text-gray-900 transition-colors">Accueil</a>
+                <a href="/product/rainbow" class="text-sm text-gray-500 hover:text-gray-900 transition-colors">Produit</a>
+                <a href="/blog" class="text-sm font-medium text-brand-500 transition-colors">Blog</a>
+                <a href="/reviews" class="text-sm text-gray-500 hover:text-gray-900 transition-colors">Avis</a>
+                <a href="/support" class="text-sm text-gray-500 hover:text-gray-900 transition-colors">Support</a>
+                <a href="/tutorials" class="text-sm text-gray-500 hover:text-gray-900 transition-colors">Tutoriels</a>
+                <a href="/login" class="text-sm text-gray-500 hover:text-gray-900 transition-colors">Se connecter</a>
+                <a href="/" class="px-5 py-2 rounded-lg bg-brand-500 text-white text-sm font-medium hover:bg-brand-600 transition-colors">Demarrer</a>
+            </div>
+            <button id="mobile-menu-btn" class="md:hidden p-2" aria-label="Menu">
+                <svg class="w-6 h-6 text-gray-600" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M4 6h16M4 12h16M4 18h16"/></svg>
+            </button>
+        </div>
+        <div id="mobile-menu" class="md:hidden hidden border-t border-gray-100 bg-white px-6 py-4 space-y-3">
+            <a href="/" class="block text-sm text-gray-600 py-2">Accueil</a>
+            <a href="/product/rainbow" class="block text-sm text-gray-600 py-2">Produit</a>
+            <a href="/blog" class="block text-sm font-medium text-brand-500 py-2">Blog</a>
+            <a href="/reviews" class="block text-sm text-gray-600 py-2">Avis</a>
+            <a href="/support" class="block text-sm text-gray-600 py-2">Support</a>
+            <a href="/tutorials" class="block text-sm text-gray-600 py-2">Tutoriels</a>
+            <a href="/login" class="block text-sm text-gray-600 py-2">Se connecter</a>
+            <a href="/" class="block w-full text-center text-sm font-medium text-white bg-brand-500 rounded-lg py-2.5">Demarrer</a>
+        </div>
+    </nav>
+
+    <!-- ARTICLE LOADING STATE -->
+    <div id="loading" class="pt-28 pb-20 px-6 text-center">
+        <div class="inline-block w-8 h-8 border-4 border-brand-500 border-t-transparent rounded-full animate-spin"></div>
+        <p class="mt-3 text-gray-400 text-sm">Chargement de l'article...</p>
+    </div>
+
+    <!-- ARTICLE NOT FOUND -->
+    <div id="not-found" class="pt-28 pb-20 px-6 text-center hidden">
+        <svg class="w-20 h-20 mx-auto text-gray-300 mb-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.5"><path stroke-linecap="round" stroke-linejoin="round" d="M12 9v3.75m9-.75a9 9 0 11-18 0 9 9 0 0118 0zm-9 3.75h.008v.008H12v-.008z"/></svg>
+        <h1 class="text-3xl font-bold text-gray-900 mb-2">Article introuvable</h1>
+        <p class="text-gray-500 mb-6">L'article que vous recherchez n'existe pas ou a ete supprime.</p>
+        <a href="/blog" class="inline-flex items-center gap-2 px-5 py-2.5 rounded-lg bg-brand-500 text-white text-sm font-medium hover:bg-brand-600 transition-colors">
+            <svg class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M10.5 19.5L3 12m0 0l7.5-7.5M3 12h18"/></svg>
+            Retour au blog
+        </a>
+    </div>
+
+    <!-- ARTICLE CONTENT -->
+    <article id="article-container" class="hidden">
+        <!-- Cover Image -->
+        <div id="cover-section" class="pt-16">
+            <div id="cover-image-wrapper" class="w-full h-64 sm:h-80 md:h-96 bg-gradient-to-br from-brand-500 to-indigo-600 relative overflow-hidden">
+                <img id="cover-image" src="" alt="" class="w-full h-full object-cover hidden">
+                <div class="absolute inset-0 bg-black/30"></div>
+            </div>
+        </div>
+
+        <!-- Article Body -->
+        <div class="max-w-3xl mx-auto px-6 -mt-12 relative z-10">
+            <div class="bg-white rounded-2xl shadow-lg p-8 sm:p-10">
+                <!-- Back link -->
+                <a href="/blog" class="inline-flex items-center gap-1.5 text-sm text-brand-500 hover:text-brand-600 transition-colors mb-6">
+                    <svg class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M10.5 19.5L3 12m0 0l7.5-7.5M3 12h18"/></svg>
+                    Retour au blog
+                </a>
+
+                <!-- Meta -->
+                <div class="flex flex-wrap items-center gap-3 mb-4">
+                    <span id="article-category" class="inline-block px-3 py-1 rounded-full text-xs font-medium bg-brand-50 text-brand-600"></span>
+                    <span id="article-date" class="text-sm text-gray-400"></span>
+                </div>
+
+                <!-- Title -->
+                <h1 id="article-title" class="text-3xl sm:text-4xl font-bold text-gray-900 leading-tight mb-4"></h1>
+
+                <!-- Author -->
+                <div id="article-author-section" class="flex items-center gap-3 mb-8 pb-8 border-b border-gray-100">
+                    <div class="w-10 h-10 rounded-full bg-brand-100 flex items-center justify-center">
+                        <span id="article-author-initial" class="text-brand-600 font-semibold text-sm"></span>
+                    </div>
+                    <div>
+                        <p id="article-author" class="text-sm font-medium text-gray-900"></p>
+                        <p class="text-xs text-gray-400">Auteur</p>
+                    </div>
+                </div>
+
+                <!-- Content -->
+                <div id="article-content" class="article-content"></div>
+            </div>
+        </div>
+
+        <!-- Bottom CTA -->
+        <div class="max-w-3xl mx-auto px-6 py-12 text-center">
+            <a href="/blog" class="inline-flex items-center gap-2 text-brand-500 hover:text-brand-600 font-medium transition-colors">
+                <svg class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M10.5 19.5L3 12m0 0l7.5-7.5M3 12h18"/></svg>
+                Voir tous les articles
+            </a>
+        </div>
+    </article>
+
+    <!-- FOOTER -->
+    <footer class="bg-gray-900 text-gray-400 pt-16 pb-8 px-6">
+        <div class="max-w-6xl mx-auto">
+            <div class="grid sm:grid-cols-2 lg:grid-cols-4 gap-10 mb-12">
+                <div>
+                    <h4 class="text-white font-semibold text-sm mb-4">Produit</h4>
+                    <ul class="space-y-2 text-sm">
+                        <li><a href="/product/rainbow" class="hover:text-white transition-colors">Rainbow</a></li>
+                        <li><a href="/#features" class="hover:text-white transition-colors">Fonctionnalites</a></li>
+                        <li><a href="/#pricing" class="hover:text-white transition-colors">Tarifs</a></li>
+                        <li><a href="/#demo" class="hover:text-white transition-colors">Demo</a></li>
+                    </ul>
+                </div>
+                <div>
+                    <h4 class="text-white font-semibold text-sm mb-4">Ressources</h4>
+                    <ul class="space-y-2 text-sm">
+                        <li><a href="/blog" class="hover:text-white transition-colors">Blog</a></li>
+                        <li><a href="/tutorials" class="hover:text-white transition-colors">Tutoriels</a></li>
+                        <li><a href="#" class="hover:text-white transition-colors">Documentation API</a></li>
+                        <li><a href="#" class="hover:text-white transition-colors">Changelog</a></li>
+                    </ul>
+                </div>
+                <div>
+                    <h4 class="text-white font-semibold text-sm mb-4">Support</h4>
+                    <ul class="space-y-2 text-sm">
+                        <li><a href="/support" class="hover:text-white transition-colors">Centre d'aide</a></li>
+                        <li><a href="/support" class="hover:text-white transition-colors">Contactez-nous</a></li>
+                        <li><a href="#" class="hover:text-white transition-colors">Statut du service</a></li>
+                        <li><a href="/reviews" class="hover:text-white transition-colors">Avis clients</a></li>
+                    </ul>
+                </div>
+                <div>
+                    <h4 class="text-white font-semibold text-sm mb-4">Entreprise</h4>
+                    <ul class="space-y-2 text-sm">
+                        <li><a href="#" class="hover:text-white transition-colors">A propos</a></li>
+                        <li><a href="#" class="hover:text-white transition-colors">Carrieres</a></li>
+                        <li><a href="#" class="hover:text-white transition-colors">Mentions legales</a></li>
+                        <li><a href="#" class="hover:text-white transition-colors">Politique de confidentialite</a></li>
+                    </ul>
+                </div>
+            </div>
+            <div class="border-t border-gray-800 pt-6 text-center text-xs text-gray-500">
+                &copy; 2024 Rainbow by ALE. Tous droits reserves.
+            </div>
+        </div>
+    </footer>
+
+    <script>
+        // Mobile menu toggle
+        document.getElementById('mobile-menu-btn').addEventListener('click', function() {
+            document.getElementById('mobile-menu').classList.toggle('hidden');
+        });
+
+        // Extract slug from URL
+        var pathParts = window.location.pathname.split('/');
+        var slug = pathParts[pathParts.length - 1];
+
+        async function loadArticle() {
+            var loadingEl = document.getElementById('loading');
+            var notFoundEl = document.getElementById('not-found');
+            var containerEl = document.getElementById('article-container');
+
+            if (!slug) {
+                loadingEl.classList.add('hidden');
+                notFoundEl.classList.remove('hidden');
+                return;
+            }
+
+            try {
+                var res = await fetch('/api/blog/articles/' + encodeURIComponent(slug));
+                if (!res.ok) {
+                    loadingEl.classList.add('hidden');
+                    notFoundEl.classList.remove('hidden');
+                    return;
+                }
+
+                var article = await res.json();
+
+                // Update page title
+                document.title = article.title + ' - Blog Rainbow';
+
+                // Cover image
+                if (article.coverImage) {
+                    var img = document.getElementById('cover-image');
+                    img.src = article.coverImage;
+                    img.alt = article.title;
+                    img.classList.remove('hidden');
+                }
+
+                // Category badge
+                var catEl = document.getElementById('article-category');
+                if (article.categoryName) {
+                    catEl.textContent = article.categoryName;
+                } else {
+                    catEl.classList.add('hidden');
+                }
+
+                // Date
+                if (article.publishedAt || article.createdAt) {
+                    var d = new Date(article.publishedAt || article.createdAt);
+                    document.getElementById('article-date').textContent = d.toLocaleDateString('fr-FR', { year: 'numeric', month: 'long', day: 'numeric' });
+                }
+
+                // Title
+                document.getElementById('article-title').textContent = article.title;
+
+                // Author
+                if (article.author) {
+                    document.getElementById('article-author').textContent = article.author;
+                    document.getElementById('article-author-initial').textContent = article.author.charAt(0).toUpperCase();
+                } else {
+                    document.getElementById('article-author-section').classList.add('hidden');
+                }
+
+                // Content
+                document.getElementById('article-content').innerHTML = article.content || '<p>Contenu non disponible.</p>';
+
+                // Show article, hide loading
+                loadingEl.classList.add('hidden');
+                containerEl.classList.remove('hidden');
+            } catch(e) {
+                loadingEl.classList.add('hidden');
+                notFoundEl.classList.remove('hidden');
+            }
+        }
+
+        loadArticle();
+    </script>
+</body>
+</html>
