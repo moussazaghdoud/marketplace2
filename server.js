@@ -285,4 +285,5 @@ app.listen(PORT, () => {
     console.log(`Blog: http://localhost:${PORT}/blog`);
     console.log(`Rainbow APP_ID: ${RAINBOW_APP_ID ? RAINBOW_APP_ID.slice(0, 6) + '...' : 'NOT SET'}`);
     console.log(`Stripe: ${process.env.STRIPE_SECRET_KEY ? 'configured' : 'NOT SET'}`);
+    console.log(`Salesforce: ${process.env.SF_CLIENT_ID ? 'configured' : 'NOT SET'}`);
 });

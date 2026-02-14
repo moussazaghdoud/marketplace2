@@ -33,6 +33,7 @@ router.post('/register', (req, res) => {
     db.prepare('UPDATE clients SET emailVerified = 1, status = ? WHERE id = ?').run('active', id);
 
     // Fire-and-forget: create Salesforce Lead
+    console.log('[Salesforce] Attempting lead creation for:', email);
     salesforce.createLead({ firstName, lastName, email })
         .then(result => {
             if (result.leadId) {
