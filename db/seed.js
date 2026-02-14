@@ -7,15 +7,23 @@ function seed() {
     createTables();
     const db = getDb();
 
-    // Seed default admin user
-    const existingAdmin = db.prepare('SELECT id FROM admin_users WHERE email = ?').get('admin@rainbow.ale.com');
+    // Seed default admin user (or fix corrupted password hash)
+    const hashedPassword = bcrypt.hashSync('Admin123!', 10);
+    const existingAdmin = db.prepare('SELECT id, password FROM admin_users WHERE email = ?').get('admin@rainbow.ale.com');
     if (!existingAdmin) {
-        const hashedPassword = bcrypt.hashSync('Admin123!', 10);
         db.prepare(`
             INSERT INTO admin_users (id, email, password, firstName, lastName, role)
             VALUES (?, ?, ?, ?, ?, ?)
         `).run(uuidv4(), 'admin@rainbow.ale.com', hashedPassword, 'Admin', 'Rainbow', 'super_admin');
         console.log('Default admin user created: admin@rainbow.ale.com / Admin123!');
+    } else {
+        // Ensure the password hash is valid bcrypt
+        try {
+            bcrypt.compareSync('Admin123!', existingAdmin.password);
+        } catch (e) {
+            db.prepare('UPDATE admin_users SET password = ? WHERE id = ?').run(hashedPassword, existingAdmin.id);
+            console.log('Admin password hash repaired');
+        }
     }
 
     // Seed default Rainbow product
