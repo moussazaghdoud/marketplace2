@@ -1,9 +1,9 @@
 <!DOCTYPE html>
-<html lang="fr">
+<html lang="en">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Mon Espace Rainbow</title>
+    <title>My Rainbow Portal</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -96,7 +96,7 @@
             </div>
             <div>
                 <span class="text-lg font-bold text-gray-900">Rainbow</span>
-                <p class="text-[10px] text-gray-400 -mt-0.5">Mon Espace Client</p>
+                <p class="text-[10px] text-gray-400 -mt-0.5">My Client Portal</p>
             </div>
         </div>
 
@@ -104,27 +104,27 @@
         <nav class="p-3 space-y-1 sidebar-scroll overflow-y-auto" style="height: calc(100% - 4rem - 4rem);">
             <button onclick="navigateTo('dashboard')" data-nav="dashboard" class="sidebar-link active w-full flex items-center gap-3 px-3 py-2.5 rounded-lg text-sm text-gray-700">
                 <svg class="sidebar-icon w-5 h-5 text-gray-400" fill="none" stroke="currentColor" stroke-width="1.5" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M2.25 12l8.954-8.955c.44-.439 1.152-.439 1.591 0L21.75 12M4.5 9.75v10.125c0 .621.504 1.125 1.125 1.125H9.75v-4.875c0-.621.504-1.125 1.125-1.125h2.25c.621 0 1.125.504 1.125 1.125V21h4.125c.621 0 1.125-.504 1.125-1.125V9.75M8.25 21h8.25"/></svg>
-                Tableau de bord
+                Dashboard
             </button>
             <button onclick="navigateTo('subscriptions')" data-nav="subscriptions" class="sidebar-link w-full flex items-center gap-3 px-3 py-2.5 rounded-lg text-sm text-gray-700">
                 <svg class="sidebar-icon w-5 h-5 text-gray-400" fill="none" stroke="currentColor" stroke-width="1.5" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M20.25 6.375c0 2.278-3.694 4.125-8.25 4.125S3.75 8.653 3.75 6.375m16.5 0c0-2.278-3.694-4.125-8.25-4.125S3.75 4.097 3.75 6.375m16.5 0v11.25c0 2.278-3.694 4.125-8.25 4.125s-8.25-1.847-8.25-4.125V6.375m16.5 0v3.75m-16.5-3.75v3.75m16.5 0v3.75C20.25 16.153 16.556 18 12 18s-8.25-1.847-8.25-4.125v-3.75m16.5 0c0 2.278-3.694 4.125-8.25 4.125s-8.25-1.847-8.25-4.125"/></svg>
-                Mes abonnements
+                My Subscriptions
             </button>
             <button onclick="navigateTo('profile')" data-nav="profile" class="sidebar-link w-full flex items-center gap-3 px-3 py-2.5 rounded-lg text-sm text-gray-700">
                 <svg class="sidebar-icon w-5 h-5 text-gray-400" fill="none" stroke="currentColor" stroke-width="1.5" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M15.75 6a3.75 3.75 0 11-7.5 0 3.75 3.75 0 017.5 0zM4.501 20.118a7.5 7.5 0 0114.998 0A17.933 17.933 0 0112 21.75c-2.676 0-5.216-.584-7.499-1.632z"/></svg>
-                Mes informations
+                My Information
             </button>
             <button onclick="navigateTo('password')" data-nav="password" class="sidebar-link w-full flex items-center gap-3 px-3 py-2.5 rounded-lg text-sm text-gray-700">
                 <svg class="sidebar-icon w-5 h-5 text-gray-400" fill="none" stroke="currentColor" stroke-width="1.5" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M16.5 10.5V6.75a4.5 4.5 0 10-9 0v3.75m-.75 11.25h10.5a2.25 2.25 0 002.25-2.25v-6.75a2.25 2.25 0 00-2.25-2.25H6.75a2.25 2.25 0 00-2.25 2.25v6.75a2.25 2.25 0 002.25 2.25z"/></svg>
-                Changer le mot de passe
+                Change Password
             </button>
             <button onclick="navigateTo('payment')" data-nav="payment" class="sidebar-link w-full flex items-center gap-3 px-3 py-2.5 rounded-lg text-sm text-gray-700">
                 <svg class="sidebar-icon w-5 h-5 text-gray-400" fill="none" stroke="currentColor" stroke-width="1.5" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M2.25 8.25h19.5M2.25 9h19.5m-16.5 5.25h6m-6 2.25h3m-3.75 3h15a2.25 2.25 0 002.25-2.25V6.75A2.25 2.25 0 0019.5 4.5h-15a2.25 2.25 0 00-2.25 2.25v10.5A2.25 2.25 0 004.5 19.5z"/></svg>
-                Moyens de paiement
+                Payment Methods
             </button>
             <button onclick="navigateTo('invoices')" data-nav="invoices" class="sidebar-link w-full flex items-center gap-3 px-3 py-2.5 rounded-lg text-sm text-gray-700">
                 <svg class="sidebar-icon w-5 h-5 text-gray-400" fill="none" stroke="currentColor" stroke-width="1.5" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M19.5 14.25v-2.625a3.375 3.375 0 00-3.375-3.375h-1.5A1.125 1.125 0 0113.5 7.125v-1.5a3.375 3.375 0 00-3.375-3.375H8.25m0 12.75h7.5m-7.5 3H12M10.5 2.25H5.625c-.621 0-1.125.504-1.125 1.125v17.25c0 .621.504 1.125 1.125 1.125h12.75c.621 0 1.125-.504 1.125-1.125V11.25a9 9 0 00-9-9z"/></svg>
-                Factures
+                Invoices
             </button>
         </nav>
 
@@ -132,7 +132,7 @@
         <div class="absolute bottom-0 left-0 right-0 h-16 border-t border-gray-100 flex items-center px-4 bg-white">
             <div class="w-8 h-8 bg-rainbow-100 rounded-full flex items-center justify-center text-rainbow-600 font-semibold text-xs mr-3" id="sidebar-avatar">--</div>
             <div class="flex-1 min-w-0">
-                <p class="text-sm font-medium text-gray-800 truncate" id="sidebar-username">Chargement...</p>
+                <p class="text-sm font-medium text-gray-800 truncate" id="sidebar-username">Loading...</p>
                 <p class="text-xs text-gray-400 truncate" id="sidebar-email">...</p>
             </div>
         </div>
@@ -146,13 +146,13 @@
                 <button onclick="toggleMobileSidebar()" class="lg:hidden p-2 -ml-2 text-gray-500 hover:text-gray-700 rounded-lg hover:bg-gray-100">
                     <svg class="w-5 h-5" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M3.75 6.75h16.5M3.75 12h16.5m-16.5 5.25h16.5"/></svg>
                 </button>
-                <h1 class="text-lg font-semibold text-gray-900" id="page-title">Tableau de bord</h1>
+                <h1 class="text-lg font-semibold text-gray-900" id="page-title">Dashboard</h1>
             </div>
             <div class="flex items-center gap-3">
                 <span class="hidden sm:block text-sm text-gray-500" id="header-name"></span>
                 <button onclick="logout()" class="flex items-center gap-2 px-3 py-2 text-sm text-gray-600 hover:text-red-600 hover:bg-red-50 rounded-lg transition-colors">
                     <svg class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M15.75 9V5.25A2.25 2.25 0 0013.5 3h-6a2.25 2.25 0 00-2.25 2.25v13.5A2.25 2.25 0 007.5 21h6a2.25 2.25 0 002.25-2.25V15m3 0l3-3m0 0l-3-3m3 3H9"/></svg>
-                    Deconnexion
+                    Log out
                 </button>
             </div>
         </header>
@@ -173,13 +173,13 @@
         <div class="relative z-10 flex items-center justify-center min-h-screen p-4">
             <div class="bg-white rounded-2xl shadow-xl max-w-lg w-full max-h-[80vh] overflow-y-auto">
                 <div class="p-6 border-b border-gray-100 flex items-center justify-between">
-                    <h3 class="text-lg font-semibold text-gray-900">Changer de plan</h3>
+                    <h3 class="text-lg font-semibold text-gray-900">Change Plan</h3>
                     <button onclick="closeModal('modal-change-plan')" class="text-gray-400 hover:text-gray-600">
                         <svg class="w-5 h-5" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M6 18L18 6M6 6l12 12"/></svg>
                     </button>
                 </div>
                 <div class="p-6" id="change-plan-content">
-                    <div class="text-center py-8 text-gray-400">Chargement des plans...</div>
+                    <div class="text-center py-8 text-gray-400">Loading plans...</div>
                 </div>
             </div>
         </div>
@@ -191,13 +191,13 @@
         <div class="relative z-10 flex items-center justify-center min-h-screen p-4">
             <div class="bg-white rounded-2xl shadow-xl max-w-2xl w-full max-h-[85vh] overflow-y-auto">
                 <div class="p-6 border-b border-gray-100 flex items-center justify-between">
-                    <h3 class="text-lg font-semibold text-gray-900">Nouvel abonnement</h3>
+                    <h3 class="text-lg font-semibold text-gray-900">New Subscription</h3>
                     <button onclick="closeModal('modal-new-sub')" class="text-gray-400 hover:text-gray-600">
                         <svg class="w-5 h-5" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M6 18L18 6M6 6l12 12"/></svg>
                     </button>
                 </div>
                 <div class="p-6" id="new-sub-content">
-                    <div class="text-center py-8 text-gray-400">Chargement des plans...</div>
+                    <div class="text-center py-8 text-gray-400">Loading plans...</div>
                 </div>
             </div>
         </div>
@@ -209,7 +209,7 @@
         <div class="relative z-10 flex items-center justify-center min-h-screen p-4">
             <div class="bg-white rounded-2xl shadow-xl max-w-md w-full">
                 <div class="p-6 border-b border-gray-100 flex items-center justify-between">
-                    <h3 class="text-lg font-semibold text-gray-900">Ajouter une carte</h3>
+                    <h3 class="text-lg font-semibold text-gray-900">Add a Card</h3>
                     <button onclick="closeModal('modal-add-card')" class="text-gray-400 hover:text-gray-600">
                         <svg class="w-5 h-5" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M6 18L18 6M6 6l12 12"/></svg>
                     </button>
@@ -219,7 +219,7 @@
                     <div id="card-errors" class="text-sm text-red-600 mb-4 hidden"></div>
                     <button onclick="handleAddCard()" id="btn-add-card"
                         class="w-full py-2.5 px-4 bg-rainbow-500 hover:bg-rainbow-600 text-white font-semibold rounded-lg text-sm transition-colors disabled:opacity-60 disabled:cursor-not-allowed">
-                        Ajouter la carte
+                        Add Card
                     </button>
                 </div>
             </div>
@@ -269,7 +269,7 @@
 
             const data = await res.json().catch(() => ({}));
             if (!res.ok) {
-                throw new Error(data.error || data.message || 'Une erreur est survenue');
+                throw new Error(data.error || data.message || 'An error occurred');
             }
             return data;
         }
@@ -288,12 +288,12 @@
         // Navigation
         // =============================================
         const pageTitles = {
-            dashboard: 'Tableau de bord',
-            subscriptions: 'Mes abonnements',
-            profile: 'Mes informations',
-            password: 'Changer le mot de passe',
-            payment: 'Moyens de paiement',
-            invoices: 'Factures',
+            dashboard: 'Dashboard',
+            subscriptions: 'My Subscriptions',
+            profile: 'My Information',
+            password: 'Change Password',
+            payment: 'Payment Methods',
+            invoices: 'Invoices',
         };
 
         function navigateTo(page) {
@@ -381,16 +381,16 @@
         function formatDate(dateStr) {
             if (!dateStr) return '-';
             const d = new Date(dateStr);
-            return d.toLocaleDateString('fr-FR', { day: '2-digit', month: '2-digit', year: 'numeric' });
+            return d.toLocaleDateString('en-US', { day: '2-digit', month: '2-digit', year: 'numeric' });
         }
 
         function statusBadge(status) {
             const map = {
-                active: { label: 'Actif', class: 'bg-green-100 text-green-700' },
-                trialing: { label: 'Essai', class: 'bg-blue-100 text-blue-700' },
-                past_due: { label: 'En retard', class: 'bg-yellow-100 text-yellow-700' },
-                canceled: { label: 'Annule', class: 'bg-gray-100 text-gray-600' },
-                unpaid: { label: 'Impaye', class: 'bg-red-100 text-red-700' },
+                active: { label: 'Active', class: 'bg-green-100 text-green-700' },
+                trialing: { label: 'Trial', class: 'bg-blue-100 text-blue-700' },
+                past_due: { label: 'Overdue', class: 'bg-yellow-100 text-yellow-700' },
+                canceled: { label: 'Canceled', class: 'bg-gray-100 text-gray-600' },
+                unpaid: { label: 'Unpaid', class: 'bg-red-100 text-red-700' },
             };
             const s = map[status] || { label: status, class: 'bg-gray-100 text-gray-600' };
             return `<span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium ${s.class}">${s.label}</span>`;
@@ -403,8 +403,8 @@
             container.innerHTML = `
                 <div class="fade-in">
                     <div class="mb-8">
-                        <h2 class="text-2xl font-bold text-gray-900 mb-1">Bienvenue, <span id="dash-name" class="text-rainbow-500">...</span></h2>
-                        <p class="text-gray-500">Voici un resume de votre compte Rainbow.</p>
+                        <h2 class="text-2xl font-bold text-gray-900 mb-1">Welcome, <span id="dash-name" class="text-rainbow-500">...</span></h2>
+                        <p class="text-gray-500">Here is a summary of your Rainbow account.</p>
                     </div>
                     <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-5" id="dash-cards">
                         <div class="bg-white rounded-xl border border-gray-200 p-5 animate-pulse">
@@ -439,7 +439,7 @@
                             <div class="w-10 h-10 bg-rainbow-50 rounded-lg flex items-center justify-center">
                                 <svg class="w-5 h-5 text-rainbow-500" fill="none" stroke="currentColor" stroke-width="1.5" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M20.25 6.375c0 2.278-3.694 4.125-8.25 4.125S3.75 8.653 3.75 6.375m16.5 0c0-2.278-3.694-4.125-8.25-4.125S3.75 4.097 3.75 6.375m16.5 0v11.25c0 2.278-3.694 4.125-8.25 4.125s-8.25-1.847-8.25-4.125V6.375"/></svg>
                             </div>
-                            <p class="text-sm text-gray-500">Abonnements actifs</p>
+                            <p class="text-sm text-gray-500">Active Subscriptions</p>
                         </div>
                         <p class="text-3xl font-bold text-gray-900">${activeSubs.length}</p>
                     </div>
@@ -448,7 +448,7 @@
                             <div class="w-10 h-10 bg-green-50 rounded-lg flex items-center justify-center">
                                 <svg class="w-5 h-5 text-green-500" fill="none" stroke="currentColor" stroke-width="1.5" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M15 19.128a9.38 9.38 0 002.625.372 9.337 9.337 0 004.121-.952 4.125 4.125 0 00-7.533-2.493M15 19.128v-.003c0-1.113-.285-2.16-.786-3.07M15 19.128v.106A12.318 12.318 0 018.624 21c-2.331 0-4.512-.645-6.374-1.766l-.001-.109a6.375 6.375 0 0111.964-3.07M12 6.375a3.375 3.375 0 11-6.75 0 3.375 3.375 0 016.75 0zm8.25 2.25a2.625 2.625 0 11-5.25 0 2.625 2.625 0 015.25 0z"/></svg>
                             </div>
-                            <p class="text-sm text-gray-500">Licences totales</p>
+                            <p class="text-sm text-gray-500">Total Licenses</p>
                         </div>
                         <p class="text-3xl font-bold text-gray-900">${totalLicenses}</p>
                     </div>
@@ -457,9 +457,9 @@
                             <div class="w-10 h-10 bg-purple-50 rounded-lg flex items-center justify-center">
                                 <svg class="w-5 h-5 text-purple-500" fill="none" stroke="currentColor" stroke-width="1.5" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M9 12.75L11.25 15 15 9.75m-3-7.036A11.959 11.959 0 013.598 6 11.99 11.99 0 003 9.749c0 5.592 3.824 10.29 9 11.623 5.176-1.332 9-6.03 9-11.622 0-1.31-.21-2.571-.598-3.751h-.152c-3.196 0-6.1-1.248-8.25-3.285z"/></svg>
                             </div>
-                            <p class="text-sm text-gray-500">Statut du compte</p>
+                            <p class="text-sm text-gray-500">Account Status</p>
                         </div>
-                        <p class="text-lg font-semibold text-green-600">${activeSubs.length > 0 ? 'Actif' : 'Aucun abonnement'}</p>
+                        <p class="text-lg font-semibold text-green-600">${activeSubs.length > 0 ? 'Active' : 'No Subscription'}</p>
                     </div>
                 `;
 
@@ -470,11 +470,11 @@
                             <div class="w-14 h-14 bg-rainbow-100 rounded-full flex items-center justify-center mx-auto mb-4">
                                 <svg class="w-7 h-7 text-rainbow-500" fill="none" stroke="currentColor" stroke-width="1.5" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M12 4.5v15m7.5-7.5h-15"/></svg>
                             </div>
-                            <h3 class="text-lg font-bold text-gray-900 mb-2">Commencez avec Rainbow</h3>
-                            <p class="text-sm text-gray-500 mb-5 max-w-md mx-auto">Choisissez un plan adapte a votre equipe et commencez a collaborer des maintenant.</p>
+                            <h3 class="text-lg font-bold text-gray-900 mb-2">Get Started with Rainbow</h3>
+                            <p class="text-sm text-gray-500 mb-5 max-w-md mx-auto">Choose a plan for your team and start collaborating today.</p>
                             <button onclick="navigateTo('subscriptions')" class="inline-flex items-center gap-2 px-6 py-2.5 bg-rainbow-500 hover:bg-rainbow-600 text-white text-sm font-semibold rounded-lg transition-colors">
                                 <svg class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M12 4.5v15m7.5-7.5h-15"/></svg>
-                                Choisir un plan
+                                Choose a Plan
                             </button>
                         </div>
                     `);
@@ -484,14 +484,14 @@
                 if (activeSubs.length > 0) {
                     let summaryHTML = `
                         <div class="mt-8">
-                            <h3 class="text-base font-semibold text-gray-900 mb-4">Resume des abonnements</h3>
+                            <h3 class="text-base font-semibold text-gray-900 mb-4">Subscription Summary</h3>
                             <div class="bg-white rounded-xl border border-gray-200 overflow-hidden">
                                 <table class="w-full text-sm">
                                     <thead class="bg-gray-50 text-gray-500">
                                         <tr>
                                             <th class="text-left py-3 px-4 font-medium">Plan</th>
-                                            <th class="text-left py-3 px-4 font-medium">Licences</th>
-                                            <th class="text-left py-3 px-4 font-medium">Statut</th>
+                                            <th class="text-left py-3 px-4 font-medium">Licenses</th>
+                                            <th class="text-left py-3 px-4 font-medium">Status</th>
                                         </tr>
                                     </thead>
                                     <tbody class="divide-y divide-gray-100">
@@ -522,12 +522,12 @@
                 <div class="fade-in">
                     <div class="flex flex-col sm:flex-row sm:items-center justify-between mb-6 gap-3">
                         <div>
-                            <h2 class="text-xl font-bold text-gray-900">Mes abonnements</h2>
-                            <p class="text-sm text-gray-500 mt-0.5">Gerez vos abonnements Rainbow</p>
+                            <h2 class="text-xl font-bold text-gray-900">My Subscriptions</h2>
+                            <p class="text-sm text-gray-500 mt-0.5">Manage your Rainbow subscriptions</p>
                         </div>
                         <button onclick="openNewSubscriptionModal()" class="inline-flex items-center gap-2 px-4 py-2.5 bg-rainbow-500 hover:bg-rainbow-600 text-white text-sm font-semibold rounded-lg transition-colors">
                             <svg class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M12 4.5v15m7.5-7.5h-15"/></svg>
-                            Nouvel abonnement
+                            New Subscription
                         </button>
                     </div>
                     <div id="subs-list" class="space-y-4">
@@ -549,11 +549,11 @@
                             <div class="w-16 h-16 bg-gray-100 rounded-full flex items-center justify-center mx-auto mb-4">
                                 <svg class="w-8 h-8 text-gray-400" fill="none" stroke="currentColor" stroke-width="1.5" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M20.25 6.375c0 2.278-3.694 4.125-8.25 4.125S3.75 8.653 3.75 6.375m16.5 0c0-2.278-3.694-4.125-8.25-4.125S3.75 4.097 3.75 6.375m16.5 0v11.25c0 2.278-3.694 4.125-8.25 4.125s-8.25-1.847-8.25-4.125V6.375"/></svg>
                             </div>
-                            <h3 class="text-lg font-semibold text-gray-900 mb-1">Aucun abonnement</h3>
-                            <p class="text-gray-500 text-sm mb-4">Vous n'avez pas encore d'abonnement actif.</p>
+                            <h3 class="text-lg font-semibold text-gray-900 mb-1">No Subscriptions</h3>
+                            <p class="text-gray-500 text-sm mb-4">You don't have any active subscriptions yet.</p>
                             <button onclick="openNewSubscriptionModal()" class="inline-flex items-center gap-2 px-4 py-2 bg-rainbow-500 hover:bg-rainbow-600 text-white text-sm font-semibold rounded-lg transition-colors">
                                 <svg class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M12 4.5v15m7.5-7.5h-15"/></svg>
-                                Souscrire maintenant
+                                Subscribe Now
                             </button>
                         </div>
                     `;
@@ -569,18 +569,18 @@
                                     ${statusBadge(sub.status)}
                                 </div>
                                 <div class="flex flex-wrap gap-x-6 gap-y-1 text-sm text-gray-500">
-                                    <span>Licences : <strong class="text-gray-700">${sub.licenseCount || sub.quantity || '-'}</strong></span>
-                                    <span>Prix : <strong class="text-gray-700">${sub.price ? formatPrice(sub.price) : '-'}</strong></span>
-                                    ${sub.currentPeriodEnd ? `<span>Renouvellement : <strong class="text-gray-700">${formatDate(sub.currentPeriodEnd)}</strong></span>` : ''}
+                                    <span>Licenses: <strong class="text-gray-700">${sub.licenseCount || sub.quantity || '-'}</strong></span>
+                                    <span>Price: <strong class="text-gray-700">${sub.price ? formatPrice(sub.price) : '-'}</strong></span>
+                                    ${sub.currentPeriodEnd ? `<span>Renewal: <strong class="text-gray-700">${formatDate(sub.currentPeriodEnd)}</strong></span>` : ''}
                                 </div>
                             </div>
                             <div class="flex items-center gap-2">
                                 ${sub.status === 'active' || sub.status === 'trialing' ? `
                                     <button onclick="openChangePlanModal('${sub.id}')" class="px-3 py-2 text-sm font-medium text-rainbow-600 hover:bg-rainbow-50 border border-rainbow-200 rounded-lg transition-colors">
-                                        Changer de plan
+                                        Change Plan
                                     </button>
                                     <button onclick="cancelSubscription('${sub.id}')" class="px-3 py-2 text-sm font-medium text-red-600 hover:bg-red-50 border border-red-200 rounded-lg transition-colors">
-                                        Annuler
+                                        Cancel
                                     </button>
                                 ` : ''}
                             </div>
@@ -590,7 +590,7 @@
 
             } catch (err) {
                 document.getElementById('subs-list').innerHTML = `
-                    <div class="bg-red-50 border border-red-200 rounded-xl p-4 text-sm text-red-700">Erreur : ${err.message}</div>
+                    <div class="bg-red-50 border border-red-200 rounded-xl p-4 text-sm text-red-700">Error: ${err.message}</div>
                 `;
             }
         }
@@ -602,12 +602,12 @@
             currentSubscriptionIdForChange = subscriptionId;
             openModal('modal-change-plan');
             const content = document.getElementById('change-plan-content');
-            content.innerHTML = '<div class="text-center py-8 text-gray-400">Chargement des plans...</div>';
+            content.innerHTML = '<div class="text-center py-8 text-gray-400">Loading plans...</div>';
 
             try {
                 const plans = await fetchPlans();
                 if (!plans || plans.length === 0) {
-                    content.innerHTML = '<div class="text-center py-8 text-gray-500">Aucun plan disponible.</div>';
+                    content.innerHTML = '<div class="text-center py-8 text-gray-500">No plans available.</div>';
                     return;
                 }
 
@@ -621,7 +621,7 @@
                                         <p class="font-semibold text-gray-900">${plan.name}</p>
                                         <p class="text-sm text-gray-500 mt-0.5">${plan.description || ''}</p>
                                     </div>
-                                    <span class="text-rainbow-600 font-bold">${plan.price ? formatPrice(plan.price) : '-'}<span class="text-xs font-normal text-gray-400">/mois</span></span>
+                                    <span class="text-rainbow-600 font-bold">${plan.price ? formatPrice(plan.price) : '-'}<span class="text-xs font-normal text-gray-400">/mo</span></span>
                                 </div>
                             </button>
                         `).join('')}
@@ -633,11 +633,11 @@
         }
 
         async function changePlan(subscriptionId, planId) {
-            if (!confirm('Confirmer le changement de plan ?')) return;
+            if (!confirm('Confirm plan change?')) return;
             try {
                 await api(`/api/client/subscriptions/${subscriptionId}`, 'PUT', { planId });
                 closeModal('modal-change-plan');
-                showToast('Plan modifie avec succes');
+                showToast('Plan changed successfully');
                 navigateTo('subscriptions');
             } catch (err) {
                 showToast(err.message, 'error');
@@ -650,12 +650,12 @@
         async function openNewSubscriptionModal(preselectedPlan, preselectedLicenses) {
             openModal('modal-new-sub');
             const content = document.getElementById('new-sub-content');
-            content.innerHTML = '<div class="text-center py-8 text-gray-400">Chargement des plans...</div>';
+            content.innerHTML = '<div class="text-center py-8 text-gray-400">Loading plans...</div>';
 
             try {
                 const plans = await fetchPlans();
                 if (!plans || plans.length === 0) {
-                    content.innerHTML = '<div class="text-center py-8 text-gray-500">Aucun plan disponible.</div>';
+                    content.innerHTML = '<div class="text-center py-8 text-gray-500">No plans available.</div>';
                     return;
                 }
 
@@ -677,7 +677,7 @@
                 const licenseValue = parseInt(preselectedLicenses) || 1;
 
                 content.innerHTML = `
-                    <p class="text-sm text-gray-500 mb-4">Selectionnez un plan et le nombre de licences souhaitees.</p>
+                    <p class="text-sm text-gray-500 mb-4">Select a plan and the number of licenses you need.</p>
                     <div class="grid grid-cols-1 sm:grid-cols-2 gap-3 mb-6" id="plan-cards">
                         ${plans.map((plan, i) => `
                             <button onclick="selectPlan(this, '${plan.id}')"
@@ -685,19 +685,19 @@
                                 class="plan-card text-left p-4 border-2 ${i === defaultIndex ? 'border-rainbow-500 bg-rainbow-50/30' : 'border-gray-200'} rounded-xl hover:border-rainbow-400 transition-all">
                                 <p class="font-semibold text-gray-900 text-sm">${plan.name}</p>
                                 <p class="text-xs text-gray-500 mt-1 mb-3">${plan.description || ''}</p>
-                                <p class="text-lg font-bold text-rainbow-600">${plan.price ? formatPrice(plan.price) : '-'}<span class="text-xs font-normal text-gray-400">/mois/licence</span></p>
+                                <p class="text-lg font-bold text-rainbow-600">${plan.price ? formatPrice(plan.price) : '-'}<span class="text-xs font-normal text-gray-400">/mo/license</span></p>
                             </button>
                         `).join('')}
                     </div>
                     <div class="mb-6">
-                        <label class="block text-sm font-medium text-gray-700 mb-1.5">Nombre de licences</label>
+                        <label class="block text-sm font-medium text-gray-700 mb-1.5">Number of licenses</label>
                         <input type="number" id="new-sub-licenses" min="1" value="${licenseValue}"
                             class="input-focus w-full px-4 py-2.5 border border-gray-300 rounded-lg text-sm text-gray-900 outline-none transition-all">
                     </div>
                     <input type="hidden" id="selected-plan-id" value="${defaultPlanId}">
                     <button onclick="createSubscription()" id="btn-create-sub"
                         class="w-full py-2.5 px-4 bg-rainbow-500 hover:bg-rainbow-600 text-white font-semibold rounded-lg text-sm transition-colors disabled:opacity-60 disabled:cursor-not-allowed">
-                        Souscrire
+                        Subscribe
                     </button>
                 `;
             } catch (err) {
@@ -720,18 +720,18 @@
             const licenseCount = parseInt(document.getElementById('new-sub-licenses').value) || 1;
             const btn = document.getElementById('btn-create-sub');
             btn.disabled = true;
-            btn.textContent = 'Traitement...';
+            btn.textContent = 'Processing...';
 
             try {
                 await api('/api/client/subscriptions', 'POST', { planId, licenseCount });
                 closeModal('modal-new-sub');
-                showToast('Abonnement cree avec succes !');
+                showToast('Subscription created successfully!');
                 navigateTo('subscriptions');
             } catch (err) {
                 showToast(err.message, 'error');
             } finally {
                 btn.disabled = false;
-                btn.textContent = 'Souscrire';
+                btn.textContent = 'Subscribe';
             }
         }
 
@@ -739,10 +739,10 @@
         // Cancel subscription
         // =============================================
         async function cancelSubscription(subscriptionId) {
-            if (!confirm('Etes-vous sur de vouloir annuler cet abonnement ? Cette action prendra effet a la fin de la periode de facturation en cours.')) return;
+            if (!confirm('Are you sure you want to cancel this subscription? This will take effect at the end of the current billing period.')) return;
             try {
                 await api(`/api/client/subscriptions/${subscriptionId}/cancel`, 'POST');
-                showToast('Abonnement annule.');
+                showToast('Subscription canceled.');
                 navigateTo('subscriptions');
             } catch (err) {
                 showToast(err.message, 'error');
@@ -766,8 +766,8 @@
             container.innerHTML = `
                 <div class="fade-in">
                     <div class="mb-6">
-                        <h2 class="text-xl font-bold text-gray-900">Mes informations</h2>
-                        <p class="text-sm text-gray-500 mt-0.5">Mettez a jour vos informations personnelles et professionnelles</p>
+                        <h2 class="text-xl font-bold text-gray-900">My Information</h2>
+                        <p class="text-sm text-gray-500 mt-0.5">Update your personal and professional information</p>
                     </div>
                     <div class="bg-white rounded-xl border border-gray-200 p-6" id="profile-form-container">
                         <div class="animate-pulse space-y-4">
@@ -790,58 +790,58 @@
                         <div id="profile-msg" class="hidden p-3 rounded-lg text-sm font-medium mb-2"></div>
                         <div class="grid grid-cols-1 sm:grid-cols-2 gap-5">
                             <div>
-                                <label class="block text-sm font-medium text-gray-700 mb-1.5">Prenom</label>
+                                <label class="block text-sm font-medium text-gray-700 mb-1.5">First name</label>
                                 <input type="text" id="prof-firstName" value="${profile.firstName || ''}"
                                     class="input-focus w-full px-4 py-2.5 border border-gray-300 rounded-lg text-sm text-gray-900 outline-none transition-all">
                             </div>
                             <div>
-                                <label class="block text-sm font-medium text-gray-700 mb-1.5">Nom</label>
+                                <label class="block text-sm font-medium text-gray-700 mb-1.5">Last name</label>
                                 <input type="text" id="prof-lastName" value="${profile.lastName || ''}"
                                     class="input-focus w-full px-4 py-2.5 border border-gray-300 rounded-lg text-sm text-gray-900 outline-none transition-all">
                             </div>
                         </div>
                         <div>
-                            <label class="block text-sm font-medium text-gray-700 mb-1.5">Entreprise</label>
+                            <label class="block text-sm font-medium text-gray-700 mb-1.5">Company</label>
                             <input type="text" id="prof-company" value="${profile.company || ''}"
                                 class="input-focus w-full px-4 py-2.5 border border-gray-300 rounded-lg text-sm text-gray-900 outline-none transition-all">
                         </div>
                         <div class="grid grid-cols-1 sm:grid-cols-2 gap-5">
                             <div>
-                                <label class="block text-sm font-medium text-gray-700 mb-1.5">Taille de l'entreprise</label>
+                                <label class="block text-sm font-medium text-gray-700 mb-1.5">Company size</label>
                                 <select id="prof-companySize"
                                     class="input-focus w-full px-4 py-2.5 border border-gray-300 rounded-lg text-sm text-gray-900 outline-none transition-all bg-white">
-                                    <option value="">Selectionnez</option>
-                                    <option value="1-10" ${profile.companySize === '1-10' ? 'selected' : ''}>1-10 employes</option>
-                                    <option value="11-50" ${profile.companySize === '11-50' ? 'selected' : ''}>11-50 employes</option>
-                                    <option value="51-200" ${profile.companySize === '51-200' ? 'selected' : ''}>51-200 employes</option>
-                                    <option value="201-500" ${profile.companySize === '201-500' ? 'selected' : ''}>201-500 employes</option>
-                                    <option value="501+" ${profile.companySize === '501+' ? 'selected' : ''}>501+ employes</option>
+                                    <option value="">Select</option>
+                                    <option value="1-10" ${profile.companySize === '1-10' ? 'selected' : ''}>1-10 employees</option>
+                                    <option value="11-50" ${profile.companySize === '11-50' ? 'selected' : ''}>11-50 employees</option>
+                                    <option value="51-200" ${profile.companySize === '51-200' ? 'selected' : ''}>51-200 employees</option>
+                                    <option value="201-500" ${profile.companySize === '201-500' ? 'selected' : ''}>201-500 employees</option>
+                                    <option value="501+" ${profile.companySize === '501+' ? 'selected' : ''}>501+ employees</option>
                                 </select>
                             </div>
                             <div>
-                                <label class="block text-sm font-medium text-gray-700 mb-1.5">Telephone</label>
+                                <label class="block text-sm font-medium text-gray-700 mb-1.5">Phone</label>
                                 <input type="tel" id="prof-phone" value="${profile.phone || ''}"
                                     class="input-focus w-full px-4 py-2.5 border border-gray-300 rounded-lg text-sm text-gray-900 outline-none transition-all">
                             </div>
                         </div>
                         <div>
-                            <label class="block text-sm font-medium text-gray-700 mb-1.5">Adresse</label>
+                            <label class="block text-sm font-medium text-gray-700 mb-1.5">Address</label>
                             <input type="text" id="prof-address" value="${profile.address || ''}"
                                 class="input-focus w-full px-4 py-2.5 border border-gray-300 rounded-lg text-sm text-gray-900 outline-none transition-all">
                         </div>
                         <div class="grid grid-cols-1 sm:grid-cols-3 gap-5">
                             <div>
-                                <label class="block text-sm font-medium text-gray-700 mb-1.5">Ville</label>
+                                <label class="block text-sm font-medium text-gray-700 mb-1.5">City</label>
                                 <input type="text" id="prof-city" value="${profile.city || ''}"
                                     class="input-focus w-full px-4 py-2.5 border border-gray-300 rounded-lg text-sm text-gray-900 outline-none transition-all">
                             </div>
                             <div>
-                                <label class="block text-sm font-medium text-gray-700 mb-1.5">Code postal</label>
+                                <label class="block text-sm font-medium text-gray-700 mb-1.5">Postal code</label>
                                 <input type="text" id="prof-postalCode" value="${profile.postalCode || ''}"
                                     class="input-focus w-full px-4 py-2.5 border border-gray-300 rounded-lg text-sm text-gray-900 outline-none transition-all">
                             </div>
                             <div>
-                                <label class="block text-sm font-medium text-gray-700 mb-1.5">Pays</label>
+                                <label class="block text-sm font-medium text-gray-700 mb-1.5">Country</label>
                                 <input type="text" id="prof-country" value="${profile.country || ''}"
                                     class="input-focus w-full px-4 py-2.5 border border-gray-300 rounded-lg text-sm text-gray-900 outline-none transition-all">
                             </div>
@@ -849,7 +849,7 @@
                         <div class="pt-2">
                             <button type="submit" id="btn-save-profile"
                                 class="px-6 py-2.5 bg-rainbow-500 hover:bg-rainbow-600 text-white font-semibold rounded-lg text-sm transition-colors disabled:opacity-60 disabled:cursor-not-allowed">
-                                Enregistrer les modifications
+                                Save Changes
                             </button>
                         </div>
                     </form>
@@ -865,7 +865,7 @@
             e.preventDefault();
             const btn = document.getElementById('btn-save-profile');
             btn.disabled = true;
-            btn.textContent = 'Enregistrement...';
+            btn.textContent = 'Saving...';
 
             try {
                 const body = {
@@ -882,12 +882,12 @@
 
                 clientData = await api('/api/client/me', 'PUT', body);
                 updateSidebarUser();
-                showToast('Informations mises a jour avec succes');
+                showToast('Information updated successfully');
             } catch (err) {
                 showToast(err.message, 'error');
             } finally {
                 btn.disabled = false;
-                btn.textContent = 'Enregistrer les modifications';
+                btn.textContent = 'Save Changes';
             }
         }
 
@@ -898,29 +898,29 @@
             container.innerHTML = `
                 <div class="fade-in">
                     <div class="mb-6">
-                        <h2 class="text-xl font-bold text-gray-900">Changer le mot de passe</h2>
-                        <p class="text-sm text-gray-500 mt-0.5">Mettez a jour votre mot de passe pour securiser votre compte</p>
+                        <h2 class="text-xl font-bold text-gray-900">Change Password</h2>
+                        <p class="text-sm text-gray-500 mt-0.5">Update your password to keep your account secure</p>
                     </div>
                     <div class="bg-white rounded-xl border border-gray-200 p-6 max-w-lg">
                         <form onsubmit="handleChangePassword(event)" class="space-y-5">
                             <div>
-                                <label class="block text-sm font-medium text-gray-700 mb-1.5">Mot de passe actuel</label>
+                                <label class="block text-sm font-medium text-gray-700 mb-1.5">Current password</label>
                                 <input type="password" id="pw-current" required
                                     class="input-focus w-full px-4 py-2.5 border border-gray-300 rounded-lg text-sm text-gray-900 outline-none transition-all">
                             </div>
                             <div>
-                                <label class="block text-sm font-medium text-gray-700 mb-1.5">Nouveau mot de passe</label>
-                                <input type="password" id="pw-new" required placeholder="Min. 8 caracteres"
+                                <label class="block text-sm font-medium text-gray-700 mb-1.5">New password</label>
+                                <input type="password" id="pw-new" required placeholder="Min. 8 characters"
                                     class="input-focus w-full px-4 py-2.5 border border-gray-300 rounded-lg text-sm text-gray-900 outline-none transition-all">
                             </div>
                             <div>
-                                <label class="block text-sm font-medium text-gray-700 mb-1.5">Confirmer le nouveau mot de passe</label>
+                                <label class="block text-sm font-medium text-gray-700 mb-1.5">Confirm new password</label>
                                 <input type="password" id="pw-confirm" required
                                     class="input-focus w-full px-4 py-2.5 border border-gray-300 rounded-lg text-sm text-gray-900 outline-none transition-all">
                             </div>
                             <button type="submit" id="btn-change-pw"
                                 class="px-6 py-2.5 bg-rainbow-500 hover:bg-rainbow-600 text-white font-semibold rounded-lg text-sm transition-colors disabled:opacity-60 disabled:cursor-not-allowed">
-                                Modifier le mot de passe
+                                Change Password
                             </button>
                         </form>
                     </div>
@@ -935,21 +935,21 @@
             const confirmPassword = document.getElementById('pw-confirm').value;
 
             if (newPassword.length < 8) {
-                showToast('Le nouveau mot de passe doit contenir au moins 8 caracteres.', 'error');
+                showToast('New password must be at least 8 characters.', 'error');
                 return;
             }
             if (newPassword !== confirmPassword) {
-                showToast('Les mots de passe ne correspondent pas.', 'error');
+                showToast('Passwords do not match.', 'error');
                 return;
             }
 
             const btn = document.getElementById('btn-change-pw');
             btn.disabled = true;
-            btn.textContent = 'Modification...';
+            btn.textContent = 'Updating...';
 
             try {
                 await api('/api/client/change-password', 'POST', { currentPassword, newPassword, confirmPassword });
-                showToast('Mot de passe modifie avec succes');
+                showToast('Password changed successfully');
                 document.getElementById('pw-current').value = '';
                 document.getElementById('pw-new').value = '';
                 document.getElementById('pw-confirm').value = '';
@@ -957,7 +957,7 @@
                 showToast(err.message, 'error');
             } finally {
                 btn.disabled = false;
-                btn.textContent = 'Modifier le mot de passe';
+                btn.textContent = 'Change Password';
             }
         }
 
@@ -969,12 +969,12 @@
                 <div class="fade-in">
                     <div class="flex flex-col sm:flex-row sm:items-center justify-between mb-6 gap-3">
                         <div>
-                            <h2 class="text-xl font-bold text-gray-900">Moyens de paiement</h2>
-                            <p class="text-sm text-gray-500 mt-0.5">Gerez vos cartes bancaires</p>
+                            <h2 class="text-xl font-bold text-gray-900">Payment Methods</h2>
+                            <p class="text-sm text-gray-500 mt-0.5">Manage your bank cards</p>
                         </div>
                         <button onclick="openAddCardModal()" class="inline-flex items-center gap-2 px-4 py-2.5 bg-rainbow-500 hover:bg-rainbow-600 text-white text-sm font-semibold rounded-lg transition-colors">
                             <svg class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M12 4.5v15m7.5-7.5h-15"/></svg>
-                            Ajouter une carte
+                            Add a Card
                         </button>
                     </div>
                     <div id="cards-list" class="space-y-3">
@@ -997,11 +997,11 @@
                             <div class="w-16 h-16 bg-gray-100 rounded-full flex items-center justify-center mx-auto mb-4">
                                 <svg class="w-8 h-8 text-gray-400" fill="none" stroke="currentColor" stroke-width="1.5" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M2.25 8.25h19.5M2.25 9h19.5m-16.5 5.25h6m-6 2.25h3m-3.75 3h15a2.25 2.25 0 002.25-2.25V6.75A2.25 2.25 0 0019.5 4.5h-15a2.25 2.25 0 00-2.25 2.25v10.5A2.25 2.25 0 004.5 19.5z"/></svg>
                             </div>
-                            <h3 class="text-lg font-semibold text-gray-900 mb-1">Aucune carte enregistree</h3>
-                            <p class="text-gray-500 text-sm mb-4">Ajoutez une carte bancaire pour vos paiements.</p>
+                            <h3 class="text-lg font-semibold text-gray-900 mb-1">No cards on file</h3>
+                            <p class="text-gray-500 text-sm mb-4">Add a bank card for your payments.</p>
                             <button onclick="openAddCardModal()" class="inline-flex items-center gap-2 px-4 py-2 bg-rainbow-500 hover:bg-rainbow-600 text-white text-sm font-semibold rounded-lg transition-colors">
                                 <svg class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M12 4.5v15m7.5-7.5h-15"/></svg>
-                                Ajouter une carte
+                                Add a Card
                             </button>
                         </div>
                     `;
@@ -1020,16 +1020,16 @@
                                     <p class="text-sm font-medium text-gray-900">${brand} **** ${c.last4 || '????'}</p>
                                     <p class="text-xs text-gray-500">Expire ${String(c.exp_month || c.expMonth || '??').padStart(2, '0')}/${c.exp_year || c.expYear || '??'}</p>
                                 </div>
-                                ${isDefault ? '<span class="inline-flex items-center px-2 py-0.5 rounded-full text-xs font-medium bg-rainbow-100 text-rainbow-700">Par defaut</span>' : ''}
+                                ${isDefault ? '<span class="inline-flex items-center px-2 py-0.5 rounded-full text-xs font-medium bg-rainbow-100 text-rainbow-700">Default</span>' : ''}
                             </div>
                             <div class="flex items-center gap-2">
                                 ${!isDefault ? `
                                     <button onclick="setDefaultCard('${card.id}')" class="px-3 py-1.5 text-xs font-medium text-gray-600 hover:bg-gray-100 border border-gray-200 rounded-lg transition-colors">
-                                        Definir par defaut
+                                        Set as default
                                     </button>
                                 ` : ''}
                                 <button onclick="deleteCard('${card.id}')" class="px-3 py-1.5 text-xs font-medium text-red-600 hover:bg-red-50 border border-red-200 rounded-lg transition-colors">
-                                    Supprimer
+                                    Delete
                                 </button>
                             </div>
                         </div>
@@ -1038,7 +1038,7 @@
 
             } catch (err) {
                 document.getElementById('cards-list').innerHTML = `
-                    <div class="bg-red-50 border border-red-200 rounded-xl p-4 text-sm text-red-700">Erreur : ${err.message}</div>
+                    <div class="bg-red-50 border border-red-200 rounded-xl p-4 text-sm text-red-700">Error: ${err.message}</div>
                 `;
             }
         }
@@ -1092,7 +1092,7 @@
         async function handleAddCard() {
             const btn = document.getElementById('btn-add-card');
             btn.disabled = true;
-            btn.textContent = 'Traitement...';
+            btn.textContent = 'Processing...';
             document.getElementById('card-errors').classList.add('hidden');
 
             try {
@@ -1110,7 +1110,7 @@
                 }
 
                 closeModal('modal-add-card');
-                showToast('Carte ajoutee avec succes');
+                showToast('Card added successfully');
                 navigateTo('payment');
             } catch (err) {
                 const errEl = document.getElementById('card-errors');
@@ -1118,14 +1118,14 @@
                 errEl.classList.remove('hidden');
             } finally {
                 btn.disabled = false;
-                btn.textContent = 'Ajouter la carte';
+                btn.textContent = 'Add Card';
             }
         }
 
         async function setDefaultCard(paymentMethodId) {
             try {
                 await api(`/api/client/payment-methods/${paymentMethodId}/default`, 'POST');
-                showToast('Carte par defaut mise a jour');
+                showToast('Default card updated');
                 navigateTo('payment');
             } catch (err) {
                 showToast(err.message, 'error');
@@ -1133,10 +1133,10 @@
         }
 
         async function deleteCard(paymentMethodId) {
-            if (!confirm('Supprimer cette carte ?')) return;
+            if (!confirm('Delete this card?')) return;
             try {
                 await api(`/api/client/payment-methods/${paymentMethodId}`, 'DELETE');
-                showToast('Carte supprimee');
+                showToast('Card deleted');
                 navigateTo('payment');
             } catch (err) {
                 showToast(err.message, 'error');
@@ -1150,8 +1150,8 @@
             container.innerHTML = `
                 <div class="fade-in">
                     <div class="mb-6">
-                        <h2 class="text-xl font-bold text-gray-900">Factures</h2>
-                        <p class="text-sm text-gray-500 mt-0.5">Consultez et telechargez vos factures</p>
+                        <h2 class="text-xl font-bold text-gray-900">Invoices</h2>
+                        <p class="text-sm text-gray-500 mt-0.5">View and download your invoices</p>
                     </div>
                     <div class="bg-white rounded-xl border border-gray-200 overflow-hidden" id="invoices-container">
                         <div class="p-6 animate-pulse">
@@ -1174,8 +1174,8 @@
                             <div class="w-16 h-16 bg-gray-100 rounded-full flex items-center justify-center mx-auto mb-4">
                                 <svg class="w-8 h-8 text-gray-400" fill="none" stroke="currentColor" stroke-width="1.5" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M19.5 14.25v-2.625a3.375 3.375 0 00-3.375-3.375h-1.5A1.125 1.125 0 0113.5 7.125v-1.5a3.375 3.375 0 00-3.375-3.375H8.25m0 12.75h7.5m-7.5 3H12M10.5 2.25H5.625c-.621 0-1.125.504-1.125 1.125v17.25c0 .621.504 1.125 1.125 1.125h12.75c.621 0 1.125-.504 1.125-1.125V11.25a9 9 0 00-9-9z"/></svg>
                             </div>
-                            <h3 class="text-lg font-semibold text-gray-900 mb-1">Aucune facture</h3>
-                            <p class="text-gray-500 text-sm">Vos factures apparaitront ici une fois generees.</p>
+                            <h3 class="text-lg font-semibold text-gray-900 mb-1">No Invoices</h3>
+                            <p class="text-gray-500 text-sm">Your invoices will appear here once generated.</p>
                         </div>
                     `;
                     return;
@@ -1183,11 +1183,11 @@
 
                 const invoiceStatusBadge = (status) => {
                     const map = {
-                        paid: { label: 'Payee', class: 'bg-green-100 text-green-700' },
-                        open: { label: 'En attente', class: 'bg-yellow-100 text-yellow-700' },
-                        draft: { label: 'Brouillon', class: 'bg-gray-100 text-gray-600' },
-                        void: { label: 'Annulee', class: 'bg-red-100 text-red-700' },
-                        uncollectible: { label: 'Irrecouvrable', class: 'bg-red-100 text-red-700' },
+                        paid: { label: 'Paid', class: 'bg-green-100 text-green-700' },
+                        open: { label: 'Pending', class: 'bg-yellow-100 text-yellow-700' },
+                        draft: { label: 'Draft', class: 'bg-gray-100 text-gray-600' },
+                        void: { label: 'Canceled', class: 'bg-red-100 text-red-700' },
+                        uncollectible: { label: 'Uncollectible', class: 'bg-red-100 text-red-700' },
                     };
                     const s = map[status] || { label: status, class: 'bg-gray-100 text-gray-600' };
                     return `<span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium ${s.class}">${s.label}</span>`;
@@ -1198,10 +1198,10 @@
                         <table class="w-full text-sm">
                             <thead class="bg-gray-50 text-gray-500 text-xs uppercase tracking-wider">
                                 <tr>
-                                    <th class="text-left py-3 px-5 font-medium">Numero</th>
+                                    <th class="text-left py-3 px-5 font-medium">Number</th>
                                     <th class="text-left py-3 px-5 font-medium">Date</th>
-                                    <th class="text-left py-3 px-5 font-medium">Montant</th>
-                                    <th class="text-left py-3 px-5 font-medium">Statut</th>
+                                    <th class="text-left py-3 px-5 font-medium">Amount</th>
+                                    <th class="text-left py-3 px-5 font-medium">Status</th>
                                     <th class="text-right py-3 px-5 font-medium">Action</th>
                                 </tr>
                             </thead>
@@ -1229,7 +1229,7 @@
                 `;
             } catch (err) {
                 document.getElementById('invoices-container').innerHTML = `
-                    <div class="p-4 text-red-600 text-sm">Erreur : ${err.message}</div>
+                    <div class="p-4 text-red-600 text-sm">Error: ${err.message}</div>
                 `;
             }
         }
@@ -1239,7 +1239,7 @@
         // =============================================
         function updateSidebarUser() {
             if (!clientData) return;
-            const name = [clientData.firstName, clientData.lastName].filter(Boolean).join(' ') || 'Utilisateur';
+            const name = [clientData.firstName, clientData.lastName].filter(Boolean).join(' ') || 'User';
             const initials = (clientData.firstName?.[0] || '') + (clientData.lastName?.[0] || '');
             document.getElementById('sidebar-username').textContent = name;
             document.getElementById('sidebar-email').textContent = clientData.email || '';

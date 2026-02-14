@@ -1,10 +1,10 @@
 <!DOCTYPE html>
-<html lang="fr">
+<html lang="en">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Support - Rainbow by ALE</title>
-    <meta name="description" content="Centre d'aide Rainbow. Trouvez des reponses a vos questions ou contactez notre equipe de support.">
+    <meta name="description" content="Rainbow Help Center. Find answers to your questions or contact our support team.">
     <script src="https://cdn.tailwindcss.com"></script>
     <script>
         tailwind.config = {
@@ -34,28 +34,28 @@
                 <span class="text-lg font-bold text-gray-900">Rainbow</span>
             </a>
             <div class="hidden md:flex items-center gap-6">
-                <a href="/" class="text-sm text-gray-500 hover:text-gray-900 transition-colors">Accueil</a>
-                <a href="/product/rainbow" class="text-sm text-gray-500 hover:text-gray-900 transition-colors">Produit</a>
+                <a href="/" class="text-sm text-gray-500 hover:text-gray-900 transition-colors">Home</a>
+                <a href="/product/rainbow" class="text-sm text-gray-500 hover:text-gray-900 transition-colors">Product</a>
                 <a href="/blog" class="text-sm text-gray-500 hover:text-gray-900 transition-colors">Blog</a>
-                <a href="/reviews" class="text-sm text-gray-500 hover:text-gray-900 transition-colors">Avis</a>
+                <a href="/reviews" class="text-sm text-gray-500 hover:text-gray-900 transition-colors">Reviews</a>
                 <a href="/support" class="text-sm font-medium text-brand-500 transition-colors">Support</a>
-                <a href="/tutorials" class="text-sm text-gray-500 hover:text-gray-900 transition-colors">Tutoriels</a>
-                <a href="/login" class="text-sm text-gray-500 hover:text-gray-900 transition-colors">Se connecter</a>
-                <a href="/" class="px-5 py-2 rounded-lg bg-brand-500 text-white text-sm font-medium hover:bg-brand-600 transition-colors">Demarrer</a>
+                <a href="/tutorials" class="text-sm text-gray-500 hover:text-gray-900 transition-colors">Tutorials</a>
+                <a href="/login" class="text-sm text-gray-500 hover:text-gray-900 transition-colors">Log in</a>
+                <a href="/" class="px-5 py-2 rounded-lg bg-brand-500 text-white text-sm font-medium hover:bg-brand-600 transition-colors">Get Started</a>
             </div>
             <button id="mobile-menu-btn" class="md:hidden p-2" aria-label="Menu">
                 <svg class="w-6 h-6 text-gray-600" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M4 6h16M4 12h16M4 18h16"/></svg>
             </button>
         </div>
         <div id="mobile-menu" class="md:hidden hidden border-t border-gray-100 bg-white px-6 py-4 space-y-3">
-            <a href="/" class="block text-sm text-gray-600 py-2">Accueil</a>
-            <a href="/product/rainbow" class="block text-sm text-gray-600 py-2">Produit</a>
+            <a href="/" class="block text-sm text-gray-600 py-2">Home</a>
+            <a href="/product/rainbow" class="block text-sm text-gray-600 py-2">Product</a>
             <a href="/blog" class="block text-sm text-gray-600 py-2">Blog</a>
-            <a href="/reviews" class="block text-sm text-gray-600 py-2">Avis</a>
+            <a href="/reviews" class="block text-sm text-gray-600 py-2">Reviews</a>
             <a href="/support" class="block text-sm font-medium text-brand-500 py-2">Support</a>
-            <a href="/tutorials" class="block text-sm text-gray-600 py-2">Tutoriels</a>
-            <a href="/login" class="block text-sm text-gray-600 py-2">Se connecter</a>
-            <a href="/" class="block w-full text-center text-sm font-medium text-white bg-brand-500 rounded-lg py-2.5">Demarrer</a>
+            <a href="/tutorials" class="block text-sm text-gray-600 py-2">Tutorials</a>
+            <a href="/login" class="block text-sm text-gray-600 py-2">Log in</a>
+            <a href="/" class="block w-full text-center text-sm font-medium text-white bg-brand-500 rounded-lg py-2.5">Get Started</a>
         </div>
     </nav>
 
@@ -65,15 +65,15 @@
             <div class="w-16 h-16 bg-brand-500 rounded-2xl flex items-center justify-center mx-auto mb-6">
                 <svg class="w-8 h-8 text-white" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M9.879 7.519c1.171-1.025 3.071-1.025 4.242 0 1.172 1.025 1.172 2.687 0 3.712-.203.179-.43.326-.67.442-.745.361-1.45.999-1.45 1.827v.75M21 12a9 9 0 11-18 0 9 9 0 0118 0zm-9 5.25h.008v.008H12v-.008z"/></svg>
             </div>
-            <h1 class="text-4xl sm:text-5xl font-bold text-gray-900 leading-tight">Centre d'aide</h1>
-            <p class="mt-4 text-lg text-gray-500 max-w-2xl mx-auto">Trouvez rapidement des reponses a vos questions ou contactez notre equipe de support.</p>
+            <h1 class="text-4xl sm:text-5xl font-bold text-gray-900 leading-tight">Help Center</h1>
+            <p class="mt-4 text-lg text-gray-500 max-w-2xl mx-auto">Quickly find answers to your questions or contact our support team.</p>
         </div>
     </header>
 
     <!-- FAQ SECTION -->
     <section class="px-6 pb-16">
         <div class="max-w-3xl mx-auto">
-            <h2 class="text-2xl font-bold text-gray-900 text-center mb-10">Questions frequentes</h2>
+            <h2 class="text-2xl font-bold text-gray-900 text-center mb-10">Frequently Asked Questions</h2>
             <div id="faq-list" class="space-y-3">
                 <!-- Populated by JS -->
             </div>
@@ -86,7 +86,7 @@
     <!-- CONTACT SECTION -->
     <section class="px-6 pb-20 bg-gray-50 pt-16">
         <div class="max-w-5xl mx-auto">
-            <h2 class="text-2xl font-bold text-gray-900 text-center mb-10">Contactez-nous</h2>
+            <h2 class="text-2xl font-bold text-gray-900 text-center mb-10">Contact Us</h2>
             <div class="grid lg:grid-cols-3 gap-10">
 
                 <!-- Contact Form -->
@@ -95,33 +95,33 @@
                         <form id="contact-form" class="space-y-5">
                             <div class="grid sm:grid-cols-2 gap-5">
                                 <div>
-                                    <label for="contact-name" class="block text-sm font-medium text-gray-700 mb-1.5">Nom complet</label>
-                                    <input type="text" id="contact-name" name="name" required placeholder="Jean Dupont" class="w-full px-4 py-2.5 rounded-lg border border-gray-200 focus:border-brand-500 focus:ring-2 focus:ring-brand-500/20 outline-none text-sm transition-colors">
+                                    <label for="contact-name" class="block text-sm font-medium text-gray-700 mb-1.5">Full Name</label>
+                                    <input type="text" id="contact-name" name="name" required placeholder="John Doe" class="w-full px-4 py-2.5 rounded-lg border border-gray-200 focus:border-brand-500 focus:ring-2 focus:ring-brand-500/20 outline-none text-sm transition-colors">
                                 </div>
                                 <div>
                                     <label for="contact-email" class="block text-sm font-medium text-gray-700 mb-1.5">Email</label>
-                                    <input type="email" id="contact-email" name="email" required placeholder="jean@entreprise.com" class="w-full px-4 py-2.5 rounded-lg border border-gray-200 focus:border-brand-500 focus:ring-2 focus:ring-brand-500/20 outline-none text-sm transition-colors">
+                                    <input type="email" id="contact-email" name="email" required placeholder="john@company.com" class="w-full px-4 py-2.5 rounded-lg border border-gray-200 focus:border-brand-500 focus:ring-2 focus:ring-brand-500/20 outline-none text-sm transition-colors">
                                 </div>
                             </div>
                             <div>
-                                <label for="contact-subject" class="block text-sm font-medium text-gray-700 mb-1.5">Sujet</label>
-                                <input type="text" id="contact-subject" name="subject" required placeholder="Question technique, demande commerciale..." class="w-full px-4 py-2.5 rounded-lg border border-gray-200 focus:border-brand-500 focus:ring-2 focus:ring-brand-500/20 outline-none text-sm transition-colors">
+                                <label for="contact-subject" class="block text-sm font-medium text-gray-700 mb-1.5">Subject</label>
+                                <input type="text" id="contact-subject" name="subject" required placeholder="Technical question, sales inquiry..." class="w-full px-4 py-2.5 rounded-lg border border-gray-200 focus:border-brand-500 focus:ring-2 focus:ring-brand-500/20 outline-none text-sm transition-colors">
                             </div>
                             <div>
                                 <label for="contact-message" class="block text-sm font-medium text-gray-700 mb-1.5">Message</label>
-                                <textarea id="contact-message" name="message" rows="5" required placeholder="Decrivez votre question ou probleme..." class="w-full px-4 py-2.5 rounded-lg border border-gray-200 focus:border-brand-500 focus:ring-2 focus:ring-brand-500/20 outline-none text-sm transition-colors resize-none"></textarea>
+                                <textarea id="contact-message" name="message" rows="5" required placeholder="Describe your question or issue..." class="w-full px-4 py-2.5 rounded-lg border border-gray-200 focus:border-brand-500 focus:ring-2 focus:ring-brand-500/20 outline-none text-sm transition-colors resize-none"></textarea>
                             </div>
                             <button type="submit" id="contact-submit" class="w-full sm:w-auto px-8 py-3 rounded-lg bg-brand-500 text-white font-medium text-sm hover:bg-brand-600 transition-colors">
-                                Envoyer le message
+                                Send Message
                             </button>
                         </form>
                         <div id="contact-success" class="hidden text-center py-8">
                             <div class="w-16 h-16 bg-green-100 rounded-full flex items-center justify-center mx-auto mb-4">
                                 <svg class="w-8 h-8 text-green-500" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M4.5 12.75l6 6 9-13.5"/></svg>
                             </div>
-                            <h3 class="text-lg font-semibold text-gray-900 mb-2">Message envoye avec succes !</h3>
-                            <p class="text-sm text-gray-500">Notre equipe vous repondra dans les plus brefs delais.</p>
-                            <button onclick="resetContactForm()" class="mt-4 text-sm text-brand-500 hover:text-brand-600 font-medium">Envoyer un autre message</button>
+                            <h3 class="text-lg font-semibold text-gray-900 mb-2">Message sent successfully!</h3>
+                            <p class="text-sm text-gray-500">Our team will get back to you as soon as possible.</p>
+                            <button onclick="resetContactForm()" class="mt-4 text-sm text-brand-500 hover:text-brand-600 font-medium">Send another message</button>
                         </div>
                         <div id="contact-error" class="hidden mt-4 p-3 rounded-lg bg-red-50 text-red-600 text-sm"></div>
                     </div>
@@ -146,7 +146,7 @@
                                 <svg class="w-5 h-5 text-brand-500" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M2.25 6.75c0 8.284 6.716 15 15 15h2.25a2.25 2.25 0 002.25-2.25v-1.372c0-.516-.351-.966-.852-1.091l-4.423-1.106c-.44-.11-.902.055-1.173.417l-.97 1.293c-.282.376-.769.542-1.21.38a12.035 12.035 0 01-7.143-7.143c-.162-.441.004-.928.38-1.21l1.293-.97c.363-.271.527-.734.417-1.173L6.963 3.102a1.125 1.125 0 00-1.091-.852H4.5A2.25 2.25 0 002.25 4.5v2.25z"/></svg>
                             </div>
                             <div>
-                                <p class="text-sm font-semibold text-gray-900">Telephone</p>
+                                <p class="text-sm font-semibold text-gray-900">Phone</p>
                                 <a href="tel:+33140079500" class="text-sm text-brand-500 hover:text-brand-600">+33 1 40 07 95 00</a>
                             </div>
                         </div>
@@ -157,16 +157,16 @@
                                 <svg class="w-5 h-5 text-brand-500" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M12 6v6h4.5m4.5 0a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>
                             </div>
                             <div>
-                                <p class="text-sm font-semibold text-gray-900">Horaires</p>
-                                <p class="text-sm text-gray-500">Lun - Ven : 9h00 - 18h00</p>
-                                <p class="text-xs text-gray-400">Heure de Paris (CET)</p>
+                                <p class="text-sm font-semibold text-gray-900">Business Hours</p>
+                                <p class="text-sm text-gray-500">Mon - Fri: 9:00 AM - 6:00 PM</p>
+                                <p class="text-xs text-gray-400">Paris Time (CET)</p>
                             </div>
                         </div>
                     </div>
                     <div class="bg-gradient-to-br from-brand-500 to-indigo-600 rounded-2xl p-6 text-white">
-                        <h3 class="font-semibold mb-2">Besoin d'aide urgente ?</h3>
-                        <p class="text-sm text-blue-100 mb-4">Nos clients Enterprise beneficient d'un support prioritaire 24/7.</p>
-                        <a href="/product/rainbow" class="inline-block px-4 py-2 bg-white/20 rounded-lg text-sm font-medium hover:bg-white/30 transition-colors">Voir les plans</a>
+                        <h3 class="font-semibold mb-2">Need urgent help?</h3>
+                        <p class="text-sm text-blue-100 mb-4">Our Enterprise customers benefit from 24/7 priority support.</p>
+                        <a href="/product/rainbow" class="inline-block px-4 py-2 bg-white/20 rounded-lg text-sm font-medium hover:bg-white/30 transition-colors">View Plans</a>
                     </div>
                 </div>
             </div>
@@ -178,44 +178,44 @@
         <div class="max-w-6xl mx-auto">
             <div class="grid sm:grid-cols-2 lg:grid-cols-4 gap-10 mb-12">
                 <div>
-                    <h4 class="text-white font-semibold text-sm mb-4">Produit</h4>
+                    <h4 class="text-white font-semibold text-sm mb-4">Product</h4>
                     <ul class="space-y-2 text-sm">
                         <li><a href="/product/rainbow" class="hover:text-white transition-colors">Rainbow</a></li>
-                        <li><a href="/#features" class="hover:text-white transition-colors">Fonctionnalites</a></li>
-                        <li><a href="/#pricing" class="hover:text-white transition-colors">Tarifs</a></li>
+                        <li><a href="/#features" class="hover:text-white transition-colors">Features</a></li>
+                        <li><a href="/#pricing" class="hover:text-white transition-colors">Pricing</a></li>
                         <li><a href="/#demo" class="hover:text-white transition-colors">Demo</a></li>
                     </ul>
                 </div>
                 <div>
-                    <h4 class="text-white font-semibold text-sm mb-4">Ressources</h4>
+                    <h4 class="text-white font-semibold text-sm mb-4">Resources</h4>
                     <ul class="space-y-2 text-sm">
                         <li><a href="/blog" class="hover:text-white transition-colors">Blog</a></li>
-                        <li><a href="/tutorials" class="hover:text-white transition-colors">Tutoriels</a></li>
-                        <li><a href="#" class="hover:text-white transition-colors">Documentation API</a></li>
+                        <li><a href="/tutorials" class="hover:text-white transition-colors">Tutorials</a></li>
+                        <li><a href="#" class="hover:text-white transition-colors">API Documentation</a></li>
                         <li><a href="#" class="hover:text-white transition-colors">Changelog</a></li>
                     </ul>
                 </div>
                 <div>
                     <h4 class="text-white font-semibold text-sm mb-4">Support</h4>
                     <ul class="space-y-2 text-sm">
-                        <li><a href="/support" class="hover:text-white transition-colors">Centre d'aide</a></li>
-                        <li><a href="/support" class="hover:text-white transition-colors">Contactez-nous</a></li>
-                        <li><a href="#" class="hover:text-white transition-colors">Statut du service</a></li>
-                        <li><a href="/reviews" class="hover:text-white transition-colors">Avis clients</a></li>
+                        <li><a href="/support" class="hover:text-white transition-colors">Help Center</a></li>
+                        <li><a href="/support" class="hover:text-white transition-colors">Contact Us</a></li>
+                        <li><a href="#" class="hover:text-white transition-colors">Service Status</a></li>
+                        <li><a href="/reviews" class="hover:text-white transition-colors">Customer Reviews</a></li>
                     </ul>
                 </div>
                 <div>
-                    <h4 class="text-white font-semibold text-sm mb-4">Entreprise</h4>
+                    <h4 class="text-white font-semibold text-sm mb-4">Company</h4>
                     <ul class="space-y-2 text-sm">
-                        <li><a href="#" class="hover:text-white transition-colors">A propos</a></li>
-                        <li><a href="#" class="hover:text-white transition-colors">Carrieres</a></li>
-                        <li><a href="#" class="hover:text-white transition-colors">Mentions legales</a></li>
-                        <li><a href="#" class="hover:text-white transition-colors">Politique de confidentialite</a></li>
+                        <li><a href="#" class="hover:text-white transition-colors">About</a></li>
+                        <li><a href="#" class="hover:text-white transition-colors">Careers</a></li>
+                        <li><a href="#" class="hover:text-white transition-colors">Legal Notice</a></li>
+                        <li><a href="#" class="hover:text-white transition-colors">Privacy Policy</a></li>
                     </ul>
                 </div>
             </div>
             <div class="border-t border-gray-800 pt-6 text-center text-xs text-gray-500">
-                &copy; 2024 Rainbow by ALE. Tous droits reserves.
+                &copy; 2024 Rainbow by ALE. All rights reserved.
             </div>
         </div>
     </footer>
@@ -240,7 +240,7 @@
                 faqLoading.classList.add('hidden');
 
                 if (faqItems.length === 0) {
-                    faqList.innerHTML = '<p class="text-center text-gray-400">Aucune question frequente pour le moment.</p>';
+                    faqList.innerHTML = '<p class="text-center text-gray-400">No frequently asked questions at this time.</p>';
                     return;
                 }
 
@@ -277,7 +277,7 @@
                 });
             } catch(e) {
                 faqLoading.classList.add('hidden');
-                faqList.innerHTML = '<p class="text-center text-gray-400">Impossible de charger les questions frequentes.</p>';
+                faqList.innerHTML = '<p class="text-center text-gray-400">Unable to load frequently asked questions.</p>';
             }
         }
 
@@ -298,7 +298,7 @@
 
             errorEl.classList.add('hidden');
             submitBtn.disabled = true;
-            submitBtn.textContent = 'Envoi en cours...';
+            submitBtn.textContent = 'Sending...';
 
             var payload = {
                 name: document.getElementById('contact-name').value.trim(),
@@ -316,7 +316,7 @@
 
                 if (!res.ok) {
                     var errData = await res.json().catch(function() { return {}; });
-                    throw new Error(errData.error || 'Erreur lors de l\'envoi du message.');
+                    throw new Error(errData.error || 'Error sending message.');
                 }
 
                 form.classList.add('hidden');
@@ -326,7 +326,7 @@
                 errorEl.classList.remove('hidden');
             } finally {
                 submitBtn.disabled = false;
-                submitBtn.textContent = 'Envoyer le message';
+                submitBtn.textContent = 'Send Message';
             }
         });
 
