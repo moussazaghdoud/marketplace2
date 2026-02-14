@@ -463,6 +463,23 @@
                     </div>
                 `;
 
+                // Show CTA if no subscriptions
+                if (activeSubs.length === 0) {
+                    document.getElementById('dash-cards').insertAdjacentHTML('afterend', `
+                        <div class="mt-8 bg-gradient-to-r from-rainbow-50 to-white rounded-xl border border-rainbow-200 p-8 text-center">
+                            <div class="w-14 h-14 bg-rainbow-100 rounded-full flex items-center justify-center mx-auto mb-4">
+                                <svg class="w-7 h-7 text-rainbow-500" fill="none" stroke="currentColor" stroke-width="1.5" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M12 4.5v15m7.5-7.5h-15"/></svg>
+                            </div>
+                            <h3 class="text-lg font-bold text-gray-900 mb-2">Commencez avec Rainbow</h3>
+                            <p class="text-sm text-gray-500 mb-5 max-w-md mx-auto">Choisissez un plan adapte a votre equipe et commencez a collaborer des maintenant.</p>
+                            <button onclick="navigateTo('subscriptions')" class="inline-flex items-center gap-2 px-6 py-2.5 bg-rainbow-500 hover:bg-rainbow-600 text-white text-sm font-semibold rounded-lg transition-colors">
+                                <svg class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M12 4.5v15m7.5-7.5h-15"/></svg>
+                                Choisir un plan
+                            </button>
+                        </div>
+                    `);
+                }
+
                 // Show subscription summary below
                 if (activeSubs.length > 0) {
                     let summaryHTML = `
@@ -630,7 +647,7 @@
         // =============================================
         // New subscription modal
         // =============================================
-        async function openNewSubscriptionModal() {
+        async function openNewSubscriptionModal(preselectedPlan, preselectedLicenses) {
             openModal('modal-new-sub');
             const content = document.getElementById('new-sub-content');
             content.innerHTML = '<div class="text-center py-8 text-gray-400">Chargement des plans...</div>';
@@ -642,13 +659,30 @@
                     return;
                 }
 
+                // Find pre-selected plan by matching name/key
+                let defaultIndex = 0;
+                let defaultPlanId = plans[0]?.id || '';
+                if (preselectedPlan) {
+                    const match = plans.findIndex(p =>
+                        p.name.toLowerCase().replace(/\s+/g, '-') === preselectedPlan.toLowerCase() ||
+                        p.name.toLowerCase() === preselectedPlan.toLowerCase() ||
+                        (p.id && p.id === preselectedPlan)
+                    );
+                    if (match >= 0) {
+                        defaultIndex = match;
+                        defaultPlanId = plans[match].id;
+                    }
+                }
+
+                const licenseValue = parseInt(preselectedLicenses) || 1;
+
                 content.innerHTML = `
                     <p class="text-sm text-gray-500 mb-4">Selectionnez un plan et le nombre de licences souhaitees.</p>
                     <div class="grid grid-cols-1 sm:grid-cols-2 gap-3 mb-6" id="plan-cards">
                         ${plans.map((plan, i) => `
                             <button onclick="selectPlan(this, '${plan.id}')"
                                 data-plan-id="${plan.id}"
-                                class="plan-card text-left p-4 border-2 ${i === 0 ? 'border-rainbow-500 bg-rainbow-50/30' : 'border-gray-200'} rounded-xl hover:border-rainbow-400 transition-all">
+                                class="plan-card text-left p-4 border-2 ${i === defaultIndex ? 'border-rainbow-500 bg-rainbow-50/30' : 'border-gray-200'} rounded-xl hover:border-rainbow-400 transition-all">
                                 <p class="font-semibold text-gray-900 text-sm">${plan.name}</p>
                                 <p class="text-xs text-gray-500 mt-1 mb-3">${plan.description || ''}</p>
                                 <p class="text-lg font-bold text-rainbow-600">${plan.price ? formatPrice(plan.price) : '-'}<span class="text-xs font-normal text-gray-400">/mois/licence</span></p>
@@ -657,10 +691,10 @@
                     </div>
                     <div class="mb-6">
                         <label class="block text-sm font-medium text-gray-700 mb-1.5">Nombre de licences</label>
-                        <input type="number" id="new-sub-licenses" min="1" value="1"
+                        <input type="number" id="new-sub-licenses" min="1" value="${licenseValue}"
                             class="input-focus w-full px-4 py-2.5 border border-gray-300 rounded-lg text-sm text-gray-900 outline-none transition-all">
                     </div>
-                    <input type="hidden" id="selected-plan-id" value="${plans[0]?.id || ''}">
+                    <input type="hidden" id="selected-plan-id" value="${defaultPlanId}">
                     <button onclick="createSubscription()" id="btn-create-sub"
                         class="w-full py-2.5 px-4 bg-rainbow-500 hover:bg-rainbow-600 text-white font-semibold rounded-lg text-sm transition-colors disabled:opacity-60 disabled:cursor-not-allowed">
                         Souscrire
@@ -1223,7 +1257,21 @@
             } catch (err) {
                 console.error('Failed to load user:', err);
             }
-            renderPage('dashboard');
+
+            // Check for plan params from homepage flow
+            const urlParams = new URLSearchParams(window.location.search);
+            const planFromUrl = urlParams.get('plan');
+            const licensesFromUrl = urlParams.get('licenses');
+
+            if (planFromUrl) {
+                // Clean URL without reloading
+                window.history.replaceState({}, '', '/portal');
+                // Go to subscriptions and auto-open modal with pre-selected plan
+                navigateTo('subscriptions');
+                await openNewSubscriptionModal(planFromUrl, licensesFromUrl);
+            } else {
+                renderPage('dashboard');
+            }
         }
 
         init();

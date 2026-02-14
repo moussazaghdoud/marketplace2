@@ -206,6 +206,18 @@
         // Configuration
         // =============================================
         const API_BASE = window.location.origin;
+        const urlParams = new URLSearchParams(window.location.search);
+        const selectedPlan = urlParams.get('plan');
+        const selectedLicenses = urlParams.get('licenses');
+
+        function getPortalRedirect() {
+            let url = '/portal';
+            if (selectedPlan) {
+                url += '?plan=' + encodeURIComponent(selectedPlan);
+                if (selectedLicenses) url += '&licenses=' + encodeURIComponent(selectedLicenses);
+            }
+            return url;
+        }
 
         // =============================================
         // Tab switching
@@ -328,7 +340,7 @@
 
                 showMessage('Connexion reussie ! Redirection...', 'success');
                 setTimeout(() => {
-                    window.location.href = '/portal';
+                    window.location.href = getPortalRedirect();
                 }, 500);
             } catch (err) {
                 showMessage(err.message, 'error');
@@ -376,7 +388,7 @@
 
                 showMessage('Compte cree avec succes ! Redirection...', 'success');
                 setTimeout(() => {
-                    window.location.href = '/portal';
+                    window.location.href = getPortalRedirect();
                 }, 500);
             } catch (err) {
                 showMessage(err.message, 'error');
@@ -414,9 +426,13 @@
         (function() {
             const token = localStorage.getItem('token');
             if (token) {
-                window.location.href = '/portal';
+                window.location.href = getPortalRedirect();
             }
         })();
+        // Auto-switch to register tab if coming from plan selection
+        if (selectedPlan) {
+            switchTab('register');
+        }
     </script>
 </body>
 </html>

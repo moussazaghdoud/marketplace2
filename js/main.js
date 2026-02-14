@@ -197,7 +197,7 @@ function renderPricing(pricing) {
 
         var ctaHtml;
         if (p.pricePerUser === 0 && !p.ctaLink) {
-            ctaHtml = '<button onclick="openOnboarding()" class="w-full py-2.5 rounded-lg border border-brand-500 text-brand-600 text-sm font-medium hover:bg-blue-50 transition-colors">' + escapeHtml(p.ctaText) + '</button>';
+            ctaHtml = '<button onclick="checkout(\'' + planKey + '\')" class="w-full py-2.5 rounded-lg border border-brand-500 text-brand-600 text-sm font-medium hover:bg-blue-50 transition-colors">' + escapeHtml(p.ctaText) + '</button>';
         } else if (p.ctaLink) {
             ctaHtml = '<a href="' + p.ctaLink + '" target="_blank" class="block text-center py-2.5 rounded-lg border border-gray-200 text-sm font-medium text-gray-700 hover:border-brand-500 hover:text-brand-600 transition-colors">' + escapeHtml(p.ctaText) + '</a>';
         } else if (p.highlighted) {
@@ -318,21 +318,9 @@ function updatePrices() {
 var selectedPlan = null;
 
 function checkout(planKey) {
-    selectedPlan = window.PLANS[planKey];
-    if (!selectedPlan) return;
+    // Redirect to login/register with plan params instead of opening checkout modal
     var count = getLicenseCount();
-    var total = (selectedPlan.pricePerUser * count).toFixed(2);
-
-    document.getElementById('checkout-plan-name').textContent = selectedPlan.name;
-    document.getElementById('checkout-licenses').textContent = count + ' user' + (count > 1 ? 's' : '');
-    document.getElementById('checkout-unit-price').textContent = '\u20AC' + selectedPlan.pricePerUser.toFixed(2) + '/mo';
-    document.getElementById('checkout-total').textContent = '\u20AC' + total + '/mo';
-    document.getElementById('checkout-summary').textContent = selectedPlan.name + ' \u2014 ' + count + ' license' + (count > 1 ? 's' : '');
-
-    var modal = document.getElementById('checkout-modal');
-    modal.classList.remove('hidden');
-    modal.classList.add('active');
-    document.body.style.overflow = 'hidden';
+    window.location.href = '/login?plan=' + encodeURIComponent(planKey) + '&licenses=' + count;
 }
 
 function closeCheckout() {
