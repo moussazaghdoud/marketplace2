@@ -1,10 +1,10 @@
 <!DOCTYPE html>
-<html lang="fr">
+<html lang="en">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Article - Blog Rainbow</title>
-    <meta name="description" content="Lisez cet article sur le blog Rainbow par Alcatel-Lucent Enterprise.">
+    <meta name="description" content="Read this article on the Rainbow blog by Alcatel-Lucent Enterprise.">
     <script src="https://cdn.tailwindcss.com"></script>
     <script>
         tailwind.config = {
@@ -73,17 +73,17 @@
     <!-- ARTICLE LOADING STATE -->
     <div id="loading" class="pt-28 pb-20 px-6 text-center">
         <div class="inline-block w-8 h-8 border-4 border-brand-500 border-t-transparent rounded-full animate-spin"></div>
-        <p class="mt-3 text-gray-400 text-sm">Chargement de l'article...</p>
+        <p class="mt-3 text-gray-400 text-sm">Loading article...</p>
     </div>
 
     <!-- ARTICLE NOT FOUND -->
     <div id="not-found" class="pt-28 pb-20 px-6 text-center hidden">
         <svg class="w-20 h-20 mx-auto text-gray-300 mb-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.5"><path stroke-linecap="round" stroke-linejoin="round" d="M12 9v3.75m9-.75a9 9 0 11-18 0 9 9 0 0118 0zm-9 3.75h.008v.008H12v-.008z"/></svg>
-        <h1 class="text-3xl font-bold text-gray-900 mb-2">Article introuvable</h1>
-        <p class="text-gray-500 mb-6">L'article que vous recherchez n'existe pas ou a ete supprime.</p>
+        <h1 class="text-3xl font-bold text-gray-900 mb-2">Article not found</h1>
+        <p class="text-gray-500 mb-6">The article you're looking for doesn't exist or has been removed.</p>
         <a href="/blog" class="inline-flex items-center gap-2 px-5 py-2.5 rounded-lg bg-brand-500 text-white text-sm font-medium hover:bg-brand-600 transition-colors">
             <svg class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M10.5 19.5L3 12m0 0l7.5-7.5M3 12h18"/></svg>
-            Retour au blog
+            Back to blog
         </a>
     </div>
 
@@ -103,7 +103,7 @@
                 <!-- Back link -->
                 <a href="/blog" class="inline-flex items-center gap-1.5 text-sm text-brand-500 hover:text-brand-600 transition-colors mb-6">
                     <svg class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M10.5 19.5L3 12m0 0l7.5-7.5M3 12h18"/></svg>
-                    Retour au blog
+                    Back to blog
                 </a>
 
                 <!-- Meta -->
@@ -122,7 +122,7 @@
                     </div>
                     <div>
                         <p id="article-author" class="text-sm font-medium text-gray-900"></p>
-                        <p class="text-xs text-gray-400">Auteur</p>
+                        <p class="text-xs text-gray-400">Author</p>
                     </div>
                 </div>
 
@@ -135,7 +135,7 @@
         <div class="max-w-3xl mx-auto px-6 py-12 text-center">
             <a href="/blog" class="inline-flex items-center gap-2 text-brand-500 hover:text-brand-600 font-medium transition-colors">
                 <svg class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M10.5 19.5L3 12m0 0l7.5-7.5M3 12h18"/></svg>
-                Voir tous les articles
+                View all articles
             </a>
         </div>
     </article>
@@ -145,44 +145,44 @@
         <div class="max-w-6xl mx-auto">
             <div class="grid sm:grid-cols-2 lg:grid-cols-4 gap-10 mb-12">
                 <div>
-                    <h4 class="text-white font-semibold text-sm mb-4">Produit</h4>
+                    <h4 class="text-white font-semibold text-sm mb-4">Product</h4>
                     <ul class="space-y-2 text-sm">
                         <li><a href="/product/rainbow" class="hover:text-white transition-colors">Rainbow</a></li>
-                        <li><a href="/#features" class="hover:text-white transition-colors">Fonctionnalites</a></li>
-                        <li><a href="/#pricing" class="hover:text-white transition-colors">Tarifs</a></li>
+                        <li><a href="/#features" class="hover:text-white transition-colors">Features</a></li>
+                        <li><a href="/#pricing" class="hover:text-white transition-colors">Pricing</a></li>
                         <li><a href="/#demo" class="hover:text-white transition-colors">Demo</a></li>
                     </ul>
                 </div>
                 <div>
-                    <h4 class="text-white font-semibold text-sm mb-4">Ressources</h4>
+                    <h4 class="text-white font-semibold text-sm mb-4">Resources</h4>
                     <ul class="space-y-2 text-sm">
                         <li><a href="/blog" class="hover:text-white transition-colors">Blog</a></li>
-                        <li><a href="/tutorials" class="hover:text-white transition-colors">Tutoriels</a></li>
-                        <li><a href="#" class="hover:text-white transition-colors">Documentation API</a></li>
+                        <li><a href="/tutorials" class="hover:text-white transition-colors">Tutorials</a></li>
+                        <li><a href="#" class="hover:text-white transition-colors">API Documentation</a></li>
                         <li><a href="#" class="hover:text-white transition-colors">Changelog</a></li>
                     </ul>
                 </div>
                 <div>
                     <h4 class="text-white font-semibold text-sm mb-4">Support</h4>
                     <ul class="space-y-2 text-sm">
-                        <li><a href="/support" class="hover:text-white transition-colors">Centre d'aide</a></li>
-                        <li><a href="/support" class="hover:text-white transition-colors">Contactez-nous</a></li>
-                        <li><a href="#" class="hover:text-white transition-colors">Statut du service</a></li>
-                        <li><a href="/reviews" class="hover:text-white transition-colors">Avis clients</a></li>
+                        <li><a href="/support" class="hover:text-white transition-colors">Help Center</a></li>
+                        <li><a href="/support" class="hover:text-white transition-colors">Contact Us</a></li>
+                        <li><a href="#" class="hover:text-white transition-colors">Service Status</a></li>
+                        <li><a href="/reviews" class="hover:text-white transition-colors">Customer Reviews</a></li>
                     </ul>
                 </div>
                 <div>
-                    <h4 class="text-white font-semibold text-sm mb-4">Entreprise</h4>
+                    <h4 class="text-white font-semibold text-sm mb-4">Company</h4>
                     <ul class="space-y-2 text-sm">
-                        <li><a href="#" class="hover:text-white transition-colors">A propos</a></li>
-                        <li><a href="#" class="hover:text-white transition-colors">Carrieres</a></li>
-                        <li><a href="#" class="hover:text-white transition-colors">Mentions legales</a></li>
-                        <li><a href="#" class="hover:text-white transition-colors">Politique de confidentialite</a></li>
+                        <li><a href="#" class="hover:text-white transition-colors">About</a></li>
+                        <li><a href="#" class="hover:text-white transition-colors">Careers</a></li>
+                        <li><a href="#" class="hover:text-white transition-colors">Legal Notice</a></li>
+                        <li><a href="#" class="hover:text-white transition-colors">Privacy Policy</a></li>
                     </ul>
                 </div>
             </div>
             <div class="border-t border-gray-800 pt-6 text-center text-xs text-gray-500">
-                &copy; 2024 Rainbow by ALE. Tous droits reserves.
+                &copy; 2026 Rainbow by Alcatel-Lucent Enterprise. All rights reserved.
             </div>
         </div>
     </footer>
@@ -240,7 +240,7 @@
                 // Date
                 if (article.publishedAt || article.createdAt) {
                     var d = new Date(article.publishedAt || article.createdAt);
-                    document.getElementById('article-date').textContent = d.toLocaleDateString('fr-FR', { year: 'numeric', month: 'long', day: 'numeric' });
+                    document.getElementById('article-date').textContent = d.toLocaleDateString('en-US', { year: 'numeric', month: 'long', day: 'numeric' });
                 }
 
                 // Title
@@ -255,7 +255,7 @@
                 }
 
                 // Content
-                document.getElementById('article-content').innerHTML = article.content || '<p>Contenu non disponible.</p>';
+                document.getElementById('article-content').innerHTML = article.content || '<p>Content not available.</p>';
 
                 // Show article, hide loading
                 loadingEl.classList.add('hidden');
