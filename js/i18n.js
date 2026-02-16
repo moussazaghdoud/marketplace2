@@ -16,14 +16,30 @@
         return SUPPORTED.indexOf(nav) !== -1 ? nav : DEFAULT_LANG;
     }
 
-    // Fetch and cache a translation file
+    // Load translations: instant from localStorage, background-refresh from server
     function loadTranslations(lang) {
         if (cache[lang]) return Promise.resolve(cache[lang]);
-        // Resolve path: works from / or /pages/ since we use absolute path
+        // Try localStorage first for instant load (no network wait)
+        try {
+            var stored = localStorage.getItem('i18n_' + lang);
+            if (stored) {
+                var parsed = JSON.parse(stored);
+                cache[lang] = parsed;
+            }
+        } catch (e) { /* corrupted data, ignore */ }
+
         var base = window.location.origin;
-        return fetch(base + '/i18n/' + lang + '.json')
+        var fetching = fetch(base + '/i18n/' + lang + '.json')
             .then(function (r) { return r.json(); })
-            .then(function (data) { cache[lang] = data; return data; });
+            .then(function (data) {
+                cache[lang] = data;
+                try { localStorage.setItem('i18n_' + lang, JSON.stringify(data)); } catch (e) { /* quota */ }
+                return data;
+            });
+
+        // If we have cached data, return it instantly; refresh in background
+        if (cache[lang]) return Promise.resolve(cache[lang]);
+        return fetching;
     }
 
     // Get nested value by dot-separated key
