@@ -191,10 +191,16 @@ function sendPage(req, res, filePath) {
     }
 }
 
-// API to clear translation cache (called when admin updates content)
-app.post('/api/admin/clear-i18n-cache', adminAuth, (req, res) => {
+// Expose cache-clearing function for route modules
+function clearI18nCache() {
     Object.keys(translatedPageCache).forEach(k => delete translatedPageCache[k]);
     Object.keys(i18nFileCache).forEach(k => delete i18nFileCache[k]);
+}
+app.locals.clearI18nCache = clearI18nCache;
+
+// API to clear translation cache (called when admin updates content)
+app.post('/api/admin/clear-i18n-cache', adminAuth, (req, res) => {
+    clearI18nCache();
     res.json({ success: true });
 });
 
@@ -225,6 +231,7 @@ app.use('/api/admin/clients', require('./routes/admin-clients'));
 app.use('/api/admin/products', require('./routes/admin-products'));
 app.use('/api/admin/subscriptions', require('./routes/admin-subscriptions'));
 app.use('/api/admin/blog', require('./routes/admin-blog'));
+app.use('/api/admin/i18n', require('./routes/admin-i18n'));
 
 // Admin audit log
 app.get('/api/admin/audit-log', adminAuth, (req, res) => {

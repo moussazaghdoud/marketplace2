@@ -173,6 +173,10 @@
                 <svg class="w-5 h-5" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z"/></svg>
                 Contact Messages
             </div>
+            <div class="sidebar-link" onclick="switchSection('translations')" data-section="translations">
+                <svg class="w-5 h-5" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M3 5h12M9 3v2m1.048 9.5A18.022 18.022 0 016.412 9m6.088 9h7M11 21l5-10 5 10M12.751 5C11.783 10.77 8.07 15.61 3 18.129"/></svg>
+                Translations
+            </div>
         </nav>
         <div class="p-3 border-t border-slate-700">
             <div class="sidebar-link" onclick="handleLogout()">
@@ -473,6 +477,38 @@
                     </div>
                 </div>
             </div>
+
+            <!-- TRANSLATIONS -->
+            <div id="section-translations" class="section-panel hidden">
+                <h2 class="text-2xl font-bold text-gray-900 mb-6">Translations</h2>
+
+                <!-- Language tabs -->
+                <div class="flex gap-1 mb-4 bg-gray-100 rounded-lg p-1">
+                    <button onclick="loadTranslationLang('en')" class="i18n-lang-btn content-tab-btn active" data-lang="en">EN</button>
+                    <button onclick="loadTranslationLang('fr')" class="i18n-lang-btn content-tab-btn" data-lang="fr">FR</button>
+                    <button onclick="loadTranslationLang('es')" class="i18n-lang-btn content-tab-btn" data-lang="es">ES</button>
+                    <button onclick="loadTranslationLang('it')" class="i18n-lang-btn content-tab-btn" data-lang="it">IT</button>
+                    <button onclick="loadTranslationLang('de')" class="i18n-lang-btn content-tab-btn" data-lang="de">DE</button>
+                </div>
+
+                <!-- Search -->
+                <div class="mb-4">
+                    <input type="text" id="i18n-search" class="admin-input" placeholder="Search keys or values..." oninput="filterTranslationRows()">
+                </div>
+
+                <!-- Table -->
+                <div class="bg-white rounded-xl border border-gray-200 overflow-hidden mb-4">
+                    <div class="table-container" style="max-height:65vh; overflow-y:auto;">
+                        <table>
+                            <thead><tr><th style="width:30%">Key</th><th style="width:30%">English</th><th style="width:40%">Translation</th></tr></thead>
+                            <tbody id="i18n-tbody"></tbody>
+                        </table>
+                    </div>
+                </div>
+
+                <!-- Save -->
+                <button onclick="saveTranslations()" class="btn btn-primary" id="i18n-save-btn">Save Translations</button>
+            </div>
         </div>
     </main>
 </div>
@@ -603,6 +639,7 @@ function switchSection(name) {
         case 'blog': loadArticles(); loadCategories(); break;
         case 'reviews': loadReviews(); break;
         case 'contacts': loadContacts(); break;
+        case 'translations': loadTranslations(); break;
     }
 }
 
@@ -1608,6 +1645,172 @@ async function deleteContact(id) {
         await apiFetch('/api/admin/blog/contacts/'+id, { method:'DELETE' });
         showToast('Contact deleted!'); loadContacts();
     } catch(e) { showToast('Failed to delete contact','error'); }
+}
+
+// ======================== TRANSLATIONS ========================
+var i18nEnData = {};
+var i18nCurrentLang = 'en';
+var i18nCurrentData = {};
+
+function flattenObj(obj, prefix) {
+    var result = {};
+    for (var k in obj) {
+        var fullKey = prefix ? prefix + '.' + k : k;
+        if (obj[k] && typeof obj[k] === 'object' && !Array.isArray(obj[k])) {
+            var nested = flattenObj(obj[k], fullKey);
+            for (var nk in nested) result[nk] = nested[nk];
+        } else {
+            result[fullKey] = obj[k];
+        }
+    }
+    return result;
+}
+
+function unflattenObj(flat) {
+    var result = {};
+    for (var key in flat) {
+        var parts = key.split('.');
+        var cur = result;
+        for (var i = 0; i < parts.length - 1; i++) {
+            if (!(parts[i] in cur)) cur[parts[i]] = {};
+            cur = cur[parts[i]];
+        }
+        cur[parts[parts.length - 1]] = flat[key];
+    }
+    return result;
+}
+
+async function loadTranslations() {
+    // Always load English as reference
+    try {
+        var res = await apiFetch('/api/admin/i18n/en');
+        i18nEnData = await res.json();
+    } catch(e) {
+        showToast('Failed to load English translations', 'error');
+        return;
+    }
+    loadTranslationLang('en');
+}
+
+async function loadTranslationLang(lang) {
+    i18nCurrentLang = lang;
+    // Update tab active state
+    document.querySelectorAll('.i18n-lang-btn').forEach(function(b) {
+        b.classList.toggle('active', b.dataset.lang === lang);
+    });
+
+    try {
+        var res = await apiFetch('/api/admin/i18n/' + lang);
+        i18nCurrentData = await res.json();
+    } catch(e) {
+        showToast('Failed to load ' + lang.toUpperCase() + ' translations', 'error');
+        return;
+    }
+
+    renderTranslationTable();
+}
+
+function renderTranslationTable() {
+    var tbody = document.getElementById('i18n-tbody');
+    var enFlat = flattenObj(i18nEnData, '');
+    var curFlat = flattenObj(i18nCurrentData, '');
+    var isEn = i18nCurrentLang === 'en';
+
+    // Group keys by top-level section
+    var sections = {};
+    var keys = Object.keys(enFlat);
+    keys.forEach(function(k) {
+        var section = k.split('.')[0];
+        if (!sections[section]) sections[section] = [];
+        sections[section].push(k);
+    });
+
+    var html = '';
+    for (var section in sections) {
+        html += '<tr class="i18n-section-row"><td colspan="3" style="background:#f3f4f6; font-weight:700; font-size:0.8125rem; text-transform:uppercase; color:#6b7280; letter-spacing:0.05em; padding:0.625rem 1rem;">' + esc(section) + '</td></tr>';
+        sections[section].forEach(function(key) {
+            var enVal = enFlat[key] != null ? String(enFlat[key]) : '';
+            var curVal = curFlat[key] != null ? String(curFlat[key]) : '';
+            var isLong = enVal.length > 80;
+            var inputHtml;
+            if (isEn) {
+                if (isLong) {
+                    inputHtml = '<textarea class="admin-input admin-textarea i18n-value" data-key="' + escAttr(key) + '" rows="2">' + esc(enVal) + '</textarea>';
+                } else {
+                    inputHtml = '<input class="admin-input i18n-value" data-key="' + escAttr(key) + '" value="' + escAttr(enVal) + '">';
+                }
+            } else {
+                if (isLong) {
+                    inputHtml = '<textarea class="admin-input admin-textarea i18n-value" data-key="' + escAttr(key) + '" rows="2">' + esc(curVal) + '</textarea>';
+                } else {
+                    inputHtml = '<input class="admin-input i18n-value" data-key="' + escAttr(key) + '" value="' + escAttr(curVal) + '">';
+                }
+            }
+            html += '<tr class="i18n-row" data-search-key="' + escAttr(key.toLowerCase()) + '" data-search-en="' + escAttr(enVal.toLowerCase()) + '" data-search-val="' + escAttr(curVal.toLowerCase()) + '">'
+                + '<td style="color:#6b7280; font-size:0.8125rem; font-family:monospace; word-break:break-all;">' + esc(key) + '</td>'
+                + '<td style="font-size:0.8125rem; color:#374151;">' + esc(enVal) + '</td>'
+                + '<td>' + inputHtml + '</td>'
+                + '</tr>';
+        });
+    }
+    tbody.innerHTML = html;
+    document.getElementById('i18n-search').value = '';
+}
+
+function filterTranslationRows() {
+    var q = (document.getElementById('i18n-search').value || '').toLowerCase().trim();
+    var rows = document.querySelectorAll('#i18n-tbody .i18n-row');
+    var visibleSections = {};
+    rows.forEach(function(row) {
+        if (!q) {
+            row.style.display = '';
+            visibleSections[row.previousElementSibling ? '' : ''] = true; // show all
+        } else {
+            var key = row.dataset.searchKey || '';
+            var en = row.dataset.searchEn || '';
+            var val = row.dataset.searchVal || '';
+            var match = key.indexOf(q) >= 0 || en.indexOf(q) >= 0 || val.indexOf(q) >= 0;
+            row.style.display = match ? '' : 'none';
+        }
+    });
+    // Show/hide section headers based on whether they have visible rows
+    var sectionRows = document.querySelectorAll('#i18n-tbody .i18n-section-row');
+    sectionRows.forEach(function(sRow) {
+        if (!q) { sRow.style.display = ''; return; }
+        var next = sRow.nextElementSibling;
+        var hasVisible = false;
+        while (next && !next.classList.contains('i18n-section-row')) {
+            if (next.style.display !== 'none') hasVisible = true;
+            next = next.nextElementSibling;
+        }
+        sRow.style.display = hasVisible ? '' : 'none';
+    });
+}
+
+async function saveTranslations() {
+    var btn = document.getElementById('i18n-save-btn');
+    btn.textContent = 'Saving...'; btn.disabled = true;
+    try {
+        var flat = {};
+        document.querySelectorAll('.i18n-value').forEach(function(el) {
+            flat[el.dataset.key] = el.value;
+        });
+        var nested = unflattenObj(flat);
+        var res = await apiFetch('/api/admin/i18n/' + i18nCurrentLang, {
+            method: 'PUT',
+            body: nested
+        });
+        var data = await res.json();
+        if (!res.ok) throw new Error(data.error || 'Save failed');
+        // Update local reference if English was saved
+        if (i18nCurrentLang === 'en') i18nEnData = nested;
+        i18nCurrentData = nested;
+        showToast('Translations saved');
+    } catch(e) {
+        showToast('Failed to save translations: ' + e.message, 'error');
+    } finally {
+        btn.textContent = 'Save Translations'; btn.disabled = false;
+    }
 }
 </script>
 </body>
