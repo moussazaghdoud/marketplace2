@@ -1123,12 +1123,26 @@ function openProductModal(id) {
             '</div>';
     }).join('');
 
+    var currentImage = (p.gallery && p.gallery.length > 0) ? p.gallery[0] : '';
+    var imagePreviewHtml = currentImage
+        ? '<img id="ep-image-preview" src="/'+currentImage+'" alt="Product image" class="w-full h-32 object-cover rounded-lg border border-gray-200">'
+        : '<div id="ep-image-preview" class="w-full h-32 rounded-lg border-2 border-dashed border-gray-200 flex items-center justify-center text-gray-400 text-sm">No image</div>';
+
     var html = '<h3 class="text-lg font-semibold text-gray-900 mb-4">Edit Product: '+esc(p.name)+'</h3>' +
         '<form onsubmit="saveProduct(event,\''+id+'\')">' +
         '<div class="space-y-3 mb-6">' +
         '<div class="grid grid-cols-2 gap-3">' +
         '<div><label class="block text-sm font-medium text-gray-600 mb-1">Name</label><input class="admin-input" id="ep-name" value="'+escAttr(p.name)+'" required></div>' +
         '<div><label class="block text-sm font-medium text-gray-600 mb-1">Slug</label><input class="admin-input" id="ep-slug" value="'+escAttr(p.slug)+'" required></div>' +
+        '</div>' +
+        '<div><label class="block text-sm font-medium text-gray-600 mb-1">Product Image</label>' +
+        '<div class="flex items-start gap-4">' +
+        '<div class="flex-1">' + imagePreviewHtml + '</div>' +
+        '<div class="flex flex-col gap-2">' +
+        '<label class="btn btn-secondary btn-sm cursor-pointer text-center"><input type="file" accept="image/*" id="ep-image-file" class="hidden" onchange="uploadProductImage(this)">Upload image</label>' +
+        (currentImage ? '<button type="button" class="btn btn-secondary btn-sm text-red-500" onclick="removeProductImage()">Remove</button>' : '') +
+        '</div></div>' +
+        '<input type="hidden" id="ep-image-path" value="'+escAttr(currentImage)+'">' +
         '</div>' +
         '<div><label class="block text-sm font-medium text-gray-600 mb-1">Short Description</label><input class="admin-input" id="ep-short" value="'+escAttr(p.shortDescription||'')+'"></div>' +
         '<div><label class="block text-sm font-medium text-gray-600 mb-1">Full Description</label><textarea class="admin-input admin-textarea" rows="3" id="ep-full">'+esc(p.fullDescription||'')+'</textarea></div>' +
@@ -1142,6 +1156,35 @@ function openProductModal(id) {
 
     // Store plan keys for retrieval
     window._editProductPlanKeys = planKeys;
+}
+
+async function uploadProductImage(input) {
+    if (!input.files || !input.files[0]) return;
+    var formData = new FormData();
+    formData.append('image', input.files[0]);
+    try {
+        var res = await fetch('/api/upload', {
+            method: 'POST',
+            headers: { 'Authorization': 'Bearer ' + localStorage.getItem('adminToken') },
+            body: formData
+        });
+        var data = await res.json();
+        if (data.path) {
+            document.getElementById('ep-image-path').value = data.path;
+            var preview = document.getElementById('ep-image-preview');
+            var container = preview.parentElement;
+            container.innerHTML = '<img id="ep-image-preview" src="/' + data.path + '" alt="Product image" class="w-full h-32 object-cover rounded-lg border border-gray-200">';
+            showToast('Image uploaded!');
+        }
+    } catch(e) { showToast('Failed to upload image', 'error'); }
+}
+
+function removeProductImage() {
+    document.getElementById('ep-image-path').value = '';
+    var preview = document.getElementById('ep-image-preview');
+    var container = preview.parentElement;
+    container.innerHTML = '<div id="ep-image-preview" class="w-full h-32 rounded-lg border-2 border-dashed border-gray-200 flex items-center justify-center text-gray-400 text-sm">No image</div>';
+    showToast('Image removed');
 }
 
 async function saveProduct(e, id) {
@@ -1165,6 +1208,9 @@ async function saveProduct(e, id) {
         };
     });
 
+    var imagePath = document.getElementById('ep-image-path').value;
+    var gallery = imagePath ? [imagePath] : [];
+
     var body = {
         name: document.getElementById('ep-name').value,
         slug: document.getElementById('ep-slug').value,
@@ -1172,7 +1218,7 @@ async function saveProduct(e, id) {
         fullDescription: document.getElementById('ep-full').value,
         isActive: document.getElementById('ep-active').checked ? 1 : 0,
         benefits: p.benefits || [],
-        gallery: p.gallery || [],
+        gallery: gallery,
         plans: plans
     };
     try {

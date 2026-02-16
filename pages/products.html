@@ -167,10 +167,13 @@
                         ? '<a href="/product/' + esc(p.slug) + '" class="inline-flex items-center gap-1.5 text-sm font-medium text-brand-500 hover:text-brand-600 transition-colors">Learn more <span>&rarr;</span></a>'
                         : '<span class="inline-flex items-center gap-1.5 text-sm font-medium text-gray-400">Coming soon</span>';
 
+                    var hasImage = p.gallery && p.gallery.length > 0 && p.gallery[0];
+                    var headerHtml = hasImage
+                        ? '<div class="h-48 relative overflow-hidden"><img src="/' + esc(p.gallery[0]) + '" alt="' + esc(p.name) + '" class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300"></div>'
+                        : '<div class="h-48 bg-gradient-to-br ' + style.gradient + ' flex items-center justify-center relative overflow-hidden"><svg class="w-20 h-20 text-white/80 group-hover:scale-110 transition-transform duration-300" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.5">' + style.icon + '</svg></div>';
+
                     return '<div class="bg-white rounded-2xl border border-gray-100 shadow-sm hover:shadow-xl hover:border-gray-200 transition-all duration-300 overflow-hidden group">' +
-                        '<div class="h-48 bg-gradient-to-br ' + style.gradient + ' flex items-center justify-center relative overflow-hidden">' +
-                            '<svg class="w-20 h-20 text-white/80 group-hover:scale-110 transition-transform duration-300" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.5">' + style.icon + '</svg>' +
-                        '</div>' +
+                        headerHtml +
                         '<div class="p-6">' +
                             '<div class="flex items-center gap-2 mb-3">' +
                                 '<span class="px-2.5 py-0.5 rounded-full text-xs font-medium ' + style.badgeBg + ' ' + style.badgeText + '">' + esc(style.label) + '</span>' +
