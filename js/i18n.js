@@ -8,6 +8,16 @@
     var SUPPORTED = ['en', 'fr', 'es', 'it', 'de'];
     var DEFAULT_LANG = 'en';
 
+    // Hide translatable elements immediately if a non-English language is stored,
+    // to prevent flash of English text (FOUC) before translations load.
+    var storedLang = localStorage.getItem('lang');
+    if (storedLang && storedLang !== 'en' && SUPPORTED.indexOf(storedLang) !== -1) {
+        var hideStyle = document.createElement('style');
+        hideStyle.id = 'i18n-hide';
+        hideStyle.textContent = '[data-i18n],[data-i18n-html],[data-i18n-placeholder]{visibility:hidden}';
+        (document.head || document.documentElement).appendChild(hideStyle);
+    }
+
     // Detect language: localStorage > browser > default
     function detectLang() {
         var stored = localStorage.getItem('lang');
@@ -97,6 +107,12 @@
         if (sw && !sw.contains(e.target)) sw.classList.remove('open');
     });
 
+    // Remove the FOUC-prevention style so translated elements become visible
+    function revealContent() {
+        var h = document.getElementById('i18n-hide');
+        if (h) h.parentNode.removeChild(h);
+    }
+
     // Apply translations to all data-i18n elements on the page
     function applyTranslations() {
         // data-i18n → textContent
@@ -133,6 +149,7 @@
             currentTranslations = data;
             applyTranslations();
             initLangSwitcher();
+            revealContent();
             // Dispatch event so page scripts can re-render JS-built content
             window.dispatchEvent(new CustomEvent('langchange', { detail: { lang: lang } }));
         });
@@ -149,6 +166,7 @@
             currentTranslations = cache[lang] || cache['en'];
             applyTranslations();
             initLangSwitcher();
+            revealContent();
             window.dispatchEvent(new CustomEvent('langchange', { detail: { lang: lang } }));
         });
     }
