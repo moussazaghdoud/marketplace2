@@ -121,6 +121,7 @@ app.get('/blog/:slug', (req, res) => res.sendFile(path.join(__dirname, 'pages', 
 app.get('/reviews', (req, res) => res.sendFile(path.join(__dirname, 'pages', 'reviews.html')));
 app.get('/support', (req, res) => res.sendFile(path.join(__dirname, 'pages', 'support.html')));
 app.get('/tutorials', (req, res) => res.sendFile(path.join(__dirname, 'pages', 'tutorials.html')));
+app.get('/products', (req, res) => res.sendFile(path.join(__dirname, 'pages', 'products.html')));
 app.get('/product/:slug', (req, res) => res.sendFile(path.join(__dirname, 'pages', 'product.html')));
 
 // ===================== API ROUTES =====================
