@@ -378,8 +378,30 @@ app.post('/api/content', adminAuth, (req, res) => {
         const lang = (req.query.lang && /^[a-z]{2}$/.test(req.query.lang)) ? req.query.lang : 'en';
         const data = JSON.stringify(req.body, null, 2);
         const db = getDb();
-        db.prepare('INSERT INTO content_store (lang, data, updatedAt) VALUES (?, ?, datetime(\'now\')) ON CONFLICT(lang) DO UPDATE SET data = excluded.data, updatedAt = excluded.updatedAt')
-            .run(lang, data);
+        const upsert = db.prepare('INSERT INTO content_store (lang, data, updatedAt) VALUES (?, ?, datetime(\'now\')) ON CONFLICT(lang) DO UPDATE SET data = excluded.data, updatedAt = excluded.updatedAt');
+        upsert.run(lang, data);
+
+        // Sync pricing values (price, pricePerUser, highlighted, badge) across all languages
+        if (req.body.pricing && req.body.pricing.plans) {
+            const savedPlans = req.body.pricing.plans;
+            const allRows = db.prepare('SELECT lang, data FROM content_store WHERE lang != ?').all(lang);
+            for (const row of allRows) {
+                try {
+                    const other = JSON.parse(row.data);
+                    if (other.pricing && other.pricing.plans && other.pricing.plans.length === savedPlans.length) {
+                        for (let i = 0; i < savedPlans.length; i++) {
+                            other.pricing.plans[i].price = savedPlans[i].price;
+                            other.pricing.plans[i].pricePerUser = savedPlans[i].pricePerUser;
+                            other.pricing.plans[i].highlighted = savedPlans[i].highlighted;
+                            if (savedPlans[i].badge !== undefined) other.pricing.plans[i].badge = savedPlans[i].badge;
+                            if (savedPlans[i].ctaLink !== undefined) other.pricing.plans[i].ctaLink = savedPlans[i].ctaLink;
+                        }
+                        upsert.run(row.lang, JSON.stringify(other, null, 2));
+                    }
+                } catch (e) { /* skip malformed rows */ }
+            }
+        }
+
         res.json({ success: true });
     } catch (err) {
         res.status(500).json({ error: 'Failed to save content' });
