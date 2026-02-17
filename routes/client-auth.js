@@ -80,6 +80,45 @@ router.post('/verify-email', (req, res) => {
     res.json({ success: true, message: 'Email verified successfully. You can now sign in.' });
 });
 
+// POST /api/client/verify-code — verify via Rainbow 6-digit code
+router.post('/verify-code', async (req, res) => {
+    const { email, code, password } = req.body;
+    if (!email || !code || !password) {
+        return res.status(400).json({ error: 'Email, code and password are required' });
+    }
+
+    const db = getDb();
+    const client = db.prepare('SELECT id, emailVerified FROM clients WHERE email = ?').get(email);
+    if (!client) {
+        return res.status(400).json({ error: 'Account not found' });
+    }
+    if (client.emailVerified) {
+        return res.json({ success: true, message: 'Email already verified.' });
+    }
+
+    // Call Rainbow self-register to create Rainbow account with the code
+    try {
+        const rbRes = await fetch(`${RAINBOW_DOMAIN}/api/rainbow/enduser/v1.0/users/self-register`, {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json', 'accept': 'application/json' },
+            body: JSON.stringify({ loginEmail: email, password, temporaryToken: code })
+        });
+        const rbData = await rbRes.json().catch(() => ({}));
+        if (!rbRes.ok) {
+            return res.status(400).json({ error: rbData.errorDetails || rbData.errorMsg || 'Invalid verification code' });
+        }
+    } catch (err) {
+        console.error('[Rainbow] Verify code failed:', err.message);
+        return res.status(500).json({ error: 'Failed to verify with Rainbow. Try again.' });
+    }
+
+    // Mark local account as verified
+    db.prepare('UPDATE clients SET emailVerified = 1, status = ?, verificationToken = NULL, updatedAt = datetime(?) WHERE id = ?')
+        .run('active', new Date().toISOString(), client.id);
+
+    res.json({ success: true, message: 'Email verified successfully. You can now sign in.' });
+});
+
 // POST /api/client/login
 router.post('/login', (req, res) => {
     const { email, password } = req.body;

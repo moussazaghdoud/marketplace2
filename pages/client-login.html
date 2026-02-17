@@ -211,6 +211,28 @@
                     </p>
                 </form>
 
+                <!-- Verify Code Form (shown after plan registration) -->
+                <form id="form-verify-code" class="space-y-5 fade-in hidden" onsubmit="handleVerifyCode(event)">
+                    <div class="text-center mb-2">
+                        <div class="w-12 h-12 bg-rainbow-50 rounded-full flex items-center justify-center mx-auto mb-3">
+                            <svg class="w-6 h-6 text-rainbow-500" fill="none" stroke="currentColor" stroke-width="1.5" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M21.75 6.75v10.5a2.25 2.25 0 01-2.25 2.25h-15a2.25 2.25 0 01-2.25-2.25V6.75m19.5 0A2.25 2.25 0 0019.5 4.5h-15a2.25 2.25 0 00-2.25 2.25m19.5 0v.243a2.25 2.25 0 01-1.07 1.916l-7.5 4.615a2.25 2.25 0 01-2.36 0L3.32 8.91a2.25 2.25 0 01-1.07-1.916V6.75"/></svg>
+                        </div>
+                        <h3 class="text-lg font-semibold text-gray-900">Check your email</h3>
+                        <p class="text-sm text-gray-500 mt-1">Enter the 6-digit code sent to <strong id="verify-email-display"></strong></p>
+                    </div>
+                    <div>
+                        <input type="text" id="verify-code" required placeholder="Enter 6-digit code" maxlength="6"
+                            class="input-focus w-full px-4 py-3 border border-gray-300 rounded-lg text-center text-lg font-semibold tracking-widest text-gray-900 placeholder-gray-400 outline-none transition-all">
+                    </div>
+                    <button type="submit" id="btn-verify-code"
+                        class="w-full py-2.5 px-4 bg-rainbow-500 hover:bg-rainbow-600 text-white font-semibold rounded-lg text-sm transition-colors disabled:opacity-60 disabled:cursor-not-allowed">
+                        Verify
+                    </button>
+                    <button type="button" onclick="switchTab('login')" class="w-full py-2.5 px-4 text-gray-600 hover:text-gray-800 font-medium text-sm transition-colors">
+                        Back to sign in
+                    </button>
+                </form>
+
                 <!-- Forgot Password Form -->
                 <form id="form-forgot" class="space-y-5 fade-in hidden" onsubmit="handleForgotPassword(event)">
                     <div class="text-center mb-2">
@@ -286,6 +308,7 @@
 
             hideMessage();
             forgotForm.classList.add('hidden');
+            document.getElementById('form-verify-code').classList.add('hidden');
 
             if (tab === 'login') {
                 loginTab.className = loginTab.className.replace('tab-inactive', 'tab-active');
@@ -430,12 +453,56 @@
                     firstName, lastName, email, password
                 });
 
-                showMessage(t('login.checkEmail','Account created! Check your email to verify your account.'), 'success');
+                // Store credentials for verify-code step
+                window._regEmail = email;
+                window._regPassword = password;
+
+                // Show the verify code form
                 document.getElementById('form-register').classList.add('hidden');
+                document.getElementById('verify-email-display').textContent = email;
+                document.getElementById('form-verify-code').classList.remove('hidden');
+                showMessage(t('login.checkEmail','Account created! Check your email for a verification code.'), 'success');
             } catch (err) {
                 showMessage(err.message, 'error');
                 btn.disabled = false;
                 btn.textContent = t('login.createAccountBtn','Create my account');
+            }
+        }
+
+        // =============================================
+        // Verify code handler
+        // =============================================
+        async function handleVerifyCode(e) {
+            e.preventDefault();
+            hideMessage();
+            const code = document.getElementById('verify-code').value.trim();
+            if (!code) {
+                showMessage('Please enter the verification code.', 'error');
+                return;
+            }
+
+            const btn = document.getElementById('btn-verify-code');
+            btn.disabled = true;
+            btn.textContent = 'Verifying...';
+
+            try {
+                await apiRequest('/api/client/verify-code', 'POST', {
+                    email: window._regEmail,
+                    code: code,
+                    password: window._regPassword
+                });
+
+                showMessage('Email verified! You can now sign in.', 'success');
+                document.getElementById('form-verify-code').classList.add('hidden');
+                document.getElementById('form-login').classList.remove('hidden');
+                // Pre-fill login email
+                document.getElementById('login-email').value = window._regEmail;
+                window._regEmail = null;
+                window._regPassword = null;
+            } catch (err) {
+                showMessage(err.message, 'error');
+                btn.disabled = false;
+                btn.textContent = 'Verify';
             }
         }
 
