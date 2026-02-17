@@ -1397,7 +1397,7 @@ function openArticleModal(id) {
         '<div><label class="block text-sm font-medium text-gray-600 mb-1">Cover Image URL</label><input class="admin-input" id="art-cover" value="'+escAttr(a?a.coverImage:'')+'"></div>' +
         '<div><label class="block text-sm font-medium text-gray-600 mb-1">Status</label><select class="admin-input" id="art-status">' +
         '<option value="draft"'+(a&&a.status==='draft'?' selected':'')+'>Draft</option>' +
-        '<option value="published"'+(a&&a.status==='published'?' selected':'')+'>Published</option>' +
+        '<option value="published"'+(!a||a.status==='published'?' selected':'')+'>Published</option>' +
         '</select></div>' +
         '</div>' +
         '<div class="flex justify-end gap-3 mt-6"><button type="button" class="btn btn-secondary" onclick="closeModal()">Cancel</button><button type="submit" class="btn btn-primary">Save</button></div>' +
