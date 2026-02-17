@@ -64,6 +64,50 @@ async function setDefaultPaymentMethod(customerId, paymentMethodId) {
     });
 }
 
+// Ensure a Stripe product exists for this product slug; create if missing
+async function ensureProduct(name, slug) {
+    if (!stripe) throw new Error('Stripe not configured');
+    // Search for existing product by metadata slug
+    const existing = await stripe.products.search({ query: `metadata["slug"]:"${slug}"` });
+    if (existing.data.length > 0) return existing.data[0].id;
+    // Create new product
+    const product = await stripe.products.create({ name, metadata: { slug } });
+    return product.id;
+}
+
+// Ensure a Stripe price exists with the correct amount; create new + deactivate old if changed
+async function ensurePrice(stripeProductId, unitAmount, currency, planKey, existingPriceId) {
+    if (!stripe) throw new Error('Stripe not configured');
+    // If we have an existing price, check if amount matches
+    if (existingPriceId) {
+        try {
+            const existing = await stripe.prices.retrieve(existingPriceId);
+            if (existing.unit_amount === unitAmount && existing.currency === currency) {
+                return existingPriceId; // No change needed
+            }
+        } catch (e) {
+            // Price doesn't exist or was deleted — create a new one
+        }
+    }
+    // Create a new price (Stripe prices are immutable)
+    const newPrice = await stripe.prices.create({
+        product: stripeProductId,
+        unit_amount: unitAmount,
+        currency,
+        recurring: { interval: 'month' },
+        metadata: { planKey }
+    });
+    // Deactivate the old price if it existed
+    if (existingPriceId) {
+        try {
+            await stripe.prices.update(existingPriceId, { active: false });
+        } catch (e) {
+            // Ignore if old price can't be deactivated
+        }
+    }
+    return newPrice.id;
+}
+
 // Sync subscription status from webhook event to local DB
 function syncSubscriptionFromWebhook(stripeSubscription) {
     const db = getDb();
@@ -84,5 +128,6 @@ function syncSubscriptionFromWebhook(stripeSubscription) {
 module.exports = {
     isConfigured, createCustomer, createSubscription, updateSubscription,
     cancelSubscription, createSetupIntent, listPaymentMethods,
-    detachPaymentMethod, setDefaultPaymentMethod, syncSubscriptionFromWebhook
+    detachPaymentMethod, setDefaultPaymentMethod, syncSubscriptionFromWebhook,
+    ensureProduct, ensurePrice
 };
