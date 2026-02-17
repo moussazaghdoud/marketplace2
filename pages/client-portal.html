@@ -627,7 +627,7 @@
                                         <p class="font-semibold text-gray-900">${plan.name}</p>
                                         <p class="text-sm text-gray-500 mt-0.5">${plan.description || ''}</p>
                                     </div>
-                                    <span class="text-rainbow-600 font-bold">${plan.price ? formatPrice(plan.price) : '-'}<span class="text-xs font-normal text-gray-400">/mo</span></span>
+                                    <span class="text-rainbow-600 font-bold">${plan.pricePerUser != null ? (plan.pricePerUser === 0 ? (plan.price || t('portal.free','Free')) : plan.pricePerUser.toFixed(2).replace('.', ',') + ' EUR') : (plan.price || '-')}<span class="text-xs font-normal text-gray-400">/mo</span></span>
                                 </div>
                             </button>
                         `).join('')}
@@ -691,7 +691,7 @@
                                 class="plan-card text-left p-4 border-2 ${i === defaultIndex ? 'border-rainbow-500 bg-rainbow-50/30' : 'border-gray-200'} rounded-xl hover:border-rainbow-400 transition-all">
                                 <p class="font-semibold text-gray-900 text-sm">${plan.name}</p>
                                 <p class="text-xs text-gray-500 mt-1 mb-3">${plan.description || ''}</p>
-                                <p class="text-lg font-bold text-rainbow-600">${plan.price ? formatPrice(plan.price) : '-'}<span class="text-xs font-normal text-gray-400">/mo/license</span></p>
+                                <p class="text-lg font-bold text-rainbow-600">${plan.pricePerUser != null ? (plan.pricePerUser === 0 ? (plan.price || t('portal.free','Free')) : plan.pricePerUser.toFixed(2).replace('.', ',') + ' EUR') : (plan.price || '-')}<span class="text-xs font-normal text-gray-400">/mo/license</span></p>
                             </button>
                         `).join('')}
                     </div>
