@@ -565,7 +565,7 @@ function closeModal() { document.getElementById('modal-container').innerHTML = '
 
 function showModal(html, large) {
     document.getElementById('modal-container').innerHTML =
-        '<div class="modal-overlay" onclick="if(event.target===this)closeModal()">' +
+        '<div class="modal-overlay">' +
         '<div class="modal-content'+(large?' modal-lg':'')+'">' + html + '</div></div>';
 }
 
