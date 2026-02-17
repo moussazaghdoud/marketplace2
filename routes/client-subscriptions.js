@@ -99,7 +99,7 @@ router.post('/', async (req, res) => {
         VALUES (?, ?, ?, ?, ?, ?, ?, ?)
     `).run(id, req.client.id, productId, planKey, licenseCount, plan.pricePerUser > 0 ? 'pending' : 'active', stripeSubId, zuoraResult.accountId);
 
-    res.json({ id, stripeSubscriptionId: stripeSubId, clientSecret, status: plan.pricePerUser > 0 ? 'pending' : 'active' });
+    res.json({ id, stripeSubscriptionId: stripeSubId, clientSecret, publishableKey: process.env.STRIPE_PUBLISHABLE_KEY, status: plan.pricePerUser > 0 ? 'pending' : 'active' });
 });
 
 // PUT /api/client/subscriptions/:id - Upgrade/downgrade
@@ -150,6 +150,91 @@ router.post('/:id/cancel', async (req, res) => {
     db.prepare("UPDATE subscriptions SET status = 'cancelling', cancelledAt = datetime(?), updatedAt = datetime(?) WHERE id = ?")
         .run(new Date().toISOString(), new Date().toISOString(), req.params.id);
 
+    res.json({ success: true });
+});
+
+// =============================================
+// License assignment endpoints
+// =============================================
+const emailService = require('../services/email');
+
+// GET /api/client/subscriptions/:id/licenses
+router.get('/:id/licenses', (req, res) => {
+    const db = getDb();
+    const sub = db.prepare('SELECT * FROM subscriptions WHERE id = ? AND clientId = ?')
+        .get(req.params.id, req.client.id);
+    if (!sub) return res.status(404).json({ error: 'Subscription not found' });
+
+    const assignments = db.prepare(
+        "SELECT * FROM license_assignments WHERE subscriptionId = ? AND status != 'revoked' ORDER BY invitedAt DESC"
+    ).all(req.params.id);
+
+    res.json({ assignments, licenseCount: sub.licenseCount });
+});
+
+// POST /api/client/subscriptions/:id/licenses — invite an employee
+router.post('/:id/licenses', async (req, res) => {
+    const { email } = req.body;
+    if (!email) return res.status(400).json({ error: 'Email is required' });
+
+    const db = getDb();
+    const sub = db.prepare('SELECT s.*, p.name as productName, p.plans as productPlans FROM subscriptions s LEFT JOIN products p ON s.productId = p.id WHERE s.id = ? AND s.clientId = ?')
+        .get(req.params.id, req.client.id);
+    if (!sub) return res.status(404).json({ error: 'Subscription not found' });
+
+    // Check capacity
+    const assignedCount = db.prepare(
+        "SELECT COUNT(*) as cnt FROM license_assignments WHERE subscriptionId = ? AND status != 'revoked'"
+    ).get(req.params.id).cnt;
+
+    if (assignedCount >= sub.licenseCount) {
+        return res.status(400).json({ error: 'All licenses have been assigned. Revoke one or upgrade your plan.' });
+    }
+
+    // Check duplicate
+    const existing = db.prepare(
+        "SELECT id FROM license_assignments WHERE subscriptionId = ? AND email = ? AND status != 'revoked'"
+    ).get(req.params.id, email);
+    if (existing) {
+        return res.status(400).json({ error: 'This email has already been invited for this subscription.' });
+    }
+
+    const id = uuidv4();
+    db.prepare('INSERT INTO license_assignments (id, subscriptionId, email) VALUES (?, ?, ?)')
+        .run(id, req.params.id, email);
+
+    // Get inviter info
+    const client = db.prepare('SELECT firstName, lastName, company FROM clients WHERE id = ?').get(req.client.id);
+    const inviterName = [client.firstName, client.lastName].filter(Boolean).join(' ');
+    const companyName = client.company || inviterName;
+    const plans = JSON.parse(sub.productPlans || '{}');
+    const plan = plans[sub.planKey] || {};
+
+    const baseUrl = process.env.BASE_URL || `${req.protocol}://${req.get('host')}`;
+    const inviteLink = `${baseUrl}/login?invite=${id}&email=${encodeURIComponent(email)}`;
+
+    emailService.sendLicenseInvite(email, {
+        companyName,
+        inviterName,
+        planName: plan.name || sub.planKey,
+        inviteLink
+    }).catch(err => console.error('License invite email failed:', err.message));
+
+    res.json({ id, email, status: 'pending' });
+});
+
+// DELETE /api/client/subscriptions/:id/licenses/:assignmentId — revoke
+router.delete('/:id/licenses/:assignmentId', (req, res) => {
+    const db = getDb();
+    const sub = db.prepare('SELECT id FROM subscriptions WHERE id = ? AND clientId = ?')
+        .get(req.params.id, req.client.id);
+    if (!sub) return res.status(404).json({ error: 'Subscription not found' });
+
+    const assignment = db.prepare('SELECT id FROM license_assignments WHERE id = ? AND subscriptionId = ?')
+        .get(req.params.assignmentId, req.params.id);
+    if (!assignment) return res.status(404).json({ error: 'Assignment not found' });
+
+    db.prepare("UPDATE license_assignments SET status = 'revoked' WHERE id = ?").run(req.params.assignmentId);
     res.json({ success: true });
 });
 

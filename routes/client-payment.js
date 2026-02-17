@@ -37,7 +37,7 @@ router.post('/setup-intent', async (req, res) => {
     }
     try {
         const intent = await stripeService.createSetupIntent(client.stripeCustomerId);
-        res.json({ clientSecret: intent.client_secret });
+        res.json({ clientSecret: intent.client_secret, publishableKey: process.env.STRIPE_PUBLISHABLE_KEY });
     } catch (err) {
         res.status(400).json({ error: err.message });
     }

@@ -116,6 +116,11 @@ router.post('/verify-code', async (req, res) => {
     db.prepare('UPDATE clients SET emailVerified = 1, status = ?, verificationToken = NULL, updatedAt = datetime(?) WHERE id = ?')
         .run('active', new Date().toISOString(), client.id);
 
+    // Auto-accept any pending license invitations for this email
+    db.prepare(
+        "UPDATE license_assignments SET status = 'accepted', clientId = ?, acceptedAt = datetime(?) WHERE email = ? AND status = 'pending'"
+    ).run(client.id, new Date().toISOString(), email);
+
     res.json({ success: true, message: 'Email verified successfully. You can now sign in.' });
 });
 
@@ -232,6 +237,33 @@ router.post('/change-password', clientAuth, (req, res) => {
     const hashed = bcrypt.hashSync(newPassword, 10);
     db.prepare('UPDATE clients SET password = ?, updatedAt = datetime(?) WHERE id = ?')
         .run(hashed, new Date().toISOString(), req.client.id);
+
+    res.json({ success: true });
+});
+
+// POST /api/client/accept-invite — accept a license invitation
+router.post('/accept-invite', clientAuth, (req, res) => {
+    const { inviteId } = req.body;
+    if (!inviteId) return res.status(400).json({ error: 'inviteId required' });
+
+    const db = getDb();
+    const assignment = db.prepare(
+        "SELECT * FROM license_assignments WHERE id = ? AND status = 'pending'"
+    ).get(inviteId);
+
+    if (!assignment) {
+        return res.status(404).json({ error: 'Invite not found or already used' });
+    }
+
+    // Verify email matches
+    const client = db.prepare('SELECT email FROM clients WHERE id = ?').get(req.client.id);
+    if (client.email.toLowerCase() !== assignment.email.toLowerCase()) {
+        return res.status(403).json({ error: 'This invite was sent to a different email address' });
+    }
+
+    db.prepare(
+        "UPDATE license_assignments SET status = 'accepted', clientId = ?, acceptedAt = datetime(?) WHERE id = ?"
+    ).run(req.client.id, new Date().toISOString(), inviteId);
 
     res.json({ success: true });
 });

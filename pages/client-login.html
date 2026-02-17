@@ -272,6 +272,8 @@
         const urlParams = new URLSearchParams(window.location.search);
         const selectedPlan = urlParams.get('plan');
         const selectedLicenses = urlParams.get('licenses');
+        const inviteToken = urlParams.get('invite');
+        const inviteEmail = urlParams.get('email');
 
         function getPortalRedirect() {
             let url = '/portal';
@@ -280,6 +282,17 @@
                 if (selectedLicenses) url += '&licenses=' + encodeURIComponent(selectedLicenses);
             }
             return url;
+        }
+
+        // Handle license invite — pre-fill email & show banner
+        function handleInviteParams() {
+            if (!inviteToken) return;
+            if (inviteEmail) {
+                const regEmail = document.getElementById('reg-email');
+                if (regEmail) regEmail.value = decodeURIComponent(inviteEmail);
+            }
+            switchTab('register');
+            showMessage("You've been invited to join a Rainbow team! Register to activate your license.", 'info');
         }
 
         // =============================================
@@ -403,6 +416,17 @@
                 localStorage.setItem('token', data.token);
                 if (data.client) {
                     localStorage.setItem('client', JSON.stringify(data.client));
+                }
+
+                // Accept license invite if present
+                if (inviteToken) {
+                    try {
+                        await fetch(API_BASE + '/api/client/accept-invite', {
+                            method: 'POST',
+                            headers: { 'Content-Type': 'application/json', 'Authorization': 'Bearer ' + data.token },
+                            body: JSON.stringify({ inviteId: inviteToken })
+                        });
+                    } catch (e) { console.warn('Invite accept failed:', e.message); }
                 }
 
                 showMessage(t('login.loginSuccess','Login successful! Redirecting...'), 'success');
@@ -531,6 +555,8 @@
         if (selectedPlan) {
             switchTab('register');
         }
+        // Handle invite params
+        handleInviteParams();
     </script>
 </body>
 </html>

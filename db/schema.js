@@ -151,6 +151,17 @@ function createTables() {
             createdAt TEXT DEFAULT (datetime('now'))
         );
 
+        CREATE TABLE IF NOT EXISTS license_assignments (
+            id TEXT PRIMARY KEY,
+            subscriptionId TEXT NOT NULL,
+            email TEXT NOT NULL,
+            status TEXT DEFAULT 'pending',
+            invitedAt TEXT DEFAULT (datetime('now')),
+            acceptedAt TEXT,
+            clientId TEXT,
+            FOREIGN KEY (subscriptionId) REFERENCES subscriptions(id)
+        );
+
         CREATE TABLE IF NOT EXISTS content_store (
             lang TEXT PRIMARY KEY,
             data TEXT NOT NULL,
