@@ -447,7 +447,7 @@
                 document.getElementById('form-register').classList.add('hidden');
                 document.getElementById('verify-email-display').textContent = email;
                 document.getElementById('form-verify-code').classList.remove('hidden');
-                showMessage(t('login.checkEmail','Account created! Check your email for a verification code.'), 'success');
+                showMessage('Account created! Check your email for a verification code.', 'success');
             } catch (err) {
                 showMessage(err.message, 'error');
                 btn.disabled = false;
