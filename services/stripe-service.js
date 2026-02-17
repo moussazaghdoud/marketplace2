@@ -125,8 +125,10 @@ function syncSubscriptionFromWebhook(stripeSubscription) {
         .run(status, new Date().toISOString(), sub.id);
 }
 
+function getStripe() { return stripe; }
+
 module.exports = {
-    isConfigured, createCustomer, createSubscription, updateSubscription,
+    isConfigured, getStripe, createCustomer, createSubscription, updateSubscription,
     cancelSubscription, createSetupIntent, listPaymentMethods,
     detachPaymentMethod, setDefaultPaymentMethod, syncSubscriptionFromWebhook,
     ensureProduct, ensurePrice

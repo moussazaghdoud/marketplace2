@@ -153,6 +153,46 @@ router.post('/:id/cancel', async (req, res) => {
     res.json({ success: true });
 });
 
+// POST /api/client/subscriptions/:id/retry-payment — get a new payment intent for pending subscription
+router.post('/:id/retry-payment', async (req, res) => {
+    const db = getDb();
+    const sub = db.prepare('SELECT s.*, p.plans as productPlans FROM subscriptions s LEFT JOIN products p ON s.productId = p.id WHERE s.id = ? AND s.clientId = ?')
+        .get(req.params.id, req.client.id);
+    if (!sub) return res.status(404).json({ error: 'Subscription not found' });
+    if (sub.status !== 'pending') return res.status(400).json({ error: 'Subscription is not pending payment' });
+
+    const plans = JSON.parse(sub.productPlans || '{}');
+    const plan = plans[sub.planKey] || {};
+
+    if (!sub.stripeSubscriptionId || !stripeService.isConfigured()) {
+        // No Stripe sub — activate directly (free plan edge case)
+        db.prepare("UPDATE subscriptions SET status = 'active', updatedAt = datetime(?) WHERE id = ?")
+            .run(new Date().toISOString(), req.params.id);
+        return res.json({ status: 'active' });
+    }
+
+    try {
+        // Retrieve the Stripe subscription to get the latest invoice's payment intent
+        const stripe = stripeService.getStripe();
+        const stripeSub = await stripe.subscriptions.retrieve(sub.stripeSubscriptionId, {
+            expand: ['latest_invoice.payment_intent']
+        });
+        const clientSecret = stripeSub.latest_invoice?.payment_intent?.client_secret;
+        if (!clientSecret) {
+            // Subscription may already be paid
+            if (stripeSub.status === 'active') {
+                db.prepare("UPDATE subscriptions SET status = 'active', updatedAt = datetime(?) WHERE id = ?")
+                    .run(new Date().toISOString(), req.params.id);
+                return res.json({ status: 'active' });
+            }
+            return res.status(400).json({ error: 'Unable to retrieve payment information. Please contact support.' });
+        }
+        res.json({ clientSecret, publishableKey: process.env.STRIPE_PUBLISHABLE_KEY, planName: plan.name || sub.planKey });
+    } catch (err) {
+        return res.status(400).json({ error: err.message });
+    }
+});
+
 // =============================================
 // License assignment endpoints
 // =============================================

@@ -623,7 +623,13 @@
                                 </div>
                             </div>
                             <div class="flex items-center gap-2 flex-wrap">
-                                ${sub.status === 'active' || sub.status === 'trialing' ? `
+                                ${sub.status !== 'canceled' && sub.status !== 'cancelling' ? `
+                                    ${sub.status === 'pending' ? `
+                                        <button onclick="retryPayment('${sub.id}')" class="px-3 py-2 text-sm font-medium text-white bg-rainbow-500 hover:bg-rainbow-600 rounded-lg transition-colors">
+                                            <svg class="w-4 h-4 inline -mt-0.5 mr-1" fill="none" stroke="currentColor" stroke-width="1.5" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M2.25 8.25h19.5M2.25 9h19.5m-16.5 5.25h6m-6 2.25h3m-3.75 3h15a2.25 2.25 0 002.25-2.25V6.75A2.25 2.25 0 0019.5 4.5h-15a2.25 2.25 0 00-2.25 2.25v10.5A2.25 2.25 0 004.5 19.5z"/></svg>
+                                            Complete Payment
+                                        </button>
+                                    ` : ''}
                                     <button onclick="openManageLicensesModal('${sub.id}', ${sub.licenseCount || 0})" class="px-3 py-2 text-sm font-medium text-green-700 hover:bg-green-50 border border-green-200 rounded-lg transition-colors">
                                         <svg class="w-4 h-4 inline -mt-0.5 mr-1" fill="none" stroke="currentColor" stroke-width="1.5" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M15 19.128a9.38 9.38 0 002.625.372 9.337 9.337 0 004.121-.952 4.125 4.125 0 00-7.533-2.493M15 19.128v-.003c0-1.113-.285-2.16-.786-3.07M15 19.128v.106A12.318 12.318 0 018.624 21c-2.331 0-4.512-.645-6.374-1.766l-.001-.109a6.375 6.375 0 0111.964-3.07M12 6.375a3.375 3.375 0 11-6.75 0 3.375 3.375 0 016.75 0zm8.25 2.25a2.625 2.625 0 11-5.25 0 2.625 2.625 0 015.25 0z"/></svg>
                                         Manage Licenses
@@ -862,6 +868,27 @@
             } finally {
                 btn.disabled = false;
                 btn.textContent = 'Pay Now';
+            }
+        }
+
+        // =============================================
+        // Retry payment for pending subscription
+        // =============================================
+        async function retryPayment(subscriptionId) {
+            try {
+                const result = await api(`/api/client/subscriptions/${subscriptionId}/retry-payment`, 'POST');
+                if (result.status === 'active') {
+                    showToast('Subscription is now active!');
+                    navigateTo('subscriptions');
+                    return;
+                }
+                if (result.clientSecret) {
+                    await openPaymentModal(result.clientSecret, result.publishableKey, result.planName || 'Subscription', '');
+                } else {
+                    showToast('Unable to process payment. Please contact support.', 'error');
+                }
+            } catch (err) {
+                showToast(err.message, 'error');
             }
         }
 
