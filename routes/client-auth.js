@@ -93,7 +93,9 @@ router.post('/login', (req, res) => {
         return res.status(401).json({ error: 'Invalid email or password' });
     }
     if (!client.emailVerified) {
-        return res.status(403).json({ error: 'Please verify your email before signing in. Check your inbox.' });
+        const [user, domain] = client.email.split('@');
+        const masked = user[0] + '***@' + domain;
+        return res.status(403).json({ error: `Please verify your email before signing in. Check your inbox at ${masked}` });
     }
     if (client.status === 'suspended') {
         return res.status(403).json({ error: 'Account suspended. Contact support.' });
