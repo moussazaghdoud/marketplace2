@@ -331,7 +331,10 @@
     "planChanged": "Piano cambiato con successo",
     "subscriptionCreated": "Abbonamento creato con successo!",
     "subscriptionCanceled": "Abbonamento annullato.",
-    "infoUpdated": "Informazioni aggiornate con successo"
+    "infoUpdated": "Informazioni aggiornate con successo",
+    "rainbowAccess": "Accedi a Rainbow",
+    "rainbowAccessDesc": "Apri la piattaforma di comunicazione Rainbow — messaggistica, videochiamate e collaborazione.",
+    "openRainbow": "Apri Rainbow"
   },
   "checkout": {
     "title": "Abbonati",

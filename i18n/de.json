@@ -331,7 +331,10 @@
     "planChanged": "Plan erfolgreich geändert",
     "subscriptionCreated": "Abonnement erfolgreich erstellt!",
     "subscriptionCanceled": "Abonnement gekündigt.",
-    "infoUpdated": "Informationen erfolgreich aktualisiert"
+    "infoUpdated": "Informationen erfolgreich aktualisiert",
+    "rainbowAccess": "Rainbow öffnen",
+    "rainbowAccessDesc": "Öffnen Sie die Rainbow-Kommunikationsplattform — Messaging, Videoanrufe und Zusammenarbeit.",
+    "openRainbow": "Rainbow öffnen"
   },
   "checkout": {
     "title": "Abonnieren",

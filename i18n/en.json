@@ -331,7 +331,10 @@
     "planChanged": "Plan changed successfully",
     "subscriptionCreated": "Subscription created successfully!",
     "subscriptionCanceled": "Subscription canceled.",
-    "infoUpdated": "Information updated successfully"
+    "infoUpdated": "Information updated successfully",
+    "rainbowAccess": "Access Rainbow",
+    "rainbowAccessDesc": "Open the Rainbow communication platform — messaging, video calls, and collaboration.",
+    "openRainbow": "Open Rainbow"
   },
   "checkout": {
     "title": "Subscribe",

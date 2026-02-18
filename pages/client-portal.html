@@ -279,6 +279,10 @@
         // Configuration & State
         // =============================================
         const API_BASE = window.location.origin;
+        // Rainbow Web URL: sandbox vs production
+        const RAINBOW_WEB_URL = (window.location.hostname === 'localhost' || window.location.hostname.includes('sandbox'))
+            ? 'https://web-sandbox.openrainbow.com'
+            : 'https://web.openrainbow.com';
         let token = localStorage.getItem('token');
         let clientData = null;
         let stripe = null;
@@ -510,6 +514,23 @@
                         <p class="text-lg font-semibold text-green-600">${activeSubs.length > 0 ? t('portal.active','Active') : t('portal.noSubscription','No Subscription')}</p>
                     </div>
                 `;
+
+                // Rainbow access card — always visible
+                document.getElementById('dash-cards').insertAdjacentHTML('afterend', `
+                    <div class="mt-6 bg-gradient-to-r from-indigo-50 via-blue-50 to-purple-50 rounded-xl border border-indigo-200 p-6 flex flex-col sm:flex-row items-center gap-5">
+                        <div class="w-14 h-14 bg-white rounded-xl shadow-sm flex items-center justify-center shrink-0">
+                            <img src="/img/rainbow-logo.png" alt="Rainbow" class="w-9 h-9 rounded-lg">
+                        </div>
+                        <div class="flex-1 text-center sm:text-left">
+                            <h3 class="text-base font-bold text-gray-900 mb-1">${t('portal.rainbowAccess','Access Rainbow')}</h3>
+                            <p class="text-sm text-gray-500">${t('portal.rainbowAccessDesc','Open the Rainbow communication platform — messaging, video calls, and collaboration.')}</p>
+                        </div>
+                        <a href="${RAINBOW_WEB_URL}" target="_blank" rel="noopener" class="inline-flex items-center gap-2 px-5 py-2.5 bg-rainbow-500 hover:bg-rainbow-600 text-white text-sm font-semibold rounded-lg transition-colors shrink-0">
+                            <svg class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M13.5 6H5.25A2.25 2.25 0 003 8.25v10.5A2.25 2.25 0 005.25 21h10.5A2.25 2.25 0 0018 18.75V10.5m-10.5 6L21 3m0 0h-5.25M21 3v5.25"/></svg>
+                            ${t('portal.openRainbow','Open Rainbow')}
+                        </a>
+                    </div>
+                `);
 
                 // Show CTA if no subscriptions
                 if (activeSubs.length === 0) {
