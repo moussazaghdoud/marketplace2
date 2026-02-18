@@ -462,9 +462,23 @@
             btn.textContent = t('login.creatingAccount','Creating account...');
 
             try {
-                await apiRequest('/api/client/register', 'POST', {
+                const result = await apiRequest('/api/client/register', 'POST', {
                     firstName, lastName, email, password
                 });
+
+                // If Rainbow account already exists, skip verification — go straight to sign-in
+                if (result.alreadyVerified) {
+                    document.getElementById('form-register').classList.add('hidden');
+                    document.getElementById('form-login').classList.remove('hidden');
+                    document.getElementById('login-email').value = email;
+                    // Switch tab visual state
+                    document.getElementById('tab-login').className = document.getElementById('tab-login').className.replace('tab-inactive', 'tab-active');
+                    document.getElementById('tab-register').className = document.getElementById('tab-register').className.replace('tab-active', 'tab-inactive');
+                    showMessage('Your Rainbow account was found. You can sign in with your password.', 'success');
+                    btn.disabled = false;
+                    btn.textContent = t('login.createAccountBtn','Create my account');
+                    return;
+                }
 
                 // Store credentials for verify-code step
                 window._regEmail = email;

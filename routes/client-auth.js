@@ -11,7 +11,7 @@ const router = express.Router();
 const RAINBOW_DOMAIN = process.env.RAINBOW_DOMAIN || 'https://sandbox.openrainbow.com';
 
 // POST /api/client/register - Step 1: email, name, password
-router.post('/register', (req, res) => {
+router.post('/register', async (req, res) => {
     const { email, password, firstName, lastName } = req.body;
     if (!email || !password || !firstName || !lastName) {
         return res.status(400).json({ error: 'All fields are required' });
@@ -31,16 +31,25 @@ router.post('/register', (req, res) => {
     `).run(id, email, hashed, firstName, lastName, verificationToken);
 
     // Send verification email via Rainbow sandbox API (same as "Start free" flow)
-    fetch(`${RAINBOW_DOMAIN}/api/rainbow/enduser/v1.0/notifications/emails/self-register`, {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json', 'accept': 'application/json' },
-        body: JSON.stringify({ email, lang: 'en' })
-    }).then(async r => {
-        const d = await r.json().catch(() => ({}));
-        console.log('[Rainbow] Verification email response:', r.status, JSON.stringify(d));
-    }).catch(err => console.error('[Rainbow] Verification email failed:', err.message));
+    // If user already exists in Rainbow, Rainbow sends a "sign in" email instead of a code
+    let rainbowUserExists = false;
+    try {
+        const rbEmailRes = await fetch(`${RAINBOW_DOMAIN}/api/rainbow/enduser/v1.0/notifications/emails/self-register`, {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json', 'accept': 'application/json' },
+            body: JSON.stringify({ email, lang: 'en' })
+        });
+        const rbEmailData = await rbEmailRes.json().catch(() => ({}));
+        console.log('[Rainbow] Verification email response:', rbEmailRes.status, JSON.stringify(rbEmailData));
+        // Rainbow returns 409 if user already exists
+        if (rbEmailRes.status === 409) {
+            rainbowUserExists = true;
+        }
+    } catch (err) {
+        console.error('[Rainbow] Verification email failed:', err.message);
+    }
 
-    // Fire-and-forget: create Salesforce Lead
+    // Fire-and-forget: create Salesforce Lead (for all users, including existing Rainbow ones)
     console.log('[Salesforce] Attempting lead creation for:', email);
     salesforce.createLead({ firstName, lastName, email })
         .then(result => {
@@ -50,6 +59,14 @@ router.post('/register', (req, res) => {
             }
         })
         .catch(err => console.error('[Salesforce] Lead creation failed:', err.message));
+
+    // If Rainbow user already exists, activate local account immediately
+    if (rainbowUserExists) {
+        db.prepare('UPDATE clients SET emailVerified = 1, status = ?, verificationToken = NULL, updatedAt = datetime(?) WHERE id = ?')
+            .run('active', new Date().toISOString(), id);
+        console.log('[Register] Rainbow account already exists — auto-activated:', email);
+        return res.json({ success: true, alreadyVerified: true, message: 'Rainbow account found. You can sign in directly.' });
+    }
 
     res.json({ success: true, message: 'Account created. Check your email to verify.' });
 });
@@ -109,13 +126,20 @@ router.post('/verify-code', async (req, res) => {
         const rbData = await rbRes.json().catch(() => ({}));
         console.log('[Rainbow] self-register response:', rbRes.status, JSON.stringify(rbData));
         if (!rbRes.ok) {
-            // Extract a human-readable error message
-            let errMsg = 'Invalid verification code';
-            if (typeof rbData.errorDetails === 'string') errMsg = rbData.errorDetails;
-            else if (typeof rbData.errorMsg === 'string') errMsg = rbData.errorMsg;
-            else if (rbData.errorDetails && typeof rbData.errorDetails === 'object') errMsg = rbData.errorDetails.description || rbData.errorDetails.msg || JSON.stringify(rbData.errorDetails);
-            else if (rbData.error && typeof rbData.error === 'string') errMsg = rbData.error;
-            return res.status(400).json({ error: errMsg });
+            // If Rainbow says user already exists (409), that's fine — activate the local account
+            const errorStr = JSON.stringify(rbData).toLowerCase();
+            if (rbRes.status === 409 || errorStr.includes('already exist') || errorStr.includes('already used')) {
+                console.log('[Rainbow] User already exists in Rainbow — activating local account for:', email);
+                // Fall through to activate the local account below
+            } else {
+                // Extract a human-readable error message
+                let errMsg = 'Invalid verification code';
+                if (typeof rbData.errorDetails === 'string') errMsg = rbData.errorDetails;
+                else if (typeof rbData.errorMsg === 'string') errMsg = rbData.errorMsg;
+                else if (rbData.errorDetails && typeof rbData.errorDetails === 'object') errMsg = rbData.errorDetails.description || rbData.errorDetails.msg || JSON.stringify(rbData.errorDetails);
+                else if (rbData.error && typeof rbData.error === 'string') errMsg = rbData.error;
+                return res.status(400).json({ error: errMsg });
+            }
         }
     } catch (err) {
         console.error('[Rainbow] Verify code failed:', err.message);
