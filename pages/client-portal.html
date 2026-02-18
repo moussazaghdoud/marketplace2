@@ -207,25 +207,51 @@
         </div>
     </div>
 
-    <!-- Payment Confirmation Modal (for subscription) -->
+    <!-- Payment Modal -->
     <div id="modal-payment" class="fixed inset-0 z-50 hidden">
         <div class="modal-backdrop absolute inset-0" onclick="closeModal('modal-payment')"></div>
         <div class="relative z-10 flex items-center justify-center min-h-screen p-4">
             <div class="bg-white rounded-2xl shadow-xl max-w-md w-full">
                 <div class="p-6 border-b border-gray-100 flex items-center justify-between">
-                    <h3 class="text-lg font-semibold text-gray-900">Complete Payment</h3>
+                    <h3 class="text-lg font-semibold text-gray-900">${t('portal.completePayment','Complete Payment')}</h3>
                     <button onclick="closeModal('modal-payment')" class="text-gray-400 hover:text-gray-600">
                         <svg class="w-5 h-5" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M6 18L18 6M6 6l12 12"/></svg>
                     </button>
                 </div>
                 <div class="p-6">
                     <div id="payment-summary" class="mb-5 p-4 bg-gray-50 rounded-lg text-sm text-gray-700"></div>
-                    <div id="payment-card-element" class="stripe-element mb-4"></div>
+
+                    <div class="space-y-4 mb-4">
+                        <div>
+                            <label class="block text-sm font-medium text-gray-700 mb-1.5">${t('portal.cardNumber','Card number')}</label>
+                            <div id="payment-card-number" class="border border-gray-300 rounded-lg px-4 py-3"></div>
+                        </div>
+                        <div class="grid grid-cols-2 gap-4">
+                            <div>
+                                <label class="block text-sm font-medium text-gray-700 mb-1.5">${t('portal.cardExpiry','Expiry date')}</label>
+                                <div id="payment-card-expiry" class="border border-gray-300 rounded-lg px-4 py-3"></div>
+                            </div>
+                            <div>
+                                <label class="block text-sm font-medium text-gray-700 mb-1.5">${t('portal.cardCvc','CVC')}</label>
+                                <div id="payment-card-cvc" class="border border-gray-300 rounded-lg px-4 py-3"></div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <label class="flex items-center gap-2 mb-5 cursor-pointer select-none">
+                        <input type="checkbox" id="save-card-checkbox" checked class="w-4 h-4 text-rainbow-500 border-gray-300 rounded focus:ring-rainbow-500">
+                        <span class="text-sm text-gray-600">${t('portal.keepCard','Keep this card for future payments')}</span>
+                    </label>
+
                     <div id="payment-errors" class="text-sm text-red-600 mb-4 hidden"></div>
                     <button onclick="handleConfirmPayment()" id="btn-confirm-payment"
                         class="w-full py-2.5 px-4 bg-rainbow-500 hover:bg-rainbow-600 text-white font-semibold rounded-lg text-sm transition-colors disabled:opacity-60 disabled:cursor-not-allowed">
-                        Pay Now
+                        ${t('portal.payNow','Pay Now')}
                     </button>
+                    <p class="text-center text-xs text-gray-400 mt-3">
+                        <svg class="w-3.5 h-3.5 inline -mt-0.5 mr-0.5" fill="none" stroke="currentColor" stroke-width="1.5" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M16.5 10.5V6.75a4.5 4.5 0 10-9 0v3.75m-.75 11.25h10.5a2.25 2.25 0 002.25-2.25v-6.75a2.25 2.25 0 00-2.25-2.25H6.75a2.25 2.25 0 00-2.25 2.25v6.75a2.25 2.25 0 002.25 2.25z"/></svg>
+                        ${t('portal.stripeSecure','Secured by Stripe. Your card data never touches our servers.')}
+                    </p>
                 </div>
             </div>
         </div>
@@ -644,9 +670,9 @@
                             <div class="flex items-center gap-2 flex-wrap">
                                 ${sub.status !== 'canceled' && sub.status !== 'cancelling' ? `
                                     ${sub.status === 'pending' ? `
-                                        <button onclick="retryPayment('${sub.id}')" class="px-3 py-2 text-sm font-medium text-white bg-rainbow-500 hover:bg-rainbow-600 rounded-lg transition-colors">
-                                            <svg class="w-4 h-4 inline -mt-0.5 mr-1" fill="none" stroke="currentColor" stroke-width="1.5" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M2.25 8.25h19.5M2.25 9h19.5m-16.5 5.25h6m-6 2.25h3m-3.75 3h15a2.25 2.25 0 002.25-2.25V6.75A2.25 2.25 0 0019.5 4.5h-15a2.25 2.25 0 00-2.25 2.25v10.5A2.25 2.25 0 004.5 19.5z"/></svg>
-                                            Complete Payment
+                                        <button onclick="retryPayment('${sub.id}')" class="px-4 py-2 text-sm font-semibold text-white bg-green-500 hover:bg-green-600 rounded-lg transition-colors shadow-sm">
+                                            <svg class="w-4 h-4 inline -mt-0.5 mr-1" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M2.25 3h1.386c.51 0 .955.343 1.087.835l.383 1.437M7.5 14.25a3 3 0 00-3 3h15.75m-12.75-3h11.218c1.121-2.3 2.1-4.684 2.924-7.138a60.114 60.114 0 00-16.536-1.84M7.5 14.25L5.106 5.272M6 20.25a.75.75 0 11-1.5 0 .75.75 0 011.5 0zm12.75 0a.75.75 0 11-1.5 0 .75.75 0 011.5 0z"/></svg>
+                                            ${t('portal.buy','Buy')}
                                         </button>
                                     ` : ''}
                                     <button onclick="openManageLicensesModal('${sub.id}', ${sub.licenseCount || 0})" class="px-3 py-2 text-sm font-medium text-green-700 hover:bg-green-50 border border-green-200 rounded-lg transition-colors">
@@ -801,21 +827,9 @@
 
             try {
                 const result = await api('/api/client/subscriptions', 'POST', { planId, licenseCount });
-
-                if (result.clientSecret) {
-                    // Paid plan — show payment modal
-                    closeModal('modal-new-sub');
-                    const plans = await fetchPlans();
-                    const plan = plans.find(p => p.id === planId);
-                    const planName = plan ? plan.name : planId;
-                    const planPrice = plan && plan.pricePerUser ? (plan.pricePerUser * licenseCount).toFixed(2).replace('.', ',') + ' EUR/mo' : '';
-                    await openPaymentModal(result.clientSecret, result.publishableKey, planName, planPrice);
-                } else {
-                    // Free plan — done
-                    closeModal('modal-new-sub');
-                    showToast(t('portal.subscriptionCreated','Subscription created successfully!'));
-                    navigateTo('subscriptions');
-                }
+                closeModal('modal-new-sub');
+                showToast(t('portal.subscriptionCreated','Subscription created successfully!'));
+                navigateTo('subscriptions');
             } catch (err) {
                 showToast(err.message, 'error');
             } finally {
@@ -827,8 +841,20 @@
         // =============================================
         // Payment confirmation (Stripe card payment)
         // =============================================
-        let paymentCardElement = null;
+        let paymentCardNumber = null;
+        let paymentCardExpiry = null;
+        let paymentCardCvc = null;
         let paymentStripeInstance = null;
+
+        const stripeElementStyle = {
+            base: {
+                fontSize: '14px',
+                color: '#1F2937',
+                fontFamily: 'Inter, sans-serif',
+                '::placeholder': { color: '#9CA3AF' },
+            },
+            invalid: { color: '#EF4444' },
+        };
 
         async function openPaymentModal(clientSecret, publishableKey, planName, planPrice) {
             openModal('modal-payment');
@@ -840,23 +866,19 @@
                 paymentStripeInstance = Stripe(publishableKey || stripe?._apiKey);
             }
 
-            if (paymentCardElement) {
-                paymentCardElement.unmount();
-            }
+            // Unmount previous elements
+            if (paymentCardNumber) { paymentCardNumber.unmount(); paymentCardNumber = null; }
+            if (paymentCardExpiry) { paymentCardExpiry.unmount(); paymentCardExpiry = null; }
+            if (paymentCardCvc) { paymentCardCvc.unmount(); paymentCardCvc = null; }
 
             const elements = paymentStripeInstance.elements();
-            paymentCardElement = elements.create('card', {
-                style: {
-                    base: {
-                        fontSize: '14px',
-                        color: '#1F2937',
-                        fontFamily: 'Inter, sans-serif',
-                        '::placeholder': { color: '#9CA3AF' },
-                    },
-                    invalid: { color: '#EF4444' },
-                }
-            });
-            paymentCardElement.mount('#payment-card-element');
+            paymentCardNumber = elements.create('cardNumber', { style: stripeElementStyle });
+            paymentCardExpiry = elements.create('cardExpiry', { style: stripeElementStyle });
+            paymentCardCvc = elements.create('cardCvc', { style: stripeElementStyle });
+
+            paymentCardNumber.mount('#payment-card-number');
+            paymentCardExpiry.mount('#payment-card-expiry');
+            paymentCardCvc.mount('#payment-card-cvc');
 
             window._paymentClientSecret = clientSecret;
         }
@@ -864,17 +886,33 @@
         async function handleConfirmPayment() {
             const btn = document.getElementById('btn-confirm-payment');
             btn.disabled = true;
-            btn.textContent = 'Processing...';
+            btn.textContent = t('portal.processing','Processing...');
             document.getElementById('payment-errors').classList.add('hidden');
 
+            const saveCard = document.getElementById('save-card-checkbox').checked;
+
             try {
+                const paymentOpts = {
+                    payment_method: { card: paymentCardNumber }
+                };
+                if (saveCard) {
+                    paymentOpts.setup_future_usage = 'off_session';
+                }
+
                 const { error, paymentIntent } = await paymentStripeInstance.confirmCardPayment(
                     window._paymentClientSecret,
-                    { payment_method: { card: paymentCardElement } }
+                    paymentOpts
                 );
 
                 if (error) {
                     throw new Error(error.message);
+                }
+
+                // If save card is checked, attach the payment method to the customer
+                if (saveCard && paymentIntent.payment_method) {
+                    api('/api/client/payment-methods/save', 'POST', {
+                        paymentMethodId: paymentIntent.payment_method
+                    }).catch(() => {}); // fire-and-forget
                 }
 
                 closeModal('modal-payment');
@@ -886,7 +924,7 @@
                 errEl.classList.remove('hidden');
             } finally {
                 btn.disabled = false;
-                btn.textContent = 'Pay Now';
+                btn.textContent = t('portal.payNow','Pay Now');
             }
         }
 
@@ -1584,17 +1622,12 @@
                     );
                     if (match) {
                         const lc = parseInt(licensesFromUrl) || 1;
-                        const result = await api('/api/client/subscriptions', 'POST', {
+                        await api('/api/client/subscriptions', 'POST', {
                             planId: match.id,
                             licenseCount: lc
                         });
-                        if (result.clientSecret) {
-                            const planPrice = match.pricePerUser ? (match.pricePerUser * lc).toFixed(2).replace('.', ',') + ' EUR/mo' : '';
-                            await openPaymentModal(result.clientSecret, result.publishableKey, match.name, planPrice);
-                        } else {
-                            showToast(t('portal.subscriptionCreated','Subscription created successfully!'));
-                            navigateTo('subscriptions');
-                        }
+                        showToast(t('portal.subscriptionCreated','Subscription created successfully!'));
+                        navigateTo('subscriptions');
                     } else {
                         await openNewSubscriptionModal(planFromUrl, licensesFromUrl);
                     }

@@ -69,6 +69,25 @@ router.post('/:id/default', async (req, res) => {
     }
 });
 
+// POST /api/client/payment-methods/save — save a payment method from a completed payment
+router.post('/save', async (req, res) => {
+    const { paymentMethodId } = req.body;
+    if (!paymentMethodId) return res.status(400).json({ error: 'paymentMethodId required' });
+
+    const db = getDb();
+    const client = db.prepare('SELECT stripeCustomerId FROM clients WHERE id = ?').get(req.client.id);
+    if (!client?.stripeCustomerId || !stripeService.isConfigured()) {
+        return res.status(400).json({ error: 'Stripe customer not found' });
+    }
+    try {
+        await stripeService.setDefaultPaymentMethod(client.stripeCustomerId, paymentMethodId);
+        res.json({ success: true });
+    } catch (err) {
+        console.error('[Payment] Save card error:', err.message);
+        res.status(400).json({ error: err.message });
+    }
+});
+
 // GET /api/client/invoices
 router.get('/invoices', async (req, res) => {
     const zuora = require('../services/zuora-stub');
