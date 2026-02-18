@@ -35,6 +35,9 @@ router.post('/register', (req, res) => {
         method: 'POST',
         headers: { 'Content-Type': 'application/json', 'accept': 'application/json' },
         body: JSON.stringify({ email, lang: 'en' })
+    }).then(async r => {
+        const d = await r.json().catch(() => ({}));
+        console.log('[Rainbow] Verification email response:', r.status, JSON.stringify(d));
     }).catch(err => console.error('[Rainbow] Verification email failed:', err.message));
 
     // Fire-and-forget: create Salesforce Lead
@@ -104,8 +107,15 @@ router.post('/verify-code', async (req, res) => {
             body: JSON.stringify({ loginEmail: email, password, temporaryToken: code })
         });
         const rbData = await rbRes.json().catch(() => ({}));
+        console.log('[Rainbow] self-register response:', rbRes.status, JSON.stringify(rbData));
         if (!rbRes.ok) {
-            return res.status(400).json({ error: rbData.errorDetails || rbData.errorMsg || 'Invalid verification code' });
+            // Extract a human-readable error message
+            let errMsg = 'Invalid verification code';
+            if (typeof rbData.errorDetails === 'string') errMsg = rbData.errorDetails;
+            else if (typeof rbData.errorMsg === 'string') errMsg = rbData.errorMsg;
+            else if (rbData.errorDetails && typeof rbData.errorDetails === 'object') errMsg = rbData.errorDetails.description || rbData.errorDetails.msg || JSON.stringify(rbData.errorDetails);
+            else if (rbData.error && typeof rbData.error === 'string') errMsg = rbData.error;
+            return res.status(400).json({ error: errMsg });
         }
     } catch (err) {
         console.error('[Rainbow] Verify code failed:', err.message);
