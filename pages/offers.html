@@ -87,6 +87,13 @@
     <!-- PRICING -->
     <section class="px-6 pb-20 -mt-4">
         <div class="max-w-5xl mx-auto">
+            <!-- Product tabs -->
+            <div class="flex justify-center mb-10">
+                <div id="product-tabs" class="inline-flex bg-gray-100 rounded-xl p-1 gap-1">
+                    <!-- Tabs rendered dynamically -->
+                </div>
+            </div>
+
             <!-- License selector -->
             <div class="flex items-center justify-center gap-3 mb-10">
                 <span class="text-sm text-gray-500" data-i18n="home.licensesLabel">Licenses:</span>
@@ -190,6 +197,17 @@
 
         // --- Pricing state ---
         var PLANS = {};
+        var PRODUCTS = [];
+        var activeProductSlug = null;
+
+        // Tab display names mapped from product slug
+        var TAB_LABELS = {
+            'rainbow': 'Collaboration',
+            'webinar': 'Webinar',
+            'smart-hotel': 'Smart Hotel'
+        };
+        // Tab display order
+        var TAB_ORDER = ['rainbow', 'webinar', 'smart-hotel'];
 
         function getLicenseCount() {
             var input = document.getElementById('license-count');
@@ -223,22 +241,77 @@
 
         function checkout(planKey) {
             var count = getLicenseCount();
-            window.location.href = '/login?plan=' + encodeURIComponent(planKey) + '&licenses=' + count;
+            var params = 'plan=' + encodeURIComponent(planKey) + '&licenses=' + count;
+            if (activeProductSlug) params += '&product=' + encodeURIComponent(activeProductSlug);
+            window.location.href = '/login?' + params;
         }
 
-        function renderPricing(pricing) {
-            document.getElementById('pricing-heading').textContent = pricing.heading;
-            document.getElementById('pricing-subheading').textContent = pricing.subheading;
+        function renderTabs() {
+            var tabsContainer = document.getElementById('product-tabs');
+            tabsContainer.innerHTML = '';
+            // Sort products by TAB_ORDER
+            var sorted = PRODUCTS.slice().sort(function(a, b) {
+                var ia = TAB_ORDER.indexOf(a.slug);
+                var ib = TAB_ORDER.indexOf(b.slug);
+                if (ia === -1) ia = 999;
+                if (ib === -1) ib = 999;
+                return ia - ib;
+            });
+            sorted.forEach(function(product) {
+                var btn = document.createElement('button');
+                var label = TAB_LABELS[product.slug] || product.name;
+                btn.textContent = label;
+                btn.setAttribute('data-slug', product.slug);
+                var isActive = product.slug === activeProductSlug;
+                btn.className = 'px-5 py-2.5 rounded-lg text-sm font-medium transition-all ' +
+                    (isActive
+                        ? 'bg-white text-brand-600 shadow-sm'
+                        : 'text-gray-500 hover:text-gray-700');
+                btn.onclick = function() { selectProduct(product.slug); };
+                tabsContainer.appendChild(btn);
+            });
+        }
 
+        function selectProduct(slug) {
+            activeProductSlug = slug;
+            renderTabs();
+            var product = PRODUCTS.find(function(p) { return p.slug === slug; });
+            if (product) {
+                renderProductPlans(product);
+                updatePrices();
+            }
+        }
+
+        function renderProductPlans(product) {
             PLANS = {};
             var grid = document.getElementById('pricing-grid');
             grid.innerHTML = '';
 
+            var plans = product.plans || {};
+            var planKeys = Object.keys(plans);
+
+            if (planKeys.length === 0) {
+                grid.innerHTML = '<div class="col-span-full text-center py-16">' +
+                    '<svg class="w-12 h-12 text-gray-300 mx-auto mb-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.5"><path stroke-linecap="round" stroke-linejoin="round" d="M12 6v6h4.5m4.5 0a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>' +
+                    '<p class="text-gray-400 text-sm">Plans coming soon.</p></div>';
+                return;
+            }
+
+            // Adjust grid columns based on plan count
+            if (planKeys.length === 1) {
+                grid.className = 'grid gap-6 max-w-sm mx-auto';
+            } else if (planKeys.length === 2) {
+                grid.className = 'grid md:grid-cols-2 gap-6 max-w-2xl mx-auto';
+            } else {
+                grid.className = 'grid md:grid-cols-3 gap-6 max-w-4xl mx-auto';
+            }
+
             var checkSvg = '<svg class="w-4 h-4 text-green-500 shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M5 13l4 4L19 7"/></svg>';
 
-            pricing.plans.forEach(function(p) {
-                var planKey = p.name.toLowerCase().replace(/\s+/g, '-');
-                PLANS[planKey] = { name: p.name, pricePerUser: p.pricePerUser };
+            planKeys.forEach(function(key) {
+                var p = plans[key];
+                var planKey = key;
+                PLANS[planKey] = { name: p.name, pricePerUser: p.pricePerUser || 0 };
 
                 var card = document.createElement('div');
                 var borderClass = p.highlighted ? 'border-2 border-brand-500 relative' : 'border border-gray-200';
@@ -247,8 +320,8 @@
                 var badgeHtml = (p.highlighted && p.badge) ? '<span class="absolute -top-3 left-1/2 -translate-x-1/2 px-3 py-0.5 bg-brand-500 text-white text-xs font-medium rounded-full">' + escapeHtml(p.badge) + '</span>' : '';
 
                 var priceHtml;
-                if (p.pricePerUser === 0) {
-                    priceHtml = '<p class="text-4xl font-bold text-gray-900 mb-1">' + escapeHtml(p.price) + '</p>';
+                if (!p.pricePerUser || p.pricePerUser === 0) {
+                    priceHtml = '<p class="text-4xl font-bold text-gray-900 mb-1">' + escapeHtml(p.price || 'Free') + '</p>';
                 } else {
                     priceHtml =
                         '<div class="flex items-baseline gap-0.5 mb-1">' +
@@ -263,25 +336,26 @@
                 }
 
                 var ctaHtml;
-                if (p.pricePerUser === 0 && !p.ctaLink) {
-                    ctaHtml = '<button onclick="checkout(\'' + planKey + '\')" class="w-full py-2.5 rounded-lg border border-brand-500 text-brand-600 text-sm font-medium hover:bg-blue-50 transition-colors">' + escapeHtml(p.ctaText) + '</button>';
+                if ((!p.pricePerUser || p.pricePerUser === 0) && !p.ctaLink) {
+                    ctaHtml = '<button onclick="checkout(\'' + planKey + '\')" class="w-full py-2.5 rounded-lg border border-brand-500 text-brand-600 text-sm font-medium hover:bg-blue-50 transition-colors">' + escapeHtml(p.ctaText || 'Get started') + '</button>';
                 } else if (p.ctaLink) {
-                    ctaHtml = '<a href="' + p.ctaLink + '" target="_blank" class="block text-center py-2.5 rounded-lg border border-gray-200 text-sm font-medium text-gray-700 hover:border-brand-500 hover:text-brand-600 transition-colors">' + escapeHtml(p.ctaText) + '</a>';
+                    ctaHtml = '<a href="' + p.ctaLink + '" target="_blank" class="block text-center py-2.5 rounded-lg border border-gray-200 text-sm font-medium text-gray-700 hover:border-brand-500 hover:text-brand-600 transition-colors">' + escapeHtml(p.ctaText || 'Learn more') + '</a>';
                 } else if (p.highlighted) {
-                    ctaHtml = '<button onclick="checkout(\'' + planKey + '\')" class="w-full py-2.5 rounded-lg bg-brand-500 text-white text-sm font-medium hover:bg-brand-600 transition-colors">' + escapeHtml(p.ctaText) + '</button>';
+                    ctaHtml = '<button onclick="checkout(\'' + planKey + '\')" class="w-full py-2.5 rounded-lg bg-brand-500 text-white text-sm font-medium hover:bg-brand-600 transition-colors">' + escapeHtml(p.ctaText || 'Start trial') + '</button>';
                 } else {
-                    ctaHtml = '<button onclick="checkout(\'' + planKey + '\')" class="w-full py-2.5 rounded-lg border border-brand-500 text-brand-600 text-sm font-medium hover:bg-blue-50 transition-colors">' + escapeHtml(p.ctaText) + '</button>';
+                    ctaHtml = '<button onclick="checkout(\'' + planKey + '\')" class="w-full py-2.5 rounded-lg border border-brand-500 text-brand-600 text-sm font-medium hover:bg-blue-50 transition-colors">' + escapeHtml(p.ctaText || 'Get started') + '</button>';
                 }
 
-                var featuresHtml = p.features.map(function(feat) {
+                var features = p.features || [];
+                var featuresHtml = features.map(function(feat) {
                     return '<li class="flex items-center gap-2">' + checkSvg + ' ' + escapeHtml(feat) + '</li>';
                 }).join('');
 
                 card.innerHTML = badgeHtml +
                     '<h3 class="font-semibold text-gray-900">' + escapeHtml(p.name) + '</h3>' +
-                    '<p class="text-xs text-gray-400 mt-1 mb-5">' + escapeHtml(p.subtitle) + '</p>' +
+                    '<p class="text-xs text-gray-400 mt-1 mb-5">' + escapeHtml(p.subtitle || '') + '</p>' +
                     priceHtml +
-                    '<p class="text-xs text-gray-400 mb-1">' + escapeHtml(p.priceNote) + '</p>' +
+                    '<p class="text-xs text-gray-400 mb-1">' + escapeHtml(p.priceNote || '') + '</p>' +
                     totalHtml +
                     ctaHtml +
                     '<ul class="mt-6 space-y-2.5 text-sm text-gray-500">' + featuresHtml + '</ul>';
@@ -290,22 +364,40 @@
             });
         }
 
-        // Load content and render pricing
+        // Load products and render tabbed pricing
         function loadOffers() {
+            fetch('/api/products')
+                .then(function(r) { return r.json(); })
+                .then(function(products) {
+                    PRODUCTS = products;
+                    // Default to first product by tab order
+                    var defaultSlug = null;
+                    for (var i = 0; i < TAB_ORDER.length; i++) {
+                        if (products.find(function(p) { return p.slug === TAB_ORDER[i]; })) {
+                            defaultSlug = TAB_ORDER[i];
+                            break;
+                        }
+                    }
+                    if (!defaultSlug && products.length > 0) defaultSlug = products[0].slug;
+                    if (defaultSlug) selectProduct(defaultSlug);
+                })
+                .catch(function(err) {
+                    console.error('Failed to load products:', err);
+                    document.getElementById('pricing-grid').innerHTML = '<div class="col-span-full text-center py-12"><p class="text-red-400">Failed to load plans.</p></div>';
+                });
+
+            // Load heading/subheading from content API
             var lang = window.i18n ? i18n.getLang() : 'en';
             var url = '/api/content' + (lang !== 'en' ? '?lang=' + lang : '');
             fetch(url)
                 .then(function(r) { return r.json(); })
                 .then(function(data) {
                     if (data.pricing) {
-                        renderPricing(data.pricing);
-                        updatePrices();
+                        document.getElementById('pricing-heading').textContent = data.pricing.heading || '';
+                        document.getElementById('pricing-subheading').textContent = data.pricing.subheading || '';
                     }
                 })
-                .catch(function(err) {
-                    console.error('Failed to load pricing:', err);
-                    document.getElementById('pricing-grid').innerHTML = '<div class="col-span-full text-center py-12"><p class="text-red-400">Failed to load plans.</p></div>';
-                });
+                .catch(function() {});
         }
 
         loadOffers();
