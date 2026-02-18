@@ -355,6 +355,12 @@
     "noPlan": "No plan selected.",
     "paymentFailed": "Payment failed. Please try again."
   },
+  "offers": {
+    "collaborationDesc": "Unified communication platform — messaging, video, telephony.",
+    "webinarDesc": "Host large-scale online events with up to 10,000 participants.",
+    "smartHotelDesc": "AI-powered guest experience and hotel operations platform.",
+    "plansComing": "Plans coming soon."
+  },
   "lang": {
     "en": "English",
     "fr": "Fran\u00e7ais",

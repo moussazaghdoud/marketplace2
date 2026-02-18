@@ -355,6 +355,12 @@
     "noPlan": "Nessun piano selezionato.",
     "paymentFailed": "Pagamento fallito. Riprova."
   },
+  "offers": {
+    "collaborationDesc": "Piattaforma di comunicazione unificata — messaggistica, video, telefonia.",
+    "webinarDesc": "Organizza eventi online su larga scala con fino a 10.000 partecipanti.",
+    "smartHotelDesc": "Esperienza ospite e gestione alberghiera basate sull'IA.",
+    "plansComing": "Piani disponibili a breve."
+  },
   "lang": {
     "en": "English",
     "fr": "Français",

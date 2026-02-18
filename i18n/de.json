@@ -355,6 +355,12 @@
     "noPlan": "Kein Plan ausgewählt.",
     "paymentFailed": "Zahlung fehlgeschlagen. Bitte versuchen Sie es erneut."
   },
+  "offers": {
+    "collaborationDesc": "Einheitliche Kommunikationsplattform — Messaging, Video, Telefonie.",
+    "webinarDesc": "Veranstalten Sie Online-Events mit bis zu 10.000 Teilnehmern.",
+    "smartHotelDesc": "KI-gestützte Gästeerfahrung und Hotelbetriebsplattform.",
+    "plansComing": "Pläne demnächst verfügbar."
+  },
   "lang": {
     "en": "English",
     "fr": "Français",

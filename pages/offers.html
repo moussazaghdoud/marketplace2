@@ -200,26 +200,27 @@
         var PLANS = {};
         var PRODUCTS = [];
         var activeProductSlug = null;
+        var CONTENT_PRICING = null; // translated pricing from content API
 
         // Tab config: label, icon SVG, accent color, short description
         var TAB_CONFIG = {
             'rainbow': {
                 label: 'Collaboration',
                 icon: '<svg class="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0z"/></svg>',
-                color: 'brand',
-                description: 'Unified communication platform — messaging, video, telephony.'
+                descKey: 'offers.collaborationDesc',
+                descFallback: 'Unified communication platform — messaging, video, telephony.'
             },
             'webinar': {
                 label: 'Webinar',
                 icon: '<svg class="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M15 10l4.553-2.276A1 1 0 0121 8.618v6.764a1 1 0 01-1.447.894L15 14M5 18h8a2 2 0 002-2V8a2 2 0 00-2-2H5a2 2 0 00-2 2v8a2 2 0 002 2z"/></svg>',
-                color: 'violet',
-                description: 'Host large-scale online events with up to 10,000 participants.'
+                descKey: 'offers.webinarDesc',
+                descFallback: 'Host large-scale online events with up to 10,000 participants.'
             },
             'smart-hotel': {
                 label: 'Smart Hotel',
                 icon: '<svg class="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16m14 0h2m-2 0h-5m-9 0H3m2 0h5M9 7h1m-1 4h1m4-4h1m-1 4h1m-5 10v-5a1 1 0 011-1h2a1 1 0 011 1v5m-4 0h4"/></svg>',
-                color: 'emerald',
-                description: 'AI-powered guest experience and hotel operations platform.'
+                descKey: 'offers.smartHotelDesc',
+                descFallback: 'AI-powered guest experience and hotel operations platform.'
             }
         };
         // Tab display order
@@ -287,10 +288,10 @@
                 tabsContainer.appendChild(btn);
             });
 
-            // Update product description
+            // Update product description (translated)
             var activeCfg = TAB_CONFIG[activeProductSlug];
             var descEl = document.getElementById('product-description');
-            if (descEl) descEl.textContent = activeCfg ? activeCfg.description : '';
+            if (descEl && activeCfg) descEl.textContent = t(activeCfg.descKey, activeCfg.descFallback);
         }
 
         function selectProduct(slug) {
@@ -301,6 +302,18 @@
                 renderProductPlans(product);
                 updatePrices();
             }
+        }
+
+        // Build a lookup from content API translated plans (keyed by plan name lowercase)
+        function getContentTranslations() {
+            var map = {};
+            if (CONTENT_PRICING && CONTENT_PRICING.plans) {
+                CONTENT_PRICING.plans.forEach(function(cp) {
+                    var key = cp.name.toLowerCase().replace(/\s+/g, '-');
+                    map[key] = cp;
+                });
+            }
+            return map;
         }
 
         function renderProductPlans(product) {
@@ -327,27 +340,41 @@
                 grid.className = 'grid md:grid-cols-3 gap-6 max-w-4xl mx-auto';
             }
 
+            // For Collaboration (rainbow), overlay translated text from content API
+            var translations = (product.slug === 'rainbow') ? getContentTranslations() : {};
+
             var checkSvg = '<svg class="w-4 h-4 text-green-500 shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M5 13l4 4L19 7"/></svg>';
 
             planKeys.forEach(function(key) {
                 var p = plans[key];
+                var tr = translations[key] || {}; // translated fields if available
                 var planKey = key;
-                PLANS[planKey] = { name: p.name, pricePerUser: p.pricePerUser || 0 };
+                PLANS[planKey] = { name: tr.name || p.name, pricePerUser: p.pricePerUser || 0 };
+
+                // Merge: translated text wins over DB text
+                var name = tr.name || p.name;
+                var subtitle = tr.subtitle || p.subtitle || '';
+                var price = tr.price || p.price || 'Free';
+                var priceNote = tr.priceNote || p.priceNote || '';
+                var ctaText = tr.ctaText || p.ctaText || 'Get started';
+                var badge = tr.badge || p.badge || '';
+                var features = tr.features || p.features || [];
+                var highlighted = (tr.highlighted !== undefined) ? tr.highlighted : p.highlighted;
 
                 var card = document.createElement('div');
-                var borderClass = p.highlighted ? 'border-2 border-brand-500 relative' : 'border border-gray-200';
+                var borderClass = highlighted ? 'border-2 border-brand-500 relative' : 'border border-gray-200';
                 card.className = 'rounded-xl ' + borderClass + ' p-7 bg-white';
 
-                var badgeHtml = (p.highlighted && p.badge) ? '<span class="absolute -top-3 left-1/2 -translate-x-1/2 px-3 py-0.5 bg-brand-500 text-white text-xs font-medium rounded-full">' + escapeHtml(p.badge) + '</span>' : '';
+                var badgeHtml = (highlighted && badge) ? '<span class="absolute -top-3 left-1/2 -translate-x-1/2 px-3 py-0.5 bg-brand-500 text-white text-xs font-medium rounded-full">' + escapeHtml(badge) + '</span>' : '';
 
                 var priceHtml;
                 if (!p.pricePerUser || p.pricePerUser === 0) {
-                    priceHtml = '<p class="text-4xl font-bold text-gray-900 mb-1">' + escapeHtml(p.price || 'Free') + '</p>';
+                    priceHtml = '<p class="text-4xl font-bold text-gray-900 mb-1">' + escapeHtml(price) + '</p>';
                 } else {
                     priceHtml =
                         '<div class="flex items-baseline gap-0.5 mb-1">' +
                             '<span class="text-sm text-gray-400">&euro;</span>' +
-                            '<span class="text-4xl font-bold text-gray-900">' + escapeHtml(p.price) + '</span>' +
+                            '<span class="text-4xl font-bold text-gray-900">' + escapeHtml(price) + '</span>' +
                         '</div>';
                 }
 
@@ -359,25 +386,24 @@
                 var ctaHtml;
                 var hasExternalLink = p.ctaLink && p.ctaLink !== '#';
                 if ((!p.pricePerUser || p.pricePerUser === 0) && !hasExternalLink) {
-                    ctaHtml = '<button onclick="checkout(\'' + planKey + '\')" class="w-full py-2.5 rounded-lg border border-brand-500 text-brand-600 text-sm font-medium hover:bg-blue-50 transition-colors">' + escapeHtml(p.ctaText || 'Get started') + '</button>';
+                    ctaHtml = '<button onclick="checkout(\'' + planKey + '\')" class="w-full py-2.5 rounded-lg border border-brand-500 text-brand-600 text-sm font-medium hover:bg-blue-50 transition-colors">' + escapeHtml(ctaText) + '</button>';
                 } else if (hasExternalLink) {
-                    ctaHtml = '<a href="' + p.ctaLink + '" target="_blank" class="block text-center py-2.5 rounded-lg border border-gray-200 text-sm font-medium text-gray-700 hover:border-brand-500 hover:text-brand-600 transition-colors">' + escapeHtml(p.ctaText || 'Learn more') + '</a>';
-                } else if (p.highlighted) {
-                    ctaHtml = '<button onclick="checkout(\'' + planKey + '\')" class="w-full py-2.5 rounded-lg bg-brand-500 text-white text-sm font-medium hover:bg-brand-600 transition-colors">' + escapeHtml(p.ctaText || 'Start trial') + '</button>';
+                    ctaHtml = '<a href="' + p.ctaLink + '" target="_blank" class="block text-center py-2.5 rounded-lg border border-gray-200 text-sm font-medium text-gray-700 hover:border-brand-500 hover:text-brand-600 transition-colors">' + escapeHtml(ctaText) + '</a>';
+                } else if (highlighted) {
+                    ctaHtml = '<button onclick="checkout(\'' + planKey + '\')" class="w-full py-2.5 rounded-lg bg-brand-500 text-white text-sm font-medium hover:bg-brand-600 transition-colors">' + escapeHtml(ctaText) + '</button>';
                 } else {
-                    ctaHtml = '<button onclick="checkout(\'' + planKey + '\')" class="w-full py-2.5 rounded-lg border border-brand-500 text-brand-600 text-sm font-medium hover:bg-blue-50 transition-colors">' + escapeHtml(p.ctaText || 'Get started') + '</button>';
+                    ctaHtml = '<button onclick="checkout(\'' + planKey + '\')" class="w-full py-2.5 rounded-lg border border-brand-500 text-brand-600 text-sm font-medium hover:bg-blue-50 transition-colors">' + escapeHtml(ctaText) + '</button>';
                 }
 
-                var features = p.features || [];
                 var featuresHtml = features.map(function(feat) {
                     return '<li class="flex items-center gap-2">' + checkSvg + ' ' + escapeHtml(feat) + '</li>';
                 }).join('');
 
                 card.innerHTML = badgeHtml +
-                    '<h3 class="font-semibold text-gray-900">' + escapeHtml(p.name) + '</h3>' +
-                    '<p class="text-xs text-gray-400 mt-1 mb-5">' + escapeHtml(p.subtitle || '') + '</p>' +
+                    '<h3 class="font-semibold text-gray-900">' + escapeHtml(name) + '</h3>' +
+                    '<p class="text-xs text-gray-400 mt-1 mb-5">' + escapeHtml(subtitle) + '</p>' +
                     priceHtml +
-                    '<p class="text-xs text-gray-400 mb-1">' + escapeHtml(p.priceNote || '') + '</p>' +
+                    '<p class="text-xs text-gray-400 mb-1">' + escapeHtml(priceNote) + '</p>' +
                     totalHtml +
                     ctaHtml +
                     '<ul class="mt-6 space-y-2.5 text-sm text-gray-500">' + featuresHtml + '</ul>';
@@ -386,40 +412,42 @@
             });
         }
 
-        // Load products and render tabbed pricing
+        // Load products and content translations, then render
         function loadOffers() {
-            fetch('/api/products')
-                .then(function(r) { return r.json(); })
-                .then(function(products) {
-                    PRODUCTS = products;
-                    // Default to first product by tab order
-                    var defaultSlug = null;
-                    for (var i = 0; i < TAB_ORDER.length; i++) {
-                        if (products.find(function(p) { return p.slug === TAB_ORDER[i]; })) {
-                            defaultSlug = TAB_ORDER[i];
-                            break;
-                        }
-                    }
-                    if (!defaultSlug && products.length > 0) defaultSlug = products[0].slug;
-                    if (defaultSlug) selectProduct(defaultSlug);
-                })
-                .catch(function(err) {
-                    console.error('Failed to load products:', err);
-                    document.getElementById('pricing-grid').innerHTML = '<div class="col-span-full text-center py-12"><p class="text-red-400">Failed to load plans.</p></div>';
-                });
-
-            // Load heading/subheading from content API
             var lang = window.i18n ? i18n.getLang() : 'en';
-            var url = '/api/content' + (lang !== 'en' ? '?lang=' + lang : '');
-            fetch(url)
-                .then(function(r) { return r.json(); })
-                .then(function(data) {
-                    if (data.pricing) {
-                        document.getElementById('pricing-heading').textContent = data.pricing.heading || '';
-                        document.getElementById('pricing-subheading').textContent = data.pricing.subheading || '';
+            var contentUrl = '/api/content' + (lang !== 'en' ? '?lang=' + lang : '');
+
+            // Fetch both in parallel, render once both are ready
+            Promise.all([
+                fetch('/api/products').then(function(r) { return r.json(); }),
+                fetch(contentUrl).then(function(r) { return r.json(); }).catch(function() { return {}; })
+            ]).then(function(results) {
+                var products = results[0];
+                var content = results[1];
+
+                PRODUCTS = products;
+                CONTENT_PRICING = content.pricing || null;
+
+                // Set heading/subheading from content
+                if (CONTENT_PRICING) {
+                    document.getElementById('pricing-heading').textContent = CONTENT_PRICING.heading || '';
+                    document.getElementById('pricing-subheading').textContent = CONTENT_PRICING.subheading || '';
+                }
+
+                // Default to first product by tab order
+                var defaultSlug = null;
+                for (var i = 0; i < TAB_ORDER.length; i++) {
+                    if (products.find(function(p) { return p.slug === TAB_ORDER[i]; })) {
+                        defaultSlug = TAB_ORDER[i];
+                        break;
                     }
-                })
-                .catch(function() {});
+                }
+                if (!defaultSlug && products.length > 0) defaultSlug = products[0].slug;
+                if (defaultSlug) selectProduct(defaultSlug);
+            }).catch(function(err) {
+                console.error('Failed to load offers:', err);
+                document.getElementById('pricing-grid').innerHTML = '<div class="col-span-full text-center py-12"><p class="text-red-400">Failed to load plans.</p></div>';
+            });
         }
 
         loadOffers();

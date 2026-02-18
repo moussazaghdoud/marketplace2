@@ -355,6 +355,12 @@
     "noPlan": "Aucune offre sélectionnée.",
     "paymentFailed": "Le paiement a échoué. Veuillez réessayer."
   },
+  "offers": {
+    "collaborationDesc": "Plateforme de communication unifiée — messagerie, vidéo, téléphonie.",
+    "webinarDesc": "Organisez des événements en ligne à grande échelle avec jusqu'à 10 000 participants.",
+    "smartHotelDesc": "Expérience client et gestion hôtelière alimentées par l'IA.",
+    "plansComing": "Plans disponibles prochainement."
+  },
   "lang": {
     "en": "English",
     "fr": "Français",
