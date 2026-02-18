@@ -304,6 +304,33 @@
         </div>
     </div>
 
+    <!-- Company Prompt Modal -->
+    <div id="modal-company" class="fixed inset-0 z-50 hidden">
+        <div class="modal-backdrop absolute inset-0" onclick="closeModal('modal-company')"></div>
+        <div class="relative z-10 flex items-center justify-center min-h-screen p-4">
+            <div class="bg-white rounded-2xl shadow-xl max-w-md w-full">
+                <div class="p-6 border-b border-gray-100 flex items-center justify-between">
+                    <h3 class="text-lg font-semibold text-gray-900" data-i18n="portal.companyRequired">Company Information</h3>
+                    <button onclick="closeModal('modal-company')" class="text-gray-400 hover:text-gray-600">
+                        <svg class="w-5 h-5" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M6 18L18 6M6 6l12 12"/></svg>
+                    </button>
+                </div>
+                <div class="p-6">
+                    <p class="text-sm text-gray-500 mb-5" data-i18n="portal.companyRequiredDesc">Please enter your company name before subscribing.</p>
+                    <div class="mb-4">
+                        <label class="block text-sm font-medium text-gray-700 mb-1.5" data-i18n="portal.company">Company</label>
+                        <input type="text" id="company-prompt-input" required placeholder="Acme Corp"
+                            class="w-full px-4 py-2.5 border border-gray-300 rounded-lg text-sm text-gray-900 placeholder-gray-400 outline-none focus:border-rainbow-500 focus:ring-1 focus:ring-rainbow-500 transition-all">
+                    </div>
+                    <button onclick="submitCompanyAndSubscribe()" id="btn-company-submit"
+                        class="w-full py-2.5 px-4 bg-rainbow-500 hover:bg-rainbow-600 text-white font-semibold rounded-lg text-sm transition-colors disabled:opacity-60 disabled:cursor-not-allowed" data-i18n="portal.continueSubscribe">
+                        Continue
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+
     <script src="/js/i18n.js"></script>
     <script>
         function t(k,f){return typeof i18n!=='undefined'?i18n.t(k,f):f;}
@@ -824,12 +851,68 @@
             document.getElementById('selected-plan-id').value = planId;
         }
 
+        // Pending subscription params when waiting for company info
+        let _pendingSubPlanId = null;
+        let _pendingSubLicenseCount = null;
+
         async function createSubscription() {
             const planId = document.getElementById('selected-plan-id').value;
             const licenseCount = parseInt(document.getElementById('new-sub-licenses').value) || 1;
-            const btn = document.getElementById('btn-create-sub');
+
+            // Check if user has company info
+            if (!clientData) clientData = await api('/api/client/me');
+            if (!clientData.company || !clientData.company.trim()) {
+                // Store pending subscription params and show company prompt
+                _pendingSubPlanId = planId;
+                _pendingSubLicenseCount = licenseCount;
+                closeModal('modal-new-sub');
+                openModal('modal-company');
+                document.getElementById('company-prompt-input').focus();
+                return;
+            }
+
+            await doCreateSubscription(planId, licenseCount);
+        }
+
+        async function submitCompanyAndSubscribe() {
+            const companyName = document.getElementById('company-prompt-input').value.trim();
+            if (!companyName) {
+                showToast(t('portal.companyNameRequired','Please enter a company name.'), 'error');
+                return;
+            }
+
+            const btn = document.getElementById('btn-company-submit');
             btn.disabled = true;
-            btn.textContent = 'Processing...';
+            btn.textContent = t('portal.saving','Saving...');
+
+            try {
+                // Save company name
+                await api('/api/client/me', 'PUT', {
+                    firstName: clientData.firstName,
+                    lastName: clientData.lastName,
+                    company: companyName
+                });
+                clientData.company = companyName;
+
+                closeModal('modal-company');
+
+                // Now create the subscription
+                if (_pendingSubPlanId) {
+                    await doCreateSubscription(_pendingSubPlanId, _pendingSubLicenseCount);
+                    _pendingSubPlanId = null;
+                    _pendingSubLicenseCount = null;
+                }
+            } catch (err) {
+                showToast(err.message, 'error');
+            } finally {
+                btn.disabled = false;
+                btn.textContent = t('portal.continueSubscribe','Continue');
+            }
+        }
+
+        async function doCreateSubscription(planId, licenseCount) {
+            const btn = document.getElementById('btn-create-sub');
+            if (btn) { btn.disabled = true; btn.textContent = 'Processing...'; }
 
             try {
                 const result = await api('/api/client/subscriptions', 'POST', { planId, licenseCount });
@@ -839,8 +922,7 @@
             } catch (err) {
                 showToast(err.message, 'error');
             } finally {
-                btn.disabled = false;
-                btn.textContent = t('portal.subscribe','Subscribe');
+                if (btn) { btn.disabled = false; btn.textContent = t('portal.subscribe','Subscribe'); }
             }
         }
 
@@ -1635,12 +1717,16 @@
                     );
                     if (match) {
                         const lc = parseInt(licensesFromUrl) || 1;
-                        await api('/api/client/subscriptions', 'POST', {
-                            planId: match.id,
-                            licenseCount: lc
-                        });
-                        showToast(t('portal.subscriptionCreated','Subscription created successfully!'));
-                        navigateTo('subscriptions');
+                        // Check company first
+                        if (!clientData) clientData = await api('/api/client/me');
+                        if (!clientData.company || !clientData.company.trim()) {
+                            _pendingSubPlanId = match.id;
+                            _pendingSubLicenseCount = lc;
+                            openModal('modal-company');
+                            document.getElementById('company-prompt-input').focus();
+                        } else {
+                            await doCreateSubscription(match.id, lc);
+                        }
                     } else {
                         await openNewSubscriptionModal(planFromUrl, licensesFromUrl);
                     }
