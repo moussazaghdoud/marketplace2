@@ -542,7 +542,7 @@
                 document.getElementById('dash-name').textContent = clientData.firstName || clientData.email;
 
                 const subs = await api('/api/client/subscriptions');
-                const activeSubs = (subs || []).filter(s => s.status === 'active' || s.status === 'trialing');
+                const activeSubs = (subs || []).filter(s => s.status === 'active' || s.status === 'trialing' || s.status === 'pending');
                 const totalLicenses = activeSubs.reduce((sum, s) => sum + (s.licenseCount || s.quantity || 0), 0);
 
                 document.getElementById('dash-cards').innerHTML = `
