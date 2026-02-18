@@ -279,10 +279,8 @@
         // Configuration & State
         // =============================================
         const API_BASE = window.location.origin;
-        // Rainbow Web URL: sandbox vs production
-        const RAINBOW_WEB_URL = (window.location.hostname === 'localhost' || window.location.hostname.includes('sandbox'))
-            ? 'https://web-sandbox.openrainbow.com'
-            : 'https://web.openrainbow.com';
+        // Rainbow Web URL — matches RAINBOW_DOMAIN in .env
+        const RAINBOW_WEB_URL = 'https://web-sandbox.openrainbow.com';
         let token = localStorage.getItem('token');
         let clientData = null;
         let stripe = null;
