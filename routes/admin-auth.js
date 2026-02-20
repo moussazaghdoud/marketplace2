@@ -2,7 +2,7 @@ const express = require('express');
 const bcrypt = require('bcryptjs');
 const { v4: uuidv4 } = require('uuid');
 const { getDb } = require('../db/connection');
-const { generateToken, adminAuth } = require('../middleware/auth');
+const { generateToken, adminAuth, blacklistToken, validatePassword } = require('../middleware/auth');
 
 const router = express.Router();
 
@@ -15,6 +15,8 @@ router.post('/login', (req, res) => {
     const db = getDb();
     const user = db.prepare('SELECT * FROM admin_users WHERE email = ?').get(email);
     if (!user || !bcrypt.compareSync(password, user.password)) {
+        // M6: Audit failed login attempt
+        if (req.app.locals.logAudit) req.app.locals.logAudit(null, 'admin', 'login_failed', { email }, req.ip);
         return res.status(401).json({ error: 'Invalid email or password' });
     }
     const token = generateToken({
@@ -25,6 +27,8 @@ router.post('/login', (req, res) => {
         role: user.role,
         type: 'admin'
     });
+    // M6: Audit log
+    if (req.app.locals.logAudit) req.app.locals.logAudit(user.id, 'admin', 'login', { email }, req.ip);
     res.json({
         token,
         user: { id: user.id, email: user.email, firstName: user.firstName, lastName: user.lastName, role: user.role }
@@ -45,6 +49,10 @@ router.post('/change-password', adminAuth, (req, res) => {
     if (!currentPassword || !newPassword) {
         return res.status(400).json({ error: 'Current and new passwords required' });
     }
+    // M1: Password policy
+    const pwError = validatePassword(newPassword);
+    if (pwError) return res.status(400).json({ error: pwError });
+
     const db = getDb();
     const user = db.prepare('SELECT * FROM admin_users WHERE id = ?').get(req.admin.id);
     if (!bcrypt.compareSync(currentPassword, user.password)) {
@@ -53,6 +61,16 @@ router.post('/change-password', adminAuth, (req, res) => {
     const hashed = bcrypt.hashSync(newPassword, 10);
     db.prepare('UPDATE admin_users SET password = ?, updatedAt = datetime(?) WHERE id = ?')
         .run(hashed, new Date().toISOString(), req.admin.id);
+    // M6: Audit log
+    if (req.app.locals.logAudit) req.app.locals.logAudit(req.admin.id, 'admin', 'password_changed', {}, req.ip);
+    res.json({ success: true });
+});
+
+// M2: POST /api/admin/logout
+router.post('/logout', adminAuth, (req, res) => {
+    const db = getDb();
+    blacklistToken(db, req._authToken);
+    if (req.app.locals.logAudit) req.app.locals.logAudit(req.admin.id, 'admin', 'logout', {}, req.ip);
     res.json({ success: true });
 });
 

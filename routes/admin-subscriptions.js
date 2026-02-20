@@ -33,6 +33,8 @@ router.put('/:id', (req, res) => {
         UPDATE subscriptions SET status = ?, planKey = ?, licenseCount = ?, updatedAt = datetime(?)
         WHERE id = ?
     `).run(status, planKey, licenseCount, new Date().toISOString(), req.params.id);
+    // M6: Audit log
+    if (req.app.locals.logAudit) req.app.locals.logAudit(req.admin.id, 'admin', 'subscription_updated', { subscriptionId: req.params.id, status, planKey }, req.ip);
     res.json({ success: true });
 });
 

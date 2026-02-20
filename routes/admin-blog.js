@@ -1,7 +1,21 @@
 const express = require('express');
 const { v4: uuidv4 } = require('uuid');
+const sanitizeHtml = require('sanitize-html');
 const { getDb } = require('../db/connection');
 const { adminAuth } = require('../middleware/auth');
+
+// M4: Sanitize blog HTML — allow safe tags, strip scripts/iframes/event handlers
+const SANITIZE_OPTIONS = {
+    allowedTags: sanitizeHtml.defaults.allowedTags.concat(['img', 'h1', 'h2', 'h3', 'figure', 'figcaption', 'video', 'source', 'picture']),
+    allowedAttributes: {
+        ...sanitizeHtml.defaults.allowedAttributes,
+        img: ['src', 'alt', 'width', 'height', 'class', 'loading'],
+        a: ['href', 'target', 'rel', 'class'],
+        '*': ['class', 'id', 'style']
+    },
+    allowedSchemes: ['http', 'https', 'mailto'],
+    disallowedTagsMode: 'discard'
+};
 
 const router = express.Router();
 router.use(adminAuth);
@@ -69,27 +83,35 @@ router.get('/articles/:id', (req, res) => {
 
 // POST /api/admin/blog/articles
 router.post('/articles', (req, res) => {
-    const { title, slug, excerpt, content, coverImage, categoryId, status } = req.body;
+    const { title, slug, excerpt, coverImage, categoryId, status } = req.body;
+    let { content } = req.body;
     if (!title || !slug) return res.status(400).json({ error: 'Title and slug required' });
+    // M4: Sanitize HTML content
+    content = content ? sanitizeHtml(content, SANITIZE_OPTIONS) : '';
     const db = getDb();
     const id = uuidv4();
     const publishedAt = status === 'published' ? new Date().toISOString() : null;
     db.prepare(`
         INSERT INTO blog_articles (id, title, slug, excerpt, content, coverImage, categoryId, authorId, status, publishedAt)
         VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
-    `).run(id, title, slug, excerpt || '', content || '', coverImage || '', categoryId || null, req.admin.id, status || 'draft', publishedAt);
+    `).run(id, title, slug, excerpt || '', content, coverImage || '', categoryId || null, req.admin.id, status || 'draft', publishedAt);
+    // M6: Audit log
+    if (req.app.locals.logAudit) req.app.locals.logAudit(req.admin.id, 'admin', 'blog_article_created', { id, title, slug }, req.ip);
     res.json({ id });
 });
 
 // PUT /api/admin/blog/articles/:id
 router.put('/articles/:id', (req, res) => {
-    const { title, slug, excerpt, content, coverImage, categoryId, status } = req.body;
+    const { title, slug, excerpt, coverImage, categoryId, status } = req.body;
+    let { content } = req.body;
+    // M4: Sanitize HTML content
+    content = content ? sanitizeHtml(content, SANITIZE_OPTIONS) : '';
     const db = getDb();
     const existing = db.prepare('SELECT status FROM blog_articles WHERE id = ?').get(req.params.id);
     const publishedAt = (status === 'published' && existing?.status !== 'published') ? new Date().toISOString() : undefined;
 
     let sql = 'UPDATE blog_articles SET title = ?, slug = ?, excerpt = ?, content = ?, coverImage = ?, categoryId = ?, status = ?, updatedAt = datetime(?)';
-    const params = [title, slug, excerpt || '', content || '', coverImage || '', categoryId || null, status || 'draft', new Date().toISOString()];
+    const params = [title, slug, excerpt || '', content, coverImage || '', categoryId || null, status || 'draft', new Date().toISOString()];
 
     if (publishedAt) {
         sql += ', publishedAt = ?';
@@ -99,6 +121,8 @@ router.put('/articles/:id', (req, res) => {
     params.push(req.params.id);
 
     db.prepare(sql).run(...params);
+    // M6: Audit log
+    if (req.app.locals.logAudit) req.app.locals.logAudit(req.admin.id, 'admin', 'blog_article_updated', { id: req.params.id, title }, req.ip);
     res.json({ success: true });
 });
 
@@ -106,6 +130,8 @@ router.put('/articles/:id', (req, res) => {
 router.delete('/articles/:id', (req, res) => {
     const db = getDb();
     db.prepare('DELETE FROM blog_articles WHERE id = ?').run(req.params.id);
+    // M6: Audit log
+    if (req.app.locals.logAudit) req.app.locals.logAudit(req.admin.id, 'admin', 'blog_article_deleted', { id: req.params.id }, req.ip);
     res.json({ success: true });
 });
 

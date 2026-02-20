@@ -99,6 +99,8 @@ router.post('/', async (req, res) => {
         VALUES (?, ?, ?, ?, ?, ?, ?, ?)
     `).run(id, req.client.id, productId, planKey, licenseCount, plan.pricePerUser > 0 ? 'pending' : 'active', stripeSubId, zuoraResult.accountId);
 
+    // M6: Audit log
+    if (req.app.locals.logAudit) req.app.locals.logAudit(req.client.id, 'client', 'subscription_created', { subscriptionId: id, planKey, licenseCount }, req.ip);
     res.json({ id, stripeSubscriptionId: stripeSubId, clientSecret, publishableKey: process.env.STRIPE_PUBLISHABLE_KEY, status: plan.pricePerUser > 0 ? 'pending' : 'active' });
 });
 
@@ -150,6 +152,8 @@ router.post('/:id/cancel', async (req, res) => {
     db.prepare("UPDATE subscriptions SET status = 'cancelling', cancelledAt = datetime(?), updatedAt = datetime(?) WHERE id = ?")
         .run(new Date().toISOString(), new Date().toISOString(), req.params.id);
 
+    // M6: Audit log
+    if (req.app.locals.logAudit) req.app.locals.logAudit(req.client.id, 'client', 'subscription_cancelled', { subscriptionId: req.params.id }, req.ip);
     res.json({ success: true });
 });
 

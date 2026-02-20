@@ -3,7 +3,7 @@ const bcrypt = require('bcryptjs');
 const { v4: uuidv4 } = require('uuid');
 const crypto = require('crypto');
 const { getDb } = require('../db/connection');
-const { generateToken, clientAuth } = require('../middleware/auth');
+const { generateToken, clientAuth, blacklistToken, validatePassword } = require('../middleware/auth');
 const salesforce = require('../services/salesforce');
 
 const router = express.Router();
@@ -16,6 +16,9 @@ router.post('/register', async (req, res) => {
     if (!email || !password || !firstName || !lastName) {
         return res.status(400).json({ error: 'All fields are required' });
     }
+    // M1: Server-side password policy
+    const pwError = validatePassword(password);
+    if (pwError) return res.status(400).json({ error: pwError });
     const db = getDb();
     const existing = db.prepare('SELECT id FROM clients WHERE email = ?').get(email);
     if (existing) {
@@ -209,6 +212,8 @@ router.post('/login', (req, res) => {
         lastName: client.lastName,
         type: 'client'
     });
+    // M6: Audit log
+    if (req.app.locals.logAudit) req.app.locals.logAudit(client.id, 'client', 'login', { email }, req.ip);
     res.json({
         token,
         user: {
@@ -252,15 +257,32 @@ router.post('/reset-password', (req, res) => {
     const { token, newPassword } = req.body;
     if (!token || !newPassword) return res.status(400).json({ error: 'Token and new password required' });
 
+    // M1: Password policy on reset
+    const pwError = validatePassword(newPassword);
+    if (pwError) return res.status(400).json({ error: pwError });
+
     const db = getDb();
-    const client = db.prepare('SELECT id, resetTokenExpiry FROM clients WHERE resetToken = ?').get(token);
-    if (!client) return res.status(400).json({ error: 'Invalid reset token' });
-    if (new Date(client.resetTokenExpiry) < new Date()) {
+    // M5: Timing-safe token comparison — fetch all clients with a reset token and compare safely
+    const candidates = db.prepare('SELECT id, resetToken, resetTokenExpiry FROM clients WHERE resetToken IS NOT NULL').all();
+    let matched = null;
+    const tokenBuf = Buffer.from(token);
+    for (const c of candidates) {
+        const candidateBuf = Buffer.from(c.resetToken);
+        if (tokenBuf.length === candidateBuf.length && crypto.timingSafeEqual(tokenBuf, candidateBuf)) {
+            matched = c;
+            break;
+        }
+    }
+    if (!matched) return res.status(400).json({ error: 'Invalid reset token' });
+    if (new Date(matched.resetTokenExpiry) < new Date()) {
         return res.status(400).json({ error: 'Reset token has expired' });
     }
     const hashed = bcrypt.hashSync(newPassword, 10);
     db.prepare('UPDATE clients SET password = ?, resetToken = NULL, resetTokenExpiry = NULL, updatedAt = datetime(?) WHERE id = ?')
-        .run(hashed, new Date().toISOString(), client.id);
+        .run(hashed, new Date().toISOString(), matched.id);
+
+    // M6: Audit log
+    if (req.app.locals.logAudit) req.app.locals.logAudit(matched.id, 'client', 'password_reset', {}, req.ip);
 
     res.json({ success: true });
 });
@@ -294,6 +316,10 @@ router.post('/change-password', clientAuth, (req, res) => {
     if (!currentPassword || !newPassword) {
         return res.status(400).json({ error: 'Both passwords required' });
     }
+    // M1: Password policy
+    const pwError = validatePassword(newPassword);
+    if (pwError) return res.status(400).json({ error: pwError });
+
     const db = getDb();
     const client = db.prepare('SELECT password FROM clients WHERE id = ?').get(req.client.id);
     if (!bcrypt.compareSync(currentPassword, client.password)) {
@@ -303,6 +329,17 @@ router.post('/change-password', clientAuth, (req, res) => {
     db.prepare('UPDATE clients SET password = ?, updatedAt = datetime(?) WHERE id = ?')
         .run(hashed, new Date().toISOString(), req.client.id);
 
+    // M6: Audit log
+    if (req.app.locals.logAudit) req.app.locals.logAudit(req.client.id, 'client', 'password_changed', {}, req.ip);
+
+    res.json({ success: true });
+});
+
+// M2: POST /api/client/logout
+router.post('/logout', clientAuth, (req, res) => {
+    const db = getDb();
+    blacklistToken(db, req._authToken);
+    if (req.app.locals.logAudit) req.app.locals.logAudit(req.client.id, 'client', 'logout', {}, req.ip);
     res.json({ success: true });
 });
 

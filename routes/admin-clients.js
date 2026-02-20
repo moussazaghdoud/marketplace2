@@ -52,6 +52,8 @@ router.put('/:id', (req, res) => {
         UPDATE clients SET firstName = ?, lastName = ?, company = ?, companySize = ?, phone = ?, status = ?, updatedAt = datetime(?)
         WHERE id = ?
     `).run(firstName, lastName, company || null, companySize || null, phone || null, status, new Date().toISOString(), req.params.id);
+    // M6: Audit log
+    if (req.app.locals.logAudit) req.app.locals.logAudit(req.admin.id, 'admin', 'client_updated', { clientId: req.params.id, status }, req.ip);
     res.json({ success: true });
 });
 
@@ -61,6 +63,8 @@ router.delete('/:id', (req, res) => {
     db.prepare('DELETE FROM subscriptions WHERE clientId = ?').run(req.params.id);
     db.prepare('DELETE FROM payment_methods WHERE clientId = ?').run(req.params.id);
     db.prepare('DELETE FROM clients WHERE id = ?').run(req.params.id);
+    // M6: Audit log
+    if (req.app.locals.logAudit) req.app.locals.logAudit(req.admin.id, 'admin', 'client_deleted', { clientId: req.params.id }, req.ip);
     res.json({ success: true });
 });
 

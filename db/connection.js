@@ -15,4 +15,11 @@ function getDb() {
     return db;
 }
 
-module.exports = { getDb, DB_PATH };
+function closeDb() {
+    if (db) {
+        db.close();
+        db = null;
+    }
+}
+
+module.exports = { getDb, closeDb, DB_PATH };

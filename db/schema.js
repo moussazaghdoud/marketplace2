@@ -162,6 +162,11 @@ function createTables() {
             FOREIGN KEY (subscriptionId) REFERENCES subscriptions(id)
         );
 
+        CREATE TABLE IF NOT EXISTS token_blacklist (
+            tokenHash TEXT PRIMARY KEY,
+            expiresAt TEXT NOT NULL
+        );
+
         CREATE TABLE IF NOT EXISTS content_store (
             lang TEXT PRIMARY KEY,
             data TEXT NOT NULL,
@@ -247,6 +252,7 @@ function createTables() {
         CREATE INDEX IF NOT EXISTS idx_industry_value_props_industryId ON industry_value_props(industryId);
         CREATE INDEX IF NOT EXISTS idx_license_assignments_subscriptionId ON license_assignments(subscriptionId);
         CREATE INDEX IF NOT EXISTS idx_license_assignments_email ON license_assignments(email);
+        CREATE INDEX IF NOT EXISTS idx_token_blacklist_expiresAt ON token_blacklist(expiresAt);
     `);
 
     console.log('Database tables created successfully');

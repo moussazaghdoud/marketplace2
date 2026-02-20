@@ -7,6 +7,7 @@ const multer = require('multer');
 const cookieParser = require('cookie-parser');
 const helmet = require('helmet');
 const rateLimit = require('express-rate-limit');
+const cors = require('cors');
 const { createProxyMiddleware } = require('http-proxy-middleware');
 const { v4: uuidv4 } = require('uuid');
 
@@ -79,7 +80,7 @@ seed();
 const { getDb } = require('./db/connection');
 
 // Auth middleware
-const { adminAuth } = require('./middleware/auth');
+const { adminAuth, cleanupBlacklist } = require('./middleware/auth');
 
 const app = express();
 const PORT = process.env.PORT || 3000;
@@ -149,6 +150,23 @@ app.use('/api/rainbow', createProxyMiddleware({
 // --- Global middleware ---
 app.use(express.json());
 app.use(cookieParser());
+
+// H4: CORS configuration
+const ALLOWED_ORIGINS = process.env.ALLOWED_ORIGINS
+    ? process.env.ALLOWED_ORIGINS.split(',').map(s => s.trim())
+    : [];
+app.use(cors({
+    origin: function (origin, callback) {
+        // Allow requests with no origin (server-to-server, same-origin)
+        if (!origin) return callback(null, true);
+        if (ALLOWED_ORIGINS.length === 0) return callback(null, true);
+        if (ALLOWED_ORIGINS.includes(origin)) return callback(null, true);
+        callback(new Error('Not allowed by CORS'));
+    },
+    credentials: true,
+    methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'],
+    allowedHeaders: ['Content-Type', 'Authorization']
+}));
 
 // H2: Security headers
 app.use(helmet({
@@ -228,6 +246,7 @@ if (VOLUME_PATH) {
 const SUPPORTED_LANGS = ['en', 'fr', 'es', 'it', 'de'];
 const i18nFileCache = {};
 const translatedPageCache = {};
+const TRANSLATED_PAGE_CACHE_MAX = 100; // S3: Bound cache size
 
 function loadI18nFile(lang) {
     if (i18nFileCache[lang]) return i18nFileCache[lang];
@@ -298,6 +317,11 @@ function sendPage(req, res, filePath) {
     try {
         const html = fs.readFileSync(filePath, 'utf8');
         const translated = translateHTML(html, lang);
+        // S3: Evict oldest entries if cache is full
+        const cacheKeys = Object.keys(translatedPageCache);
+        if (cacheKeys.length >= TRANSLATED_PAGE_CACHE_MAX) {
+            delete translatedPageCache[cacheKeys[0]];
+        }
         translatedPageCache[cacheKey] = translated;
         res.type('html').send(translated);
     } catch (e) {
@@ -561,7 +585,7 @@ app.use((err, req, res, next) => {
 
 // ===================== START =====================
 
-app.listen(PORT, () => {
+const server = app.listen(PORT, () => {
     console.log(`Rainbow Portal running at http://localhost:${PORT}`);
     console.log(`Admin panel: http://localhost:${PORT}/admin`);
     console.log(`Client portal: http://localhost:${PORT}/portal`);
@@ -569,4 +593,33 @@ app.listen(PORT, () => {
     console.log(`Rainbow APP_ID: ${RAINBOW_APP_ID ? RAINBOW_APP_ID.slice(0, 6) + '...' : 'NOT SET'}`);
     console.log(`Stripe: ${process.env.STRIPE_SECRET_KEY ? 'configured' : 'NOT SET'}`);
     console.log(`Salesforce: ${process.env.SF_CLIENT_ID ? 'configured' : 'NOT SET'}`);
+
+    // M2: Periodically clean expired blacklisted tokens (every hour)
+    setInterval(() => {
+        try { cleanupBlacklist(getDb()); } catch (e) { /* silent */ }
+    }, 3600000);
 });
+
+// S5: Request timeout (30 seconds)
+server.timeout = 30000;
+
+// S4: Graceful shutdown
+function gracefulShutdown(signal) {
+    console.log(`\n[${signal}] Shutting down gracefully...`);
+    server.close(() => {
+        console.log('[Shutdown] HTTP server closed');
+        try {
+            const { closeDb } = require('./db/connection');
+            closeDb();
+            console.log('[Shutdown] Database closed');
+        } catch (e) { /* silent */ }
+        process.exit(0);
+    });
+    // Force exit after 10 seconds
+    setTimeout(() => {
+        console.error('[Shutdown] Forced exit after timeout');
+        process.exit(1);
+    }, 10000);
+}
+process.on('SIGTERM', () => gracefulShutdown('SIGTERM'));
+process.on('SIGINT', () => gracefulShutdown('SIGINT'));
