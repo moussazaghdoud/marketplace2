@@ -1,0 +1,297 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Industry - Rainbow by Alcatel-Lucent Enterprise</title>
+    <meta name="description" content="Discover how Rainbow serves your industry with tailored communication and collaboration solutions.">
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        brand: { 50: '#eef4ff', 100: '#dce8ff', 500: '#4F6DF5', 600: '#3B5DE7', 700: '#2D4ED9' }
+                    },
+                    fontFamily: { sans: ['Inter', 'system-ui', 'sans-serif'] }
+                }
+            }
+        }
+    </script>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+<style>
+    .lang-switcher { position: relative; }
+    .lang-switcher button { display: flex; align-items: center; gap: 4px; font-size: 0.8125rem; color: #64748b; cursor: pointer; background: none; border: none; padding: 4px 8px; border-radius: 6px; transition: color 0.2s; }
+    .lang-switcher button:hover { color: #0f172a; }
+    .lang-switcher .lang-dropdown { display: none; position: absolute; top: 100%; right: 0; background: #fff; border: 1px solid #e2e8f0; border-radius: 8px; box-shadow: 0 4px 12px rgba(0,0,0,0.1); min-width: 140px; z-index: 200; padding: 4px 0; margin-top: 4px; }
+    .lang-switcher.open .lang-dropdown { display: block; }
+    .lang-dropdown button { display: block; width: 100%; text-align: left; padding: 8px 14px; font-size: 0.8125rem; color: #374151; border: none; background: none; cursor: pointer; }
+    .lang-dropdown button:hover { background: #f1f5f9; }
+    .lang-dropdown button.active { color: #4F6DF5; font-weight: 600; }
+</style>
+</head>
+<body class="font-sans text-gray-700 antialiased bg-white">
+
+    <!-- NAV -->
+    <nav id="navbar" class="fixed top-0 w-full z-50 bg-white/80 backdrop-blur-md border-b border-gray-100">
+        <div class="max-w-6xl mx-auto px-6 flex items-center justify-between h-16">
+            <a href="/" class="flex items-center gap-2">
+                <img src="/img/rainbow-logo.png" alt="Rainbow" class="w-8 h-8 rounded-lg">
+                <span class="text-lg font-bold text-gray-900">Rainbow</span>
+            </a>
+            <div class="hidden md:flex items-center gap-6">
+                <a href="/" class="text-sm text-gray-500 hover:text-gray-900 transition-colors" data-i18n="nav.home">Home</a>
+                <a href="/products" class="text-sm text-gray-500 hover:text-gray-900 transition-colors" data-i18n="nav.product">Product</a>
+                <a href="/solutions" class="text-sm text-gray-500 hover:text-gray-900 transition-colors" data-i18n="nav.solutions">Solutions</a>
+                <a href="/industries" class="text-sm font-medium text-brand-500 transition-colors" data-i18n="nav.industries">Industries</a>
+                <a href="/offers" class="text-sm text-gray-500 hover:text-gray-900 transition-colors" data-i18n="nav.offers">Offers</a>
+                <a href="/blog" class="text-sm text-gray-500 hover:text-gray-900 transition-colors" data-i18n="nav.blog">Blog</a>
+                <a href="/reviews" class="text-sm text-gray-500 hover:text-gray-900 transition-colors" data-i18n="nav.reviews">Reviews</a>
+                <a href="/support" class="text-sm text-gray-500 hover:text-gray-900 transition-colors" data-i18n="nav.support">Support</a>
+                <a href="/tutorials" class="text-sm text-gray-500 hover:text-gray-900 transition-colors" data-i18n="nav.tutorials">Tutorials</a>
+                <div class="lang-switcher" id="lang-switcher">
+                    <button onclick="document.getElementById('lang-switcher').classList.toggle('open')">
+                        <svg class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M12 21a9.004 9.004 0 008.716-6.747M12 21a9.004 9.004 0 01-8.716-6.747M12 21c2.485 0 4.5-4.03 4.5-9S14.485 3 12 3m0 18c-2.485 0-4.5-4.03-4.5-9S9.515 3 12 3m0 0a8.997 8.997 0 017.843 4.582M12 3a8.997 8.997 0 00-7.843 4.582m15.686 0A11.953 11.953 0 0112 10.5c-2.998 0-5.74-1.1-7.843-2.918m15.686 0A8.959 8.959 0 0121 12c0 .778-.099 1.533-.284 2.253m0 0A17.919 17.919 0 0112 16.5c-3.162 0-6.133-.815-8.716-2.247m0 0A9.015 9.015 0 013 12c0-1.605.42-3.113 1.157-4.418"/></svg>
+                        <span id="lang-current">EN</span>
+                    </button>
+                    <div class="lang-dropdown" id="lang-dropdown"></div>
+                </div>
+                <a href="/login" class="px-5 py-2 rounded-lg bg-brand-500 text-white text-sm font-medium hover:bg-brand-600 transition-colors" data-i18n="nav.signin">Sign in</a>
+            </div>
+            <button id="mobile-menu-btn" class="md:hidden p-2" aria-label="Menu">
+                <svg class="w-6 h-6 text-gray-600" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M4 6h16M4 12h16M4 18h16"/></svg>
+            </button>
+        </div>
+        <div id="mobile-menu" class="md:hidden hidden border-t border-gray-100 bg-white px-6 py-4 space-y-3">
+            <a href="/" class="block text-sm text-gray-600 py-2" data-i18n="nav.home">Home</a>
+            <a href="/products" class="block text-sm text-gray-600 py-2" data-i18n="nav.product">Product</a>
+            <a href="/solutions" class="block text-sm text-gray-600 py-2" data-i18n="nav.solutions">Solutions</a>
+            <a href="/industries" class="block text-sm font-medium text-brand-500 py-2" data-i18n="nav.industries">Industries</a>
+            <a href="/offers" class="block text-sm text-gray-600 py-2" data-i18n="nav.offers">Offers</a>
+            <a href="/blog" class="block text-sm text-gray-600 py-2" data-i18n="nav.blog">Blog</a>
+            <a href="/reviews" class="block text-sm text-gray-600 py-2" data-i18n="nav.reviews">Reviews</a>
+            <a href="/support" class="block text-sm text-gray-600 py-2" data-i18n="nav.support">Support</a>
+            <a href="/tutorials" class="block text-sm text-gray-600 py-2" data-i18n="nav.tutorials">Tutorials</a>
+            <div id="mobile-lang-switcher" class="flex flex-wrap gap-2 py-2"></div>
+            <a href="/login" class="block w-full text-center text-sm font-medium text-white bg-brand-500 rounded-lg py-2.5" data-i18n="nav.signin">Sign in</a>
+        </div>
+    </nav>
+
+    <!-- LOADING -->
+    <div id="loading" class="pt-28 pb-20 px-6 text-center">
+        <div class="inline-block w-8 h-8 border-4 border-brand-500 border-t-transparent rounded-full animate-spin"></div>
+        <p class="mt-3 text-gray-400 text-sm" data-i18n="industry.loading">Loading...</p>
+    </div>
+
+    <!-- NOT FOUND -->
+    <div id="not-found" class="pt-28 pb-20 px-6 text-center hidden">
+        <svg class="w-20 h-20 mx-auto text-gray-300 mb-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.5"><path stroke-linecap="round" stroke-linejoin="round" d="M12 9v3.75m9-.75a9 9 0 11-18 0 9 9 0 0118 0zm-9 3.75h.008v.008H12v-.008z"/></svg>
+        <h1 class="text-3xl font-bold text-gray-900 mb-2" data-i18n="industry.notFoundTitle">Industry not found</h1>
+        <p class="text-gray-500 mb-6" data-i18n="industry.notFoundDescription">The requested industry page does not exist.</p>
+        <a href="/industries" class="inline-flex items-center gap-2 px-5 py-2.5 rounded-lg bg-brand-500 text-white text-sm font-medium hover:bg-brand-600 transition-colors" data-i18n="industry.backToIndustries">Back to industries</a>
+    </div>
+
+    <!-- INDUSTRY CONTENT (hidden until loaded) -->
+    <div id="industry-container" class="hidden">
+        <!-- HERO -->
+        <header id="industry-hero" class="pt-28 pb-16 px-6">
+            <div class="max-w-5xl mx-auto">
+                <div class="text-center lg:text-left">
+                    <a href="/industries" class="inline-flex items-center gap-1 text-sm text-brand-500 hover:text-brand-600 mb-4" data-i18n="industry.backToIndustries">&larr; All Industries</a>
+                    <h1 id="industry-name" class="text-4xl sm:text-5xl font-bold text-gray-900 leading-tight"></h1>
+                    <p id="industry-tagline" class="mt-3 text-xl text-gray-500"></p>
+                    <p id="industry-description" class="mt-4 text-base text-gray-500 max-w-3xl leading-relaxed"></p>
+                </div>
+            </div>
+        </header>
+
+        <!-- VALUE PROPOSITIONS -->
+        <section class="py-12 px-6 bg-gradient-to-b from-brand-50 to-white">
+            <div class="max-w-4xl mx-auto">
+                <h2 class="text-2xl font-bold text-gray-900 mb-8 text-center" data-i18n="industry.whyRainbow">Why Rainbow?</h2>
+                <div id="value-props" class="grid sm:grid-cols-2 gap-4"></div>
+            </div>
+        </section>
+
+        <!-- BENEFITS GRID -->
+        <section class="py-16 px-6">
+            <div class="max-w-5xl mx-auto">
+                <h2 class="text-2xl font-bold text-gray-900 mb-10 text-center" data-i18n="industry.benefitsTitle">Benefits by Role</h2>
+                <div id="benefits-grid"></div>
+            </div>
+        </section>
+
+        <!-- RELATED PRODUCTS -->
+        <section id="related-products-section" class="py-12 px-6 bg-gray-50 hidden">
+            <div class="max-w-5xl mx-auto">
+                <h2 class="text-2xl font-bold text-gray-900 mb-8 text-center" data-i18n="industry.relatedProducts">Recommended Products</h2>
+                <div id="related-products" class="grid sm:grid-cols-2 lg:grid-cols-3 gap-6"></div>
+            </div>
+        </section>
+
+        <!-- CTA -->
+        <section class="py-16 px-6 bg-gradient-to-r from-brand-600 via-brand-500 to-indigo-500">
+            <div class="max-w-2xl mx-auto text-center">
+                <h2 class="text-2xl font-bold text-white" data-i18n="industry.ctaTitle">Ready to get started?</h2>
+                <p class="mt-2 text-blue-100 text-sm" data-i18n="industry.ctaDescription">See how Rainbow can transform communication in your organization.</p>
+                <div class="mt-6 flex flex-col sm:flex-row gap-3 justify-center">
+                    <a href="/offers" class="px-7 py-3 rounded-lg bg-white text-brand-600 font-medium text-sm hover:bg-blue-50 transition-colors" data-i18n="industry.ctaViewPlans">View Plans</a>
+                    <a href="/support" class="px-7 py-3 rounded-lg border border-white/30 text-white font-medium text-sm hover:bg-white/10 transition-colors" data-i18n="industry.ctaContactUs">Contact Sales</a>
+                </div>
+            </div>
+        </section>
+    </div>
+
+    <!-- FOOTER -->
+    <footer class="bg-gray-900 text-gray-400 pt-16 pb-8 px-6">
+        <div class="max-w-6xl mx-auto">
+            <div class="grid sm:grid-cols-2 lg:grid-cols-4 gap-10 mb-12">
+                <div>
+                    <h4 class="text-white font-semibold text-sm mb-4" data-i18n="footer.product">Product</h4>
+                    <ul class="space-y-2 text-sm">
+                        <li><a href="/products" class="hover:text-white transition-colors" data-i18n="footer.allProducts">All Products</a></li>
+                        <li><a href="/solutions" class="hover:text-white transition-colors" data-i18n="footer.solutions">Solutions</a></li>
+                        <li><a href="/industries" class="hover:text-white transition-colors" data-i18n="footer.industries">Industries</a></li>
+                        <li><a href="/offers" class="hover:text-white transition-colors" data-i18n="footer.pricing">Pricing</a></li>
+                    </ul>
+                </div>
+                <div>
+                    <h4 class="text-white font-semibold text-sm mb-4" data-i18n="footer.resources">Resources</h4>
+                    <ul class="space-y-2 text-sm">
+                        <li><a href="/blog" class="hover:text-white transition-colors" data-i18n="footer.blog">Blog</a></li>
+                        <li><a href="/tutorials" class="hover:text-white transition-colors" data-i18n="footer.tutorials">Tutorials</a></li>
+                        <li><a href="#" class="hover:text-white transition-colors" data-i18n="footer.apiDocs">API Documentation</a></li>
+                        <li><a href="#" class="hover:text-white transition-colors" data-i18n="footer.changelog">Changelog</a></li>
+                    </ul>
+                </div>
+                <div>
+                    <h4 class="text-white font-semibold text-sm mb-4" data-i18n="footer.support">Support</h4>
+                    <ul class="space-y-2 text-sm">
+                        <li><a href="/support" class="hover:text-white transition-colors" data-i18n="footer.helpCenter">Help Center</a></li>
+                        <li><a href="/support" class="hover:text-white transition-colors" data-i18n="footer.contactUs">Contact Us</a></li>
+                        <li><a href="#" class="hover:text-white transition-colors" data-i18n="footer.serviceStatus">Service Status</a></li>
+                        <li><a href="/reviews" class="hover:text-white transition-colors" data-i18n="footer.customerReviews">Customer Reviews</a></li>
+                    </ul>
+                </div>
+                <div>
+                    <h4 class="text-white font-semibold text-sm mb-4" data-i18n="footer.company">Company</h4>
+                    <ul class="space-y-2 text-sm">
+                        <li><a href="#" class="hover:text-white transition-colors" data-i18n="footer.about">About</a></li>
+                        <li><a href="#" class="hover:text-white transition-colors" data-i18n="footer.careers">Careers</a></li>
+                        <li><a href="#" class="hover:text-white transition-colors" data-i18n="footer.legalNotice">Legal Notice</a></li>
+                        <li><a href="#" class="hover:text-white transition-colors" data-i18n="footer.privacyPolicy">Privacy Policy</a></li>
+                    </ul>
+                </div>
+            </div>
+            <div class="border-t border-gray-800 pt-6 text-center text-xs text-gray-500" data-i18n-html="footer.copyright">
+                &copy; 2026 Rainbow by Alcatel-Lucent Enterprise. All rights reserved.
+            </div>
+        </div>
+    </footer>
+
+    <script src="/js/i18n.js"></script>
+    <script>
+        document.getElementById('mobile-menu-btn').addEventListener('click', function() {
+            document.getElementById('mobile-menu').classList.toggle('hidden');
+        });
+        document.addEventListener('click', function(e) {
+            var sw = document.getElementById('lang-switcher');
+            if (sw && !sw.contains(e.target)) sw.classList.remove('open');
+        });
+
+        function t(k,f){return typeof i18n!=='undefined'?i18n.t(k,f):f;}
+        function esc(s) { var d = document.createElement('div'); d.textContent = s; return d.innerHTML; }
+
+        var colorMap = {
+            blue: { bg: 'bg-blue-50', text: 'text-blue-600', border: 'border-blue-100', heroBg: 'from-blue-50 via-white to-white' },
+            red: { bg: 'bg-red-50', text: 'text-red-600', border: 'border-red-100', heroBg: 'from-red-50 via-white to-white' },
+            amber: { bg: 'bg-amber-50', text: 'text-amber-600', border: 'border-amber-100', heroBg: 'from-amber-50 via-white to-white' },
+            indigo: { bg: 'bg-indigo-50', text: 'text-indigo-600', border: 'border-indigo-100', heroBg: 'from-indigo-50 via-white to-white' },
+            emerald: { bg: 'bg-emerald-50', text: 'text-emerald-600', border: 'border-emerald-100', heroBg: 'from-emerald-50 via-white to-white' }
+        };
+        var defaultColor = { bg: 'bg-gray-50', text: 'text-gray-600', border: 'border-gray-100', heroBg: 'from-gray-50 via-white to-white' };
+
+        async function loadIndustry() {
+            var slug = window.location.pathname.split('/').filter(Boolean).pop();
+            try {
+                var res = await fetch('/api/industries/' + encodeURIComponent(slug));
+                if (!res.ok) throw new Error('Not found');
+                var data = await res.json();
+
+                document.getElementById('loading').classList.add('hidden');
+                document.getElementById('industry-container').classList.remove('hidden');
+
+                var c = colorMap[data.color] || defaultColor;
+
+                // Update title
+                document.title = data.name + ' - Rainbow by Alcatel-Lucent Enterprise';
+
+                // Hero
+                document.getElementById('industry-hero').className = 'pt-28 pb-16 px-6 bg-gradient-to-br ' + c.heroBg;
+                document.getElementById('industry-name').textContent = data.name;
+                document.getElementById('industry-tagline').textContent = data.tagline || '';
+                document.getElementById('industry-description').textContent = data.description || '';
+
+                // Value Props
+                var vp = document.getElementById('value-props');
+                if (data.valueProps && data.valueProps.length) {
+                    vp.innerHTML = data.valueProps.map(function(v) {
+                        return '<div class="flex items-start gap-3 p-4 rounded-xl ' + c.bg + ' ' + c.border + ' border">' +
+                            '<svg class="w-5 h-5 mt-0.5 flex-shrink-0 ' + c.text + '" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M9 12.75L11.25 15 15 9.75M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>' +
+                            '<span class="text-sm text-gray-700">' + esc(v.text) + '</span>' +
+                        '</div>';
+                    }).join('');
+                }
+
+                // Benefits grouped by category
+                var bg = document.getElementById('benefits-grid');
+                if (data.benefits && data.benefits.length) {
+                    var groups = {};
+                    data.benefits.forEach(function(b) {
+                        var cat = b.category || 'General';
+                        if (!groups[cat]) groups[cat] = [];
+                        groups[cat].push(b);
+                    });
+
+                    var html = '<div class="grid sm:grid-cols-2 lg:grid-cols-3 gap-6">';
+                    Object.keys(groups).forEach(function(cat) {
+                        html += '<div class="bg-white rounded-xl border border-gray-100 shadow-sm p-6">' +
+                            '<h3 class="text-sm font-semibold uppercase tracking-wide ' + c.text + ' mb-4">' + esc(cat) + '</h3>' +
+                            '<div class="space-y-4">';
+                        groups[cat].forEach(function(b) {
+                            html += '<div>' +
+                                '<h4 class="text-sm font-semibold text-gray-900">' + esc(b.title) + '</h4>' +
+                                '<p class="text-xs text-gray-500 mt-1">' + esc(b.description || '') + '</p>' +
+                            '</div>';
+                        });
+                        html += '</div></div>';
+                    });
+                    html += '</div>';
+                    bg.innerHTML = html;
+                }
+
+                // Related products
+                if (data.products && data.products.length) {
+                    document.getElementById('related-products-section').classList.remove('hidden');
+                    var rp = document.getElementById('related-products');
+                    rp.innerHTML = data.products.map(function(p) {
+                        return '<a href="/product/' + esc(p.slug) + '" class="bg-white rounded-xl border border-gray-100 shadow-sm p-6 hover:shadow-lg transition-shadow block">' +
+                            '<h3 class="text-lg font-bold text-gray-900 mb-2">' + esc(p.name) + '</h3>' +
+                            '<p class="text-sm text-gray-500">' + esc(p.shortDescription || '') + '</p>' +
+                            '<span class="inline-flex items-center gap-1 text-sm font-medium text-brand-500 mt-3">' + t('industry.learnMore','Learn more') + ' &rarr;</span>' +
+                        '</a>';
+                    }).join('');
+                }
+
+            } catch(e) {
+                document.getElementById('loading').classList.add('hidden');
+                document.getElementById('not-found').classList.remove('hidden');
+            }
+        }
+
+        loadIndustry();
+    </script>
+</body>
+</html>

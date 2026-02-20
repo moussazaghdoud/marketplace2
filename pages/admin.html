@@ -79,6 +79,8 @@
         <div class="hidden md:flex items-center gap-6">
             <a href="/" class="text-sm text-gray-500 hover:text-gray-900 transition-colors">Home</a>
             <a href="/products" class="text-sm text-gray-500 hover:text-gray-900 transition-colors">Product</a>
+            <a href="/solutions" class="text-sm text-gray-500 hover:text-gray-900 transition-colors">Solutions</a>
+            <a href="/industries" class="text-sm text-gray-500 hover:text-gray-900 transition-colors">Industries</a>
             <a href="/offers" class="text-sm text-gray-500 hover:text-gray-900 transition-colors">Offers</a>
             <a href="/blog" class="text-sm text-gray-500 hover:text-gray-900 transition-colors">Blog</a>
             <a href="/reviews" class="text-sm text-gray-500 hover:text-gray-900 transition-colors">Reviews</a>
@@ -93,6 +95,8 @@
     <div id="mobile-menu" class="md:hidden hidden border-t border-gray-100 bg-white px-6 py-4 space-y-3">
         <a href="/" class="block text-sm text-gray-600 py-2">Home</a>
         <a href="/products" class="block text-sm text-gray-600 py-2">Product</a>
+        <a href="/solutions" class="block text-sm text-gray-600 py-2">Solutions</a>
+        <a href="/industries" class="block text-sm text-gray-600 py-2">Industries</a>
         <a href="/offers" class="block text-sm text-gray-600 py-2">Offers</a>
         <a href="/blog" class="block text-sm text-gray-600 py-2">Blog</a>
         <a href="/reviews" class="block text-sm text-gray-600 py-2">Reviews</a>
@@ -164,6 +168,10 @@
             <div class="sidebar-link" onclick="switchSection('subscriptions')" data-section="subscriptions">
                 <svg class="w-5 h-5" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M3 10h18M7 15h1m4 0h1m-7 4h12a3 3 0 003-3V8a3 3 0 00-3-3H6a3 3 0 00-3 3v8a3 3 0 003 3z"/></svg>
                 Subscriptions
+            </div>
+            <div class="sidebar-link" onclick="switchSection('industries')" data-section="industries">
+                <svg class="w-5 h-5" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M3.75 21h16.5M4.5 3h15M5.25 3v18m13.5-18v18M9 6.75h1.5m-1.5 3h1.5m-1.5 3h1.5m3-6H15m-1.5 3H15m-1.5 3H15M9 21v-3.375c0-.621.504-1.125 1.125-1.125h3.75c.621 0 1.125.504 1.125 1.125V21"/></svg>
+                Industries
             </div>
             <div class="sidebar-link" onclick="switchSection('blog')" data-section="blog">
                 <svg class="w-5 h-5" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M19 20H5a2 2 0 01-2-2V6a2 2 0 012-2h10a2 2 0 012 2v1m2 13a2 2 0 01-2-2V7m2 13a2 2 0 002-2V9a2 2 0 00-2-2h-2m-4-3H9M7 16h6M7 8h6v4H7V8z"/></svg>
@@ -468,6 +476,49 @@
                 </div>
             </div>
 
+            <!-- INDUSTRIES & SOLUTIONS -->
+            <div id="section-industries" class="section-panel hidden">
+                <h2 class="text-2xl font-bold text-gray-900 mb-6">Industries & Solutions</h2>
+
+                <!-- Sub-tabs -->
+                <div class="flex gap-1 mb-6 bg-gray-100 rounded-lg p-1 w-fit">
+                    <button onclick="switchIndustriesTab('industries')" class="ind-tab-btn content-tab-btn active" data-indtab="industries">Industries</button>
+                    <button onclick="switchIndustriesTab('solutions')" class="ind-tab-btn content-tab-btn" data-indtab="solutions">Solutions</button>
+                </div>
+
+                <!-- Industries Table -->
+                <div id="ind-tab-industries">
+                    <div class="flex items-center justify-between mb-4">
+                        <h3 class="text-lg font-semibold text-gray-900">Industries</h3>
+                        <button onclick="openIndustryModal()" class="btn btn-primary btn-sm">+ New Industry</button>
+                    </div>
+                    <div class="bg-white rounded-xl border border-gray-200 overflow-hidden">
+                        <div class="table-container">
+                            <table>
+                                <thead><tr><th>Name</th><th>Slug</th><th>Color</th><th>Order</th><th>Active</th><th>Actions</th></tr></thead>
+                                <tbody id="industries-tbody"></tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Solutions Table -->
+                <div id="ind-tab-solutions" class="hidden">
+                    <div class="flex items-center justify-between mb-4">
+                        <h3 class="text-lg font-semibold text-gray-900">Solutions</h3>
+                        <button onclick="openSolutionModal()" class="btn btn-primary btn-sm">+ New Solution</button>
+                    </div>
+                    <div class="bg-white rounded-xl border border-gray-200 overflow-hidden">
+                        <div class="table-container">
+                            <table>
+                                <thead><tr><th>Name</th><th>Category</th><th>Link</th><th>Order</th><th>Active</th><th>Actions</th></tr></thead>
+                                <tbody id="solutions-tbody"></tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
             <!-- TRANSLATIONS -->
             <div id="section-translations" class="section-panel hidden">
                 <h2 class="text-2xl font-bold text-gray-900 mb-6">Translations</h2>
@@ -633,6 +684,7 @@ function switchSection(name) {
         case 'blog': loadArticles(); loadCategories(); break;
         case 'reviews': loadReviews(); break;
         case 'contacts': loadContacts(); break;
+        case 'industries': loadAdminIndustries(); loadAdminSolutions(); break;
         case 'translations': loadTranslations(); break;
     }
 }
@@ -1761,6 +1813,278 @@ async function saveTranslations() {
     } finally {
         btn.textContent = 'Save Translations'; btn.disabled = false;
     }
+}
+
+// ======================== INDUSTRIES & SOLUTIONS ========================
+
+function switchIndustriesTab(tab) {
+    document.querySelectorAll('.ind-tab-btn').forEach(function(b){ b.classList.remove('active'); });
+    document.querySelector('.ind-tab-btn[data-indtab="'+tab+'"]').classList.add('active');
+    document.getElementById('ind-tab-industries').classList.toggle('hidden', tab !== 'industries');
+    document.getElementById('ind-tab-solutions').classList.toggle('hidden', tab !== 'solutions');
+}
+
+// --- Industries CRUD ---
+var industriesData = [];
+
+async function loadAdminIndustries() {
+    try {
+        var res = await apiFetch('/api/admin/industries');
+        industriesData = await res.json();
+        var tbody = document.getElementById('industries-tbody');
+        if (!industriesData.length) {
+            tbody.innerHTML = '<tr><td colspan="6" class="text-center text-gray-400 py-6">No industries yet.</td></tr>';
+            return;
+        }
+        tbody.innerHTML = industriesData.map(function(ind) {
+            return '<tr>' +
+                '<td class="font-medium text-gray-900">' + esc(ind.name) + '</td>' +
+                '<td>' + esc(ind.slug) + '</td>' +
+                '<td><span class="inline-block w-4 h-4 rounded" style="background:' + (ind.color || 'gray') + '"></span> ' + esc(ind.color || '') + '</td>' +
+                '<td>' + (ind.sort_order || 0) + '</td>' +
+                '<td>' + (ind.active ? statusBadge('active') : statusBadge('inactive')) + '</td>' +
+                '<td class="space-x-1">' +
+                    '<button onclick="editIndustry(\'' + ind.id + '\')" class="btn btn-secondary btn-sm">Edit</button>' +
+                    '<button onclick="deleteIndustry(\'' + ind.id + '\',\'' + esc(ind.name) + '\')" class="btn btn-danger btn-sm">Delete</button>' +
+                '</td>' +
+            '</tr>';
+        }).join('');
+    } catch(e) { console.error('Failed to load industries', e); }
+}
+
+function openIndustryModal(data) {
+    var isEdit = !!data;
+    var benefits = (data && data.benefits) || [];
+    var valueProps = (data && data.valueProps) || [];
+    var productIds = (data && data.productIds) || [];
+
+    var benefitsHtml = benefits.map(function(b,i) {
+        return '<div class="flex gap-2 mb-2 benefit-row">' +
+            '<input class="admin-input" style="width:25%" placeholder="Category" value="' + escAttr(b.category||'') + '" data-field="category">' +
+            '<input class="admin-input" style="width:30%" placeholder="Title" value="' + escAttr(b.title||'') + '" data-field="title">' +
+            '<input class="admin-input" style="width:35%" placeholder="Description" value="' + escAttr(b.description||'') + '" data-field="description">' +
+            '<button onclick="this.parentElement.remove()" class="text-red-500 text-sm flex-shrink-0">&times;</button>' +
+        '</div>';
+    }).join('');
+
+    var valuePropsHtml = valueProps.map(function(v,i) {
+        var text = typeof v === 'string' ? v : v.text;
+        return '<div class="flex gap-2 mb-2 vp-row">' +
+            '<input class="admin-input flex-1" placeholder="Value proposition" value="' + escAttr(text||'') + '" data-field="text">' +
+            '<button onclick="this.parentElement.remove()" class="text-red-500 text-sm flex-shrink-0">&times;</button>' +
+        '</div>';
+    }).join('');
+
+    showModal(
+        '<h3 class="text-lg font-bold text-gray-900 mb-4">' + (isEdit ? 'Edit' : 'New') + ' Industry</h3>' +
+        '<div class="space-y-3">' +
+            '<div class="grid grid-cols-2 gap-3">' +
+                '<div><label class="block text-xs font-medium text-gray-600 mb-1">Name</label><input id="ind-name" class="admin-input" value="' + escAttr((data&&data.name)||'') + '"></div>' +
+                '<div><label class="block text-xs font-medium text-gray-600 mb-1">Slug</label><input id="ind-slug" class="admin-input" value="' + escAttr((data&&data.slug)||'') + '"></div>' +
+            '</div>' +
+            '<div><label class="block text-xs font-medium text-gray-600 mb-1">Tagline</label><input id="ind-tagline" class="admin-input" value="' + escAttr((data&&data.tagline)||'') + '"></div>' +
+            '<div><label class="block text-xs font-medium text-gray-600 mb-1">Description</label><textarea id="ind-desc" class="admin-input admin-textarea">' + esc((data&&data.description)||'') + '</textarea></div>' +
+            '<div class="grid grid-cols-3 gap-3">' +
+                '<div><label class="block text-xs font-medium text-gray-600 mb-1">Icon</label><input id="ind-icon" class="admin-input" value="' + escAttr((data&&data.icon)||'') + '"></div>' +
+                '<div><label class="block text-xs font-medium text-gray-600 mb-1">Color</label><input id="ind-color" class="admin-input" value="' + escAttr((data&&data.color)||'') + '" placeholder="blue, red, amber..."></div>' +
+                '<div><label class="block text-xs font-medium text-gray-600 mb-1">Sort Order</label><input id="ind-order" class="admin-input" type="number" value="' + ((data&&data.sort_order)||0) + '"></div>' +
+            '</div>' +
+            '<div><label class="inline-flex items-center gap-2 text-sm"><input type="checkbox" id="ind-active" ' + ((!data || data.active) ? 'checked' : '') + '> Active</label></div>' +
+            '<hr class="my-2">' +
+            '<div><label class="block text-xs font-medium text-gray-600 mb-1">Value Propositions</label><div id="vp-container">' + valuePropsHtml + '</div><button onclick="addVPRow()" class="text-sm text-brand-500 mt-1">+ Add value prop</button></div>' +
+            '<hr class="my-2">' +
+            '<div><label class="block text-xs font-medium text-gray-600 mb-1">Benefits</label><div id="benefits-container">' + benefitsHtml + '</div><button onclick="addBenefitRow()" class="text-sm text-brand-500 mt-1">+ Add benefit</button></div>' +
+        '</div>' +
+        '<div class="flex justify-end gap-2 mt-4">' +
+            '<button onclick="closeModal()" class="btn btn-secondary">Cancel</button>' +
+            '<button onclick="saveIndustry(' + (isEdit ? "'" + data.id + "'" : 'null') + ')" class="btn btn-primary" id="ind-save-btn">' + (isEdit ? 'Update' : 'Create') + '</button>' +
+        '</div>', true
+    );
+}
+
+function addVPRow() {
+    var c = document.getElementById('vp-container');
+    c.insertAdjacentHTML('beforeend',
+        '<div class="flex gap-2 mb-2 vp-row">' +
+            '<input class="admin-input flex-1" placeholder="Value proposition" data-field="text">' +
+            '<button onclick="this.parentElement.remove()" class="text-red-500 text-sm flex-shrink-0">&times;</button>' +
+        '</div>'
+    );
+}
+
+function addBenefitRow() {
+    var c = document.getElementById('benefits-container');
+    c.insertAdjacentHTML('beforeend',
+        '<div class="flex gap-2 mb-2 benefit-row">' +
+            '<input class="admin-input" style="width:25%" placeholder="Category" data-field="category">' +
+            '<input class="admin-input" style="width:30%" placeholder="Title" data-field="title">' +
+            '<input class="admin-input" style="width:35%" placeholder="Description" data-field="description">' +
+            '<button onclick="this.parentElement.remove()" class="text-red-500 text-sm flex-shrink-0">&times;</button>' +
+        '</div>'
+    );
+}
+
+async function editIndustry(id) {
+    try {
+        var res = await apiFetch('/api/admin/industries/' + id);
+        var data = await res.json();
+        openIndustryModal(data);
+    } catch(e) { showToast('Failed to load industry', 'error'); }
+}
+
+async function saveIndustry(id) {
+    var btn = document.getElementById('ind-save-btn');
+    btn.disabled = true; btn.textContent = 'Saving...';
+
+    var valueProps = [];
+    document.querySelectorAll('#vp-container .vp-row').forEach(function(row) {
+        var text = row.querySelector('[data-field="text"]').value.trim();
+        if (text) valueProps.push({ text: text });
+    });
+
+    var benefits = [];
+    document.querySelectorAll('#benefits-container .benefit-row').forEach(function(row) {
+        var title = row.querySelector('[data-field="title"]').value.trim();
+        if (title) benefits.push({
+            category: row.querySelector('[data-field="category"]').value.trim(),
+            title: title,
+            description: row.querySelector('[data-field="description"]').value.trim()
+        });
+    });
+
+    var body = {
+        name: document.getElementById('ind-name').value.trim(),
+        slug: document.getElementById('ind-slug').value.trim(),
+        tagline: document.getElementById('ind-tagline').value.trim(),
+        description: document.getElementById('ind-desc').value.trim(),
+        icon: document.getElementById('ind-icon').value.trim(),
+        color: document.getElementById('ind-color').value.trim(),
+        sort_order: parseInt(document.getElementById('ind-order').value) || 0,
+        active: document.getElementById('ind-active').checked ? 1 : 0,
+        valueProps: valueProps,
+        benefits: benefits
+    };
+
+    try {
+        var res = await apiFetch('/api/admin/industries' + (id ? '/' + id : ''), {
+            method: id ? 'PUT' : 'POST',
+            body: body
+        });
+        var data = await res.json();
+        if (!res.ok) throw new Error(data.error || 'Save failed');
+        closeModal();
+        showToast(id ? 'Industry updated' : 'Industry created');
+        loadAdminIndustries();
+    } catch(e) {
+        showToast(e.message, 'error');
+    } finally {
+        btn.disabled = false; btn.textContent = id ? 'Update' : 'Create';
+    }
+}
+
+async function deleteIndustry(id, name) {
+    if (!confirm('Delete industry "' + name + '"? This cannot be undone.')) return;
+    try {
+        await apiFetch('/api/admin/industries/' + id, { method: 'DELETE' });
+        showToast('Industry deleted');
+        loadAdminIndustries();
+    } catch(e) { showToast('Failed to delete', 'error'); }
+}
+
+// --- Solutions CRUD ---
+var solutionsData = [];
+
+async function loadAdminSolutions() {
+    try {
+        var res = await apiFetch('/api/admin/solutions');
+        solutionsData = await res.json();
+        var tbody = document.getElementById('solutions-tbody');
+        if (!solutionsData.length) {
+            tbody.innerHTML = '<tr><td colspan="6" class="text-center text-gray-400 py-6">No solutions yet.</td></tr>';
+            return;
+        }
+        tbody.innerHTML = solutionsData.map(function(s) {
+            return '<tr>' +
+                '<td class="font-medium text-gray-900">' + esc(s.name) + '</td>' +
+                '<td>' + esc(s.category || '') + '</td>' +
+                '<td><a href="' + esc(s.linkUrl || '#') + '" class="text-brand-500 text-xs">' + esc(s.linkUrl || '-') + '</a></td>' +
+                '<td>' + (s.sort_order || 0) + '</td>' +
+                '<td>' + (s.active ? statusBadge('active') : statusBadge('inactive')) + '</td>' +
+                '<td class="space-x-1">' +
+                    '<button onclick="openSolutionModal(solutionsData.find(function(x){return x.id===\'' + s.id + '\'}))" class="btn btn-secondary btn-sm">Edit</button>' +
+                    '<button onclick="deleteSolution(\'' + s.id + '\',\'' + esc(s.name) + '\')" class="btn btn-danger btn-sm">Delete</button>' +
+                '</td>' +
+            '</tr>';
+        }).join('');
+    } catch(e) { console.error('Failed to load solutions', e); }
+}
+
+function openSolutionModal(data) {
+    var isEdit = !!data;
+    showModal(
+        '<h3 class="text-lg font-bold text-gray-900 mb-4">' + (isEdit ? 'Edit' : 'New') + ' Solution</h3>' +
+        '<div class="space-y-3">' +
+            '<div class="grid grid-cols-2 gap-3">' +
+                '<div><label class="block text-xs font-medium text-gray-600 mb-1">Name</label><input id="sol-name" class="admin-input" value="' + escAttr((data&&data.name)||'') + '"></div>' +
+                '<div><label class="block text-xs font-medium text-gray-600 mb-1">Slug</label><input id="sol-slug" class="admin-input" value="' + escAttr((data&&data.slug)||'') + '"></div>' +
+            '</div>' +
+            '<div><label class="block text-xs font-medium text-gray-600 mb-1">Description</label><textarea id="sol-desc" class="admin-input admin-textarea">' + esc((data&&data.description)||'') + '</textarea></div>' +
+            '<div class="grid grid-cols-2 gap-3">' +
+                '<div><label class="block text-xs font-medium text-gray-600 mb-1">Category</label><input id="sol-category" class="admin-input" value="' + escAttr((data&&data.category)||'') + '" placeholder="Digital Age Communications"></div>' +
+                '<div><label class="block text-xs font-medium text-gray-600 mb-1">Link URL</label><input id="sol-link" class="admin-input" value="' + escAttr((data&&data.linkUrl)||'') + '" placeholder="/product/rainbow or https://..."></div>' +
+            '</div>' +
+            '<div class="grid grid-cols-2 gap-3">' +
+                '<div><label class="block text-xs font-medium text-gray-600 mb-1">Icon</label><input id="sol-icon" class="admin-input" value="' + escAttr((data&&data.icon)||'') + '"></div>' +
+                '<div><label class="block text-xs font-medium text-gray-600 mb-1">Sort Order</label><input id="sol-order" class="admin-input" type="number" value="' + ((data&&data.sort_order)||0) + '"></div>' +
+            '</div>' +
+            '<div><label class="inline-flex items-center gap-2 text-sm"><input type="checkbox" id="sol-active" ' + ((!data || data.active) ? 'checked' : '') + '> Active</label></div>' +
+        '</div>' +
+        '<div class="flex justify-end gap-2 mt-4">' +
+            '<button onclick="closeModal()" class="btn btn-secondary">Cancel</button>' +
+            '<button onclick="saveSolution(' + (isEdit ? "'" + data.id + "'" : 'null') + ')" class="btn btn-primary" id="sol-save-btn">' + (isEdit ? 'Update' : 'Create') + '</button>' +
+        '</div>'
+    );
+}
+
+async function saveSolution(id) {
+    var btn = document.getElementById('sol-save-btn');
+    btn.disabled = true; btn.textContent = 'Saving...';
+
+    var body = {
+        name: document.getElementById('sol-name').value.trim(),
+        slug: document.getElementById('sol-slug').value.trim(),
+        description: document.getElementById('sol-desc').value.trim(),
+        category: document.getElementById('sol-category').value.trim(),
+        icon: document.getElementById('sol-icon').value.trim(),
+        linkUrl: document.getElementById('sol-link').value.trim(),
+        sort_order: parseInt(document.getElementById('sol-order').value) || 0,
+        active: document.getElementById('sol-active').checked ? 1 : 0
+    };
+
+    try {
+        var res = await apiFetch('/api/admin/solutions' + (id ? '/' + id : ''), {
+            method: id ? 'PUT' : 'POST',
+            body: body
+        });
+        var data = await res.json();
+        if (!res.ok) throw new Error(data.error || 'Save failed');
+        closeModal();
+        showToast(id ? 'Solution updated' : 'Solution created');
+        loadAdminSolutions();
+    } catch(e) {
+        showToast(e.message, 'error');
+    } finally {
+        btn.disabled = false; btn.textContent = id ? 'Update' : 'Create';
+    }
+}
+
+async function deleteSolution(id, name) {
+    if (!confirm('Delete solution "' + name + '"? This cannot be undone.')) return;
+    try {
+        await apiFetch('/api/admin/solutions/' + id, { method: 'DELETE' });
+        showToast('Solution deleted');
+        loadAdminSolutions();
+    } catch(e) { showToast('Failed to delete', 'error'); }
 }
 </script>
 </body>

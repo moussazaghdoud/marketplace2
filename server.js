@@ -288,6 +288,9 @@ app.get('/product/:slug', (req, res) => sendPage(req, res, path.join(__dirname, 
 app.get('/offers', (req, res) => sendPage(req, res, path.join(__dirname, 'pages', 'offers.html')));
 app.get('/verify-email', (req, res) => sendPage(req, res, path.join(__dirname, 'pages', 'verify-email.html')));
 app.get('/reset-password', (req, res) => sendPage(req, res, path.join(__dirname, 'pages', 'reset-password.html')));
+app.get('/industries', (req, res) => sendPage(req, res, path.join(__dirname, 'pages', 'industries.html')));
+app.get('/industries/:slug', (req, res) => sendPage(req, res, path.join(__dirname, 'pages', 'industry.html')));
+app.get('/solutions', (req, res) => sendPage(req, res, path.join(__dirname, 'pages', 'solutions.html')));
 
 // ===================== API ROUTES =====================
 
@@ -302,6 +305,8 @@ app.use('/api/admin/products', require('./routes/admin-products'));
 app.use('/api/admin/subscriptions', require('./routes/admin-subscriptions'));
 app.use('/api/admin/blog', require('./routes/admin-blog'));
 app.use('/api/admin/i18n', require('./routes/admin-i18n'));
+app.use('/api/admin/industries', require('./routes/admin-industries'));
+app.use('/api/admin/solutions', require('./routes/admin-solutions'));
 
 // Admin audit log
 app.get('/api/admin/audit-log', adminAuth, (req, res) => {
@@ -327,6 +332,8 @@ app.get('/api/client/invoices', require('./routes/client-payment'));
 app.use('/api/blog', require('./routes/public-blog'));
 app.use('/api/reviews', require('./routes/public-reviews'));
 app.use('/api/contact', require('./routes/public-contact'));
+app.use('/api/industries', require('./routes/public-industries'));
+app.use('/api/solutions', require('./routes/public-solutions'));
 
 // Public product list
 app.get('/api/products', (req, res) => {

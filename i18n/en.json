@@ -7,6 +7,8 @@
     "reviews": "Reviews",
     "support": "Support",
     "tutorials": "Tutorials",
+    "solutions": "Solutions",
+    "industries": "Industries",
     "signin": "Sign in"
   },
   "home": {
@@ -47,6 +49,8 @@
     "clientPortal": "Client Portal",
     "admin": "Admin",
     "rainbow": "Rainbow",
+    "solutions": "Solutions",
+    "industries": "Industries",
     "copyright": "&copy; 2026 Rainbow by Alcatel-Lucent Enterprise. All rights reserved.",
     "copyrightShort": "&copy; 2026 Rainbow by ALE. All rights reserved."
   },
@@ -397,6 +401,45 @@
       "ctaText": "Free 30-day trial",
       "features": ["Everything in Business +", "Conference up to 1000 participants", "Webinars & events", "Cloud telephony (SIP/PSTN)", "Unlimited storage", "Developer API & SDK", "99.99% SLA guaranteed", "Dedicated Customer Success Manager", "SSO & advanced security"]
     }
+  },
+  "industries": {
+    "heroTag": "Industries We Serve",
+    "heroTitle": "Solutions Tailored to Your Industry",
+    "heroDescription": "Rainbow adapts to the unique needs of your sector with purpose-built communication and collaboration tools.",
+    "loading": "Loading industries...",
+    "noIndustries": "No industries available yet.",
+    "loadError": "Failed to load industries.",
+    "explore": "Explore",
+    "ctaTitle": "Don't see your industry?",
+    "ctaDescription": "Rainbow works for any business. Contact us to discuss your specific needs.",
+    "ctaBtn": "Contact Us"
+  },
+  "industry": {
+    "loading": "Loading...",
+    "notFoundTitle": "Industry not found",
+    "notFoundDescription": "The requested industry page does not exist.",
+    "backToIndustries": "All Industries",
+    "whyRainbow": "Why Rainbow?",
+    "benefitsTitle": "Benefits by Role",
+    "relatedProducts": "Recommended Products",
+    "learnMore": "Learn more",
+    "ctaTitle": "Ready to get started?",
+    "ctaDescription": "See how Rainbow can transform communication in your organization.",
+    "ctaViewPlans": "View Plans",
+    "ctaContactUs": "Contact Sales"
+  },
+  "solutions": {
+    "heroTag": "Our Portfolio",
+    "heroTitle": "ALE Solutions",
+    "heroDescription": "From unified communications to enterprise networking, discover the complete Alcatel-Lucent Enterprise portfolio.",
+    "loading": "Loading solutions...",
+    "noSolutions": "No solutions available yet.",
+    "loadError": "Failed to load solutions.",
+    "learnMore": "Learn more",
+    "comingSoon": "Coming soon",
+    "ctaTitle": "Need help choosing?",
+    "ctaDescription": "Our team can help you find the right solution for your business.",
+    "ctaBtn": "Talk to Sales"
   },
   "lang": {
     "en": "English",

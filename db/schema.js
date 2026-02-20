@@ -167,6 +167,63 @@ function createTables() {
             data TEXT NOT NULL,
             updatedAt TEXT DEFAULT (datetime('now'))
         );
+
+        CREATE TABLE IF NOT EXISTS industries (
+            id TEXT PRIMARY KEY,
+            slug TEXT UNIQUE NOT NULL,
+            name TEXT NOT NULL,
+            tagline TEXT,
+            description TEXT,
+            heroImage TEXT,
+            icon TEXT,
+            color TEXT,
+            sort_order INTEGER DEFAULT 0,
+            active INTEGER DEFAULT 1,
+            createdAt TEXT DEFAULT (datetime('now')),
+            updatedAt TEXT DEFAULT (datetime('now'))
+        );
+
+        CREATE TABLE IF NOT EXISTS industry_benefits (
+            id TEXT PRIMARY KEY,
+            industryId TEXT NOT NULL,
+            category TEXT,
+            title TEXT NOT NULL,
+            description TEXT,
+            icon TEXT,
+            sort_order INTEGER DEFAULT 0,
+            FOREIGN KEY (industryId) REFERENCES industries(id) ON DELETE CASCADE
+        );
+
+        CREATE TABLE IF NOT EXISTS industry_value_props (
+            id TEXT PRIMARY KEY,
+            industryId TEXT NOT NULL,
+            text TEXT NOT NULL,
+            sort_order INTEGER DEFAULT 0,
+            FOREIGN KEY (industryId) REFERENCES industries(id) ON DELETE CASCADE
+        );
+
+        CREATE TABLE IF NOT EXISTS industry_products (
+            industryId TEXT NOT NULL,
+            productId TEXT NOT NULL,
+            sort_order INTEGER DEFAULT 0,
+            PRIMARY KEY (industryId, productId),
+            FOREIGN KEY (industryId) REFERENCES industries(id) ON DELETE CASCADE,
+            FOREIGN KEY (productId) REFERENCES products(id) ON DELETE CASCADE
+        );
+
+        CREATE TABLE IF NOT EXISTS solutions (
+            id TEXT PRIMARY KEY,
+            slug TEXT UNIQUE NOT NULL,
+            name TEXT NOT NULL,
+            description TEXT,
+            category TEXT,
+            icon TEXT,
+            linkUrl TEXT,
+            sort_order INTEGER DEFAULT 0,
+            active INTEGER DEFAULT 1,
+            createdAt TEXT DEFAULT (datetime('now')),
+            updatedAt TEXT DEFAULT (datetime('now'))
+        );
     `);
 
     console.log('Database tables created successfully');
