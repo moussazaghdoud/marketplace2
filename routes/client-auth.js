@@ -134,8 +134,12 @@ router.post('/verify-code', async (req, res) => {
             } else {
                 // Extract a human-readable error message from Rainbow
                 let errMsg = 'Invalid verification code';
-                // Prioritize detailed error info over generic status text
-                if (rbData.errorDetails && typeof rbData.errorDetails === 'object') {
+                const fullResp = JSON.stringify(rbData).toLowerCase();
+                // Check if errorDetails is an array (Rainbow validation errors)
+                if (Array.isArray(rbData.errorDetails)) {
+                    const first = rbData.errorDetails[0];
+                    if (first && first.msg) errMsg = first.msg;
+                } else if (rbData.errorDetails && typeof rbData.errorDetails === 'object') {
                     errMsg = rbData.errorDetails.description || rbData.errorDetails.msg || rbData.errorDetails.message || JSON.stringify(rbData.errorDetails);
                 } else if (typeof rbData.errorDetails === 'string' && rbData.errorDetails !== 'Bad Request') {
                     errMsg = rbData.errorDetails;
@@ -148,12 +152,15 @@ router.post('/verify-code', async (req, res) => {
                 }
                 // If still generic, try to give a better hint
                 if (errMsg === 'Invalid verification code' || errMsg === 'Bad Request') {
-                    const fullResp = JSON.stringify(rbData);
-                    if (fullResp.toLowerCase().includes('password')) {
-                        errMsg = 'Password does not meet requirements. Use at least 8 characters with uppercase, lowercase, number and special character.';
-                    } else if (fullResp.toLowerCase().includes('token') || fullResp.toLowerCase().includes('code')) {
+                    if (fullResp.includes('password')) {
+                        errMsg = 'Password does not meet Rainbow requirements: 12-64 characters, with at least 1 lowercase, 1 uppercase, 1 number and 1 special character.';
+                    } else if (fullResp.includes('token') || fullResp.includes('code')) {
                         errMsg = 'Invalid or expired verification code. Please try again.';
                     }
+                }
+                // Clean up Rainbow's verbose password messages
+                if (errMsg.toLowerCase().includes('expected a password matching')) {
+                    errMsg = 'Password does not meet Rainbow requirements: 12-64 characters, with at least 1 lowercase, 1 uppercase, 1 number and 1 special character.';
                 }
                 console.log('[Rainbow] Verify error detail:', errMsg, '| Full response:', JSON.stringify(rbData));
                 return res.status(400).json({ error: errMsg });
