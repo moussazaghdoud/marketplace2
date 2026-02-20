@@ -3,8 +3,8 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Industry - Rainbow by Alcatel-Lucent Enterprise</title>
-    <meta name="description" content="Discover how Rainbow serves your industry with tailored communication and collaboration solutions.">
+    <title>About - Rainbow by Alcatel-Lucent Enterprise</title>
+    <meta name="description" content="Learn about Alcatel-Lucent Enterprise and the Rainbow cloud communication platform. Over 100 years of innovation in enterprise networking and communications.">
     <script src="https://cdn.tailwindcss.com"></script>
     <script>
         tailwind.config = {
@@ -45,7 +45,7 @@
                 <a href="/" class="text-sm text-gray-500 hover:text-gray-900 transition-colors" data-i18n="nav.home">Home</a>
                 <a href="/products" class="text-sm text-gray-500 hover:text-gray-900 transition-colors" data-i18n="nav.product">Product</a>
                 <a href="/solutions" class="text-sm text-gray-500 hover:text-gray-900 transition-colors" data-i18n="nav.solutions">Solutions</a>
-                <a href="/industries" class="text-sm font-medium text-brand-500 transition-colors" data-i18n="nav.industries">Industries</a>
+                <a href="/industries" class="text-sm text-gray-500 hover:text-gray-900 transition-colors" data-i18n="nav.industries">Industries</a>
                 <a href="/offers" class="text-sm text-gray-500 hover:text-gray-900 transition-colors" data-i18n="nav.offers">Offers</a>
                 <a href="/blog" class="text-sm text-gray-500 hover:text-gray-900 transition-colors" data-i18n="nav.blog">Blog</a>
                 <a href="/reviews" class="text-sm text-gray-500 hover:text-gray-900 transition-colors" data-i18n="nav.reviews">Reviews</a>
@@ -68,7 +68,7 @@
             <a href="/" class="block text-sm text-gray-600 py-2" data-i18n="nav.home">Home</a>
             <a href="/products" class="block text-sm text-gray-600 py-2" data-i18n="nav.product">Product</a>
             <a href="/solutions" class="block text-sm text-gray-600 py-2" data-i18n="nav.solutions">Solutions</a>
-            <a href="/industries" class="block text-sm font-medium text-brand-500 py-2" data-i18n="nav.industries">Industries</a>
+            <a href="/industries" class="block text-sm text-gray-600 py-2" data-i18n="nav.industries">Industries</a>
             <a href="/offers" class="block text-sm text-gray-600 py-2" data-i18n="nav.offers">Offers</a>
             <a href="/blog" class="block text-sm text-gray-600 py-2" data-i18n="nav.blog">Blog</a>
             <a href="/reviews" class="block text-sm text-gray-600 py-2" data-i18n="nav.reviews">Reviews</a>
@@ -79,70 +79,93 @@
         </div>
     </nav>
 
-    <!-- LOADING -->
-    <div id="loading" class="pt-28 pb-20 px-6 text-center">
-        <div class="inline-block w-8 h-8 border-4 border-brand-500 border-t-transparent rounded-full animate-spin"></div>
-        <p class="mt-3 text-gray-400 text-sm" data-i18n="industry.loading">Loading...</p>
-    </div>
+    <!-- HERO -->
+    <header class="pt-28 pb-16 px-6 bg-gradient-to-br from-brand-100 via-white to-white">
+        <div class="max-w-5xl mx-auto text-center">
+            <span class="inline-block px-3 py-1 rounded-full text-xs font-medium bg-brand-50 text-brand-600 mb-4" data-i18n="about.heroTag">About Us</span>
+            <h1 class="text-4xl sm:text-5xl font-bold text-gray-900 leading-tight" data-i18n="about.heroTitle">Connecting the World Through Innovation</h1>
+            <p class="mt-4 text-lg text-gray-500 max-w-2xl mx-auto" data-i18n="about.heroDescription">Alcatel-Lucent Enterprise delivers secure, reliable and innovative communication solutions to over 830,000 customers worldwide.</p>
+        </div>
+    </header>
 
-    <!-- NOT FOUND -->
-    <div id="not-found" class="pt-28 pb-20 px-6 text-center hidden">
-        <svg class="w-20 h-20 mx-auto text-gray-300 mb-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.5"><path stroke-linecap="round" stroke-linejoin="round" d="M12 9v3.75m9-.75a9 9 0 11-18 0 9 9 0 0118 0zm-9 3.75h.008v.008H12v-.008z"/></svg>
-        <h1 class="text-3xl font-bold text-gray-900 mb-2" data-i18n="industry.notFoundTitle">Industry not found</h1>
-        <p class="text-gray-500 mb-6" data-i18n="industry.notFoundDescription">The requested industry page does not exist.</p>
-        <a href="/industries" class="inline-flex items-center gap-2 px-5 py-2.5 rounded-lg bg-brand-500 text-white text-sm font-medium hover:bg-brand-600 transition-colors" data-i18n="industry.backToIndustries">Back to industries</a>
-    </div>
+    <!-- STORY -->
+    <section class="py-16 px-6">
+        <div class="max-w-4xl mx-auto">
+            <h2 class="text-2xl font-bold text-gray-900 mb-6" data-i18n="about.storyTitle">Our Story</h2>
+            <div class="prose prose-gray max-w-none space-y-4 text-gray-600 leading-relaxed">
+                <p data-i18n="about.storyP1">Alcatel-Lucent Enterprise (ALE) is a leading provider of communications solutions and services, with a heritage spanning over a century of engineering excellence. Headquartered in France, ALE serves businesses, governments and institutions in more than 100 countries.</p>
+                <p data-i18n="about.storyP2">Rainbow, our flagship cloud communication platform, was created with a clear mission: to make enterprise collaboration simple, secure and accessible for organizations of every size. Combining messaging, video conferencing, cloud telephony and business integrations, Rainbow is the bridge between traditional infrastructure and the digital workplace.</p>
+                <p data-i18n="about.storyP3">Today, ALE employs over 2,300 people worldwide and partners with a network of 3,100+ business partners to deliver solutions tailored to each customer's unique needs.</p>
+            </div>
+        </div>
+    </section>
 
-    <!-- INDUSTRY CONTENT (hidden until loaded) -->
-    <div id="industry-container" class="hidden">
-        <!-- HERO -->
-        <header id="industry-hero" class="pt-28 pb-16 px-6">
-            <div class="max-w-5xl mx-auto">
-                <div class="text-center lg:text-left">
-                    <a href="/industries" class="inline-flex items-center gap-1 text-sm text-brand-500 hover:text-brand-600 mb-4" data-i18n="industry.backToIndustries">&larr; All Industries</a>
-                    <h1 id="industry-name" class="text-4xl sm:text-5xl font-bold text-gray-900 leading-tight"></h1>
-                    <p id="industry-tagline" class="mt-3 text-xl text-gray-500"></p>
-                    <p id="industry-description" class="mt-4 text-base text-gray-500 max-w-3xl leading-relaxed"></p>
+    <!-- KEY FIGURES -->
+    <section class="py-16 px-6 bg-gray-50">
+        <div class="max-w-5xl mx-auto">
+            <h2 class="text-2xl font-bold text-gray-900 mb-10 text-center" data-i18n="about.figuresTitle">ALE at a Glance</h2>
+            <div class="grid sm:grid-cols-2 lg:grid-cols-4 gap-6">
+                <div class="bg-white rounded-xl border border-gray-100 p-6 text-center">
+                    <p class="text-3xl font-bold text-brand-500">100+</p>
+                    <p class="text-sm text-gray-500 mt-1" data-i18n="about.figYears">Years of Innovation</p>
+                </div>
+                <div class="bg-white rounded-xl border border-gray-100 p-6 text-center">
+                    <p class="text-3xl font-bold text-brand-500">830K+</p>
+                    <p class="text-sm text-gray-500 mt-1" data-i18n="about.figCustomers">Customers Worldwide</p>
+                </div>
+                <div class="bg-white rounded-xl border border-gray-100 p-6 text-center">
+                    <p class="text-3xl font-bold text-brand-500">100+</p>
+                    <p class="text-sm text-gray-500 mt-1" data-i18n="about.figCountries">Countries Served</p>
+                </div>
+                <div class="bg-white rounded-xl border border-gray-100 p-6 text-center">
+                    <p class="text-3xl font-bold text-brand-500">3,100+</p>
+                    <p class="text-sm text-gray-500 mt-1" data-i18n="about.figPartners">Business Partners</p>
                 </div>
             </div>
-        </header>
+        </div>
+    </section>
 
-        <!-- VALUE PROPOSITIONS -->
-        <section class="py-12 px-6 bg-gradient-to-b from-brand-50 to-white">
-            <div class="max-w-4xl mx-auto">
-                <h2 class="text-2xl font-bold text-gray-900 mb-8 text-center" data-i18n="industry.whyRainbow">Why Rainbow?</h2>
-                <div id="value-props" class="grid sm:grid-cols-2 gap-4"></div>
-            </div>
-        </section>
-
-        <!-- BENEFITS GRID -->
-        <section class="py-16 px-6">
-            <div class="max-w-5xl mx-auto">
-                <h2 class="text-2xl font-bold text-gray-900 mb-10 text-center" data-i18n="industry.benefitsTitle">Benefits by Role</h2>
-                <div id="benefits-grid"></div>
-            </div>
-        </section>
-
-        <!-- RELATED PRODUCTS -->
-        <section id="related-products-section" class="py-12 px-6 bg-gray-50 hidden">
-            <div class="max-w-5xl mx-auto">
-                <h2 class="text-2xl font-bold text-gray-900 mb-8 text-center" data-i18n="industry.relatedProducts">Recommended Products</h2>
-                <div id="related-products" class="grid sm:grid-cols-2 lg:grid-cols-3 gap-6"></div>
-            </div>
-        </section>
-
-        <!-- CTA -->
-        <section class="py-16 px-6 bg-gradient-to-r from-brand-600 via-brand-500 to-indigo-500">
-            <div class="max-w-2xl mx-auto text-center">
-                <h2 class="text-2xl font-bold text-white" data-i18n="industry.ctaTitle">Ready to get started?</h2>
-                <p class="mt-2 text-blue-100 text-sm" data-i18n="industry.ctaDescription">See how Rainbow can transform communication in your organization.</p>
-                <div class="mt-6 flex flex-col sm:flex-row gap-3 justify-center">
-                    <a href="/offers" class="px-7 py-3 rounded-lg bg-white text-brand-600 font-medium text-sm hover:bg-blue-50 transition-colors" data-i18n="industry.ctaViewPlans">View Plans</a>
-                    <a href="/support" class="px-7 py-3 rounded-lg border border-white/30 text-white font-medium text-sm hover:bg-white/10 transition-colors" data-i18n="industry.ctaContactUs">Contact Sales</a>
+    <!-- VALUES -->
+    <section class="py-16 px-6">
+        <div class="max-w-5xl mx-auto">
+            <h2 class="text-2xl font-bold text-gray-900 mb-10 text-center" data-i18n="about.valuesTitle">What We Stand For</h2>
+            <div class="grid sm:grid-cols-3 gap-8">
+                <div class="text-center">
+                    <div class="w-12 h-12 rounded-xl bg-blue-50 flex items-center justify-center mx-auto mb-4">
+                        <svg class="w-6 h-6 text-blue-600" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.5"><path stroke-linecap="round" stroke-linejoin="round" d="M9 12.75L11.25 15 15 9.75m-3-7.036A11.959 11.959 0 013.598 6 11.99 11.99 0 003 9.749c0 5.592 3.824 10.29 9 11.623 5.176-1.332 9-6.03 9-11.622 0-1.31-.21-2.571-.598-3.751h-.152c-3.196 0-6.1-1.248-8.25-3.285z"/></svg>
+                    </div>
+                    <h3 class="text-lg font-semibold text-gray-900 mb-2" data-i18n="about.valueSecurity">Security First</h3>
+                    <p class="text-sm text-gray-500" data-i18n="about.valueSecurityDesc">End-to-end encryption, data sovereignty options and compliance with international standards including GDPR, HIPAA and SecNumCloud.</p>
+                </div>
+                <div class="text-center">
+                    <div class="w-12 h-12 rounded-xl bg-emerald-50 flex items-center justify-center mx-auto mb-4">
+                        <svg class="w-6 h-6 text-emerald-600" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.5"><path stroke-linecap="round" stroke-linejoin="round" d="M12 21a9.004 9.004 0 008.716-6.747M12 21a9.004 9.004 0 01-8.716-6.747M12 21c2.485 0 4.5-4.03 4.5-9S14.485 3 12 3m0 18c-2.485 0-4.5-4.03-4.5-9S9.515 3 12 3m0 0a8.997 8.997 0 017.843 4.582M12 3a8.997 8.997 0 00-7.843 4.582m15.686 0A11.953 11.953 0 0112 10.5c-2.998 0-5.74-1.1-7.843-2.918m15.686 0A8.959 8.959 0 0121 12c0 .778-.099 1.533-.284 2.253m0 0A17.919 17.919 0 0112 16.5c-3.162 0-6.133-.815-8.716-2.247m0 0A9.015 9.015 0 013 12c0-1.605.42-3.113 1.157-4.418"/></svg>
+                    </div>
+                    <h3 class="text-lg font-semibold text-gray-900 mb-2" data-i18n="about.valueInnovation">Continuous Innovation</h3>
+                    <p class="text-sm text-gray-500" data-i18n="about.valueInnovationDesc">From on-premise telephony to cloud-native collaboration, we continuously evolve our solutions to meet the changing needs of the digital workplace.</p>
+                </div>
+                <div class="text-center">
+                    <div class="w-12 h-12 rounded-xl bg-purple-50 flex items-center justify-center mx-auto mb-4">
+                        <svg class="w-6 h-6 text-purple-600" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.5"><path stroke-linecap="round" stroke-linejoin="round" d="M18 18.72a9.094 9.094 0 003.741-.479 3 3 0 00-4.682-2.72m.94 3.198l.001.031c0 .225-.012.447-.037.666A11.944 11.944 0 0112 21c-2.17 0-4.207-.576-5.963-1.584A6.062 6.062 0 016 18.719m12 0a5.971 5.971 0 00-.941-3.197m0 0A5.995 5.995 0 0012 12.75a5.995 5.995 0 00-5.058 2.772m0 0a3 3 0 00-4.681 2.72 8.986 8.986 0 003.74.477m.94-3.197a5.971 5.971 0 00-.94 3.197M15 6.75a3 3 0 11-6 0 3 3 0 016 0zm6 3a2.25 2.25 0 11-4.5 0 2.25 2.25 0 014.5 0zm-13.5 0a2.25 2.25 0 11-4.5 0 2.25 2.25 0 014.5 0z"/></svg>
+                    </div>
+                    <h3 class="text-lg font-semibold text-gray-900 mb-2" data-i18n="about.valueCustomer">Customer Success</h3>
+                    <p class="text-sm text-gray-500" data-i18n="about.valueCustomerDesc">With dedicated account managers, 24/7 support and a global partner network, we are committed to helping every customer achieve their communication goals.</p>
                 </div>
             </div>
-        </section>
-    </div>
+        </div>
+    </section>
+
+    <!-- CTA -->
+    <section class="py-16 px-6 bg-gradient-to-r from-brand-600 via-brand-500 to-indigo-500">
+        <div class="max-w-2xl mx-auto text-center">
+            <h2 class="text-2xl font-bold text-white" data-i18n="about.ctaTitle">Ready to work with us?</h2>
+            <p class="mt-2 text-blue-100 text-sm" data-i18n="about.ctaDescription">Discover how Rainbow can transform communication in your organization.</p>
+            <div class="mt-6 flex flex-col sm:flex-row gap-3 justify-center">
+                <a href="/offers" class="px-7 py-3 rounded-lg bg-white text-brand-600 font-medium text-sm hover:bg-blue-50 transition-colors" data-i18n="about.ctaPlans">View Plans</a>
+                <a href="/support" class="px-7 py-3 rounded-lg border border-white/30 text-white font-medium text-sm hover:bg-white/10 transition-colors" data-i18n="about.ctaContact">Contact Us</a>
+            </div>
+        </div>
+    </section>
 
     <!-- FOOTER -->
     <footer class="bg-gray-900 text-gray-400 pt-16 pb-8 px-6">
@@ -199,98 +222,6 @@
             var sw = document.getElementById('lang-switcher');
             if (sw && !sw.contains(e.target)) sw.classList.remove('open');
         });
-
-        function t(k,f){return typeof i18n!=='undefined'?i18n.t(k,f):f;}
-        function esc(s) { var d = document.createElement('div'); d.textContent = s; return d.innerHTML; }
-
-        var colorMap = {
-            blue: { bg: 'bg-blue-50', text: 'text-blue-600', border: 'border-blue-100', heroBg: 'from-blue-50 via-white to-white' },
-            red: { bg: 'bg-red-50', text: 'text-red-600', border: 'border-red-100', heroBg: 'from-red-50 via-white to-white' },
-            amber: { bg: 'bg-amber-50', text: 'text-amber-600', border: 'border-amber-100', heroBg: 'from-amber-50 via-white to-white' },
-            indigo: { bg: 'bg-indigo-50', text: 'text-indigo-600', border: 'border-indigo-100', heroBg: 'from-indigo-50 via-white to-white' },
-            emerald: { bg: 'bg-emerald-50', text: 'text-emerald-600', border: 'border-emerald-100', heroBg: 'from-emerald-50 via-white to-white' }
-        };
-        var defaultColor = { bg: 'bg-gray-50', text: 'text-gray-600', border: 'border-gray-100', heroBg: 'from-gray-50 via-white to-white' };
-
-        async function loadIndustry() {
-            var slug = window.location.pathname.split('/').filter(Boolean).pop();
-            try {
-                var res = await fetch('/api/industries/' + encodeURIComponent(slug));
-                if (!res.ok) throw new Error('Not found');
-                var data = await res.json();
-
-                document.getElementById('loading').classList.add('hidden');
-                document.getElementById('industry-container').classList.remove('hidden');
-
-                var c = colorMap[data.color] || defaultColor;
-
-                // Update title
-                document.title = data.name + ' - Rainbow by Alcatel-Lucent Enterprise';
-
-                // Hero
-                document.getElementById('industry-hero').className = 'pt-28 pb-16 px-6 bg-gradient-to-br ' + c.heroBg;
-                document.getElementById('industry-name').textContent = data.name;
-                document.getElementById('industry-tagline').textContent = data.tagline || '';
-                document.getElementById('industry-description').textContent = data.description || '';
-
-                // Value Props
-                var vp = document.getElementById('value-props');
-                if (data.valueProps && data.valueProps.length) {
-                    vp.innerHTML = data.valueProps.map(function(v) {
-                        return '<div class="flex items-start gap-3 p-4 rounded-xl ' + c.bg + ' ' + c.border + ' border">' +
-                            '<svg class="w-5 h-5 mt-0.5 flex-shrink-0 ' + c.text + '" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M9 12.75L11.25 15 15 9.75M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>' +
-                            '<span class="text-sm text-gray-700">' + esc(v.text) + '</span>' +
-                        '</div>';
-                    }).join('');
-                }
-
-                // Benefits grouped by category
-                var bg = document.getElementById('benefits-grid');
-                if (data.benefits && data.benefits.length) {
-                    var groups = {};
-                    data.benefits.forEach(function(b) {
-                        var cat = b.category || 'General';
-                        if (!groups[cat]) groups[cat] = [];
-                        groups[cat].push(b);
-                    });
-
-                    var html = '<div class="grid sm:grid-cols-2 lg:grid-cols-3 gap-6">';
-                    Object.keys(groups).forEach(function(cat) {
-                        html += '<div class="bg-white rounded-xl border border-gray-100 shadow-sm p-6">' +
-                            '<h3 class="text-sm font-semibold uppercase tracking-wide ' + c.text + ' mb-4">' + esc(cat) + '</h3>' +
-                            '<div class="space-y-4">';
-                        groups[cat].forEach(function(b) {
-                            html += '<div>' +
-                                '<h4 class="text-sm font-semibold text-gray-900">' + esc(b.title) + '</h4>' +
-                                '<p class="text-xs text-gray-500 mt-1">' + esc(b.description || '') + '</p>' +
-                            '</div>';
-                        });
-                        html += '</div></div>';
-                    });
-                    html += '</div>';
-                    bg.innerHTML = html;
-                }
-
-                // Related products
-                if (data.products && data.products.length) {
-                    document.getElementById('related-products-section').classList.remove('hidden');
-                    var rp = document.getElementById('related-products');
-                    rp.innerHTML = data.products.map(function(p) {
-                        return '<a href="/product/' + esc(p.slug) + '" class="bg-white rounded-xl border border-gray-100 shadow-sm p-6 hover:shadow-lg transition-shadow block">' +
-                            '<h3 class="text-lg font-bold text-gray-900 mb-2">' + esc(p.name) + '</h3>' +
-                            '<p class="text-sm text-gray-500">' + esc(p.shortDescription || '') + '</p>' +
-                            '<span class="inline-flex items-center gap-1 text-sm font-medium text-brand-500 mt-3">' + t('industry.learnMore','Learn more') + ' &rarr;</span>' +
-                        '</a>';
-                    }).join('');
-                }
-
-            } catch(e) {
-                document.getElementById('loading').classList.add('hidden');
-                document.getElementById('not-found').classList.remove('hidden');
-            }
-        }
-
-        loadIndustry();
     </script>
 </body>
 </html>

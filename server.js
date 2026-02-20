@@ -338,6 +338,9 @@ app.get('/reset-password', (req, res) => sendPage(req, res, path.join(__dirname,
 app.get('/industries', (req, res) => sendPage(req, res, path.join(__dirname, 'pages', 'industries.html')));
 app.get('/industries/:slug', (req, res) => sendPage(req, res, path.join(__dirname, 'pages', 'industry.html')));
 app.get('/solutions', (req, res) => sendPage(req, res, path.join(__dirname, 'pages', 'solutions.html')));
+app.get('/about', (req, res) => sendPage(req, res, path.join(__dirname, 'pages', 'about.html')));
+app.get('/legal', (req, res) => sendPage(req, res, path.join(__dirname, 'pages', 'legal.html')));
+app.get('/privacy', (req, res) => sendPage(req, res, path.join(__dirname, 'pages', 'privacy.html')));
 
 // ===================== API ROUTES =====================
 
