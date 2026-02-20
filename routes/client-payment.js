@@ -46,7 +46,14 @@ router.post('/setup-intent', async (req, res) => {
 // DELETE /api/client/payment-methods/:id
 router.delete('/:id', async (req, res) => {
     if (!stripeService.isConfigured()) return res.status(400).json({ error: 'Stripe not configured' });
+    // H3: Verify ownership — ensure payment method belongs to this client
+    const db = getDb();
+    const client = db.prepare('SELECT stripeCustomerId FROM clients WHERE id = ?').get(req.client.id);
+    if (!client?.stripeCustomerId) return res.status(400).json({ error: 'No Stripe customer' });
     try {
+        const methods = await stripeService.listPaymentMethods(client.stripeCustomerId);
+        const owns = methods.some(m => m.id === req.params.id);
+        if (!owns) return res.status(403).json({ error: 'Payment method does not belong to your account' });
         await stripeService.detachPaymentMethod(req.params.id);
         res.json({ success: true });
     } catch (err) {
@@ -62,6 +69,10 @@ router.post('/:id/default', async (req, res) => {
         return res.status(400).json({ error: 'Stripe customer not found' });
     }
     try {
+        // H3: Verify ownership before setting default
+        const methods = await stripeService.listPaymentMethods(client.stripeCustomerId);
+        const owns = methods.some(m => m.id === req.params.id);
+        if (!owns) return res.status(403).json({ error: 'Payment method does not belong to your account' });
         await stripeService.setDefaultPaymentMethod(client.stripeCustomerId, req.params.id);
         res.json({ success: true });
     } catch (err) {

@@ -14,13 +14,14 @@ router.post('/', express.raw({ type: 'application/json' }), (req, res) => {
     const endpointSecret = process.env.STRIPE_WEBHOOK_SECRET;
     let event;
 
+    // C4: Require webhook signature verification
+    if (!endpointSecret) {
+        console.error('[Webhook] STRIPE_WEBHOOK_SECRET not set — rejecting webhook');
+        return res.status(500).json({ error: 'Webhook secret not configured' });
+    }
+
     try {
-        if (endpointSecret) {
-            event = stripe.webhooks.constructEvent(req.body, sig, endpointSecret);
-        } else {
-            event = JSON.parse(req.body);
-            console.log('[Webhook] No STRIPE_WEBHOOK_SECRET set — skipping signature verification');
-        }
+        event = stripe.webhooks.constructEvent(req.body, sig, endpointSecret);
     } catch (err) {
         console.error('Webhook signature verification failed:', err.message);
         return res.status(400).json({ error: 'Webhook signature verification failed' });

@@ -226,6 +226,29 @@ function createTables() {
         );
     `);
 
+    // S2: Add indexes on frequently queried columns
+    db.exec(`
+        CREATE INDEX IF NOT EXISTS idx_clients_email ON clients(email);
+        CREATE INDEX IF NOT EXISTS idx_clients_status ON clients(status);
+        CREATE INDEX IF NOT EXISTS idx_products_slug ON products(slug);
+        CREATE INDEX IF NOT EXISTS idx_products_isActive ON products(isActive);
+        CREATE INDEX IF NOT EXISTS idx_subscriptions_clientId ON subscriptions(clientId);
+        CREATE INDEX IF NOT EXISTS idx_subscriptions_status ON subscriptions(status);
+        CREATE INDEX IF NOT EXISTS idx_blog_articles_slug ON blog_articles(slug);
+        CREATE INDEX IF NOT EXISTS idx_blog_articles_status ON blog_articles(status);
+        CREATE INDEX IF NOT EXISTS idx_blog_articles_categoryId ON blog_articles(categoryId);
+        CREATE INDEX IF NOT EXISTS idx_contact_submissions_status ON contact_submissions(status);
+        CREATE INDEX IF NOT EXISTS idx_audit_log_createdAt ON audit_log(createdAt);
+        CREATE INDEX IF NOT EXISTS idx_industries_slug ON industries(slug);
+        CREATE INDEX IF NOT EXISTS idx_industries_active ON industries(active);
+        CREATE INDEX IF NOT EXISTS idx_solutions_slug ON solutions(slug);
+        CREATE INDEX IF NOT EXISTS idx_solutions_active ON solutions(active);
+        CREATE INDEX IF NOT EXISTS idx_industry_benefits_industryId ON industry_benefits(industryId);
+        CREATE INDEX IF NOT EXISTS idx_industry_value_props_industryId ON industry_value_props(industryId);
+        CREATE INDEX IF NOT EXISTS idx_license_assignments_subscriptionId ON license_assignments(subscriptionId);
+        CREATE INDEX IF NOT EXISTS idx_license_assignments_email ON license_assignments(email);
+    `);
+
     console.log('Database tables created successfully');
 }
 

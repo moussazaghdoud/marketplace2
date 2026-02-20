@@ -5,6 +5,8 @@ const path = require('path');
 const crypto = require('crypto');
 const multer = require('multer');
 const cookieParser = require('cookie-parser');
+const helmet = require('helmet');
+const rateLimit = require('express-rate-limit');
 const { createProxyMiddleware } = require('http-proxy-middleware');
 const { v4: uuidv4 } = require('uuid');
 
@@ -148,6 +150,35 @@ app.use('/api/rainbow', createProxyMiddleware({
 app.use(express.json());
 app.use(cookieParser());
 
+// H2: Security headers
+app.use(helmet({
+    contentSecurityPolicy: {
+        directives: {
+            defaultSrc: ["'self'"],
+            scriptSrc: ["'self'", "'unsafe-inline'", "'unsafe-eval'", "https://cdn.tailwindcss.com", "https://js.stripe.com"],
+            styleSrc: ["'self'", "'unsafe-inline'", "https://fonts.googleapis.com"],
+            fontSrc: ["'self'", "https://fonts.gstatic.com"],
+            imgSrc: ["'self'", "data:", "blob:"],
+            frameSrc: ["'self'", "https://js.stripe.com", "https://www.youtube.com"],
+            connectSrc: ["'self'", "https://api.stripe.com"]
+        }
+    },
+    crossOriginEmbedderPolicy: false
+}));
+
+// H1: Rate limiting on auth endpoints
+const authLimiter = rateLimit({
+    windowMs: 15 * 60 * 1000, // 15 minutes
+    max: 15, // max 15 attempts per window
+    standardHeaders: true,
+    legacyHeaders: false,
+    message: { error: 'Too many attempts. Please try again in 15 minutes.' }
+});
+app.use('/api/admin/login', authLimiter);
+app.use('/api/client/login', authLimiter);
+app.use('/api/client/register', authLimiter);
+app.use('/api/client/forgot-password', authLimiter);
+
 // Request logging
 app.use((req, res, next) => {
     if (req.path.startsWith('/api/')) {
@@ -167,10 +198,26 @@ const storage = multer.diskStorage({
         cb(null, base + '-' + Date.now() + ext);
     }
 });
-const upload = multer({ storage: storage, limits: { fileSize: 5 * 1024 * 1024 } });
+// H5: File upload MIME filter — only allow images
+const ALLOWED_MIME_TYPES = ['image/jpeg', 'image/png', 'image/gif', 'image/webp', 'image/svg+xml'];
+const upload = multer({
+    storage: storage,
+    limits: { fileSize: 5 * 1024 * 1024 },
+    fileFilter: function (req, file, cb) {
+        if (ALLOWED_MIME_TYPES.includes(file.mimetype)) {
+            cb(null, true);
+        } else {
+            cb(new Error('Only image files are allowed (JPEG, PNG, GIF, WebP, SVG)'));
+        }
+    }
+});
 
-// Static files
-app.use(express.static(__dirname, { index: false }));
+// C1: Static files — serve only specific public directories (not source code)
+app.use('/css', express.static(path.join(__dirname, 'css')));
+app.use('/js', express.static(path.join(__dirname, 'js')));
+app.use('/img', express.static(path.join(__dirname, 'img')));
+app.use('/images', express.static(path.join(__dirname, 'images')));
+app.use('/pages', express.static(path.join(__dirname, 'pages')));
 // Serve uploaded images from persistent volume (overrides local /images)
 if (VOLUME_PATH) {
     app.use('/images', express.static(IMAGES_DIR));

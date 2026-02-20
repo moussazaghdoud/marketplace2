@@ -9,15 +9,21 @@ function seed() {
     createTables();
     const db = getDb();
 
-    // Seed default admin user
+    // C2: Seed admin user — use ADMIN_PASSWORD env var or generate a random one
     const existingAdmin = db.prepare('SELECT id FROM admin_users WHERE email = ?').get('admin@rainbow.ale.com');
     if (!existingAdmin) {
-        const hashedPassword = bcrypt.hashSync('Admin123!', 10);
+        const adminPassword = process.env.ADMIN_PASSWORD || require('crypto').randomBytes(16).toString('base64url');
+        const hashedPassword = bcrypt.hashSync(adminPassword, 10);
         db.prepare(`
             INSERT INTO admin_users (id, email, password, firstName, lastName, role)
             VALUES (?, ?, ?, ?, ?, ?)
         `).run(uuidv4(), 'admin@rainbow.ale.com', hashedPassword, 'Admin', 'Rainbow', 'super_admin');
-        console.log('Default admin user created: admin@rainbow.ale.com / Admin123!');
+        if (process.env.ADMIN_PASSWORD) {
+            console.log('Default admin user created: admin@rainbow.ale.com (password from ADMIN_PASSWORD env var)');
+        } else {
+            console.log('Default admin user created: admin@rainbow.ale.com / ' + adminPassword);
+            console.log('  >> Set ADMIN_PASSWORD env var to control this. This random password is only shown once.');
+        }
     }
 
     // Seed default Rainbow product
