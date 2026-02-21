@@ -174,6 +174,7 @@ app.use(helmet({
         directives: {
             defaultSrc: ["'self'"],
             scriptSrc: ["'self'", "'unsafe-inline'", "'unsafe-eval'", "https://cdn.tailwindcss.com", "https://js.stripe.com"],
+            scriptSrcAttr: ["'unsafe-inline'"],
             styleSrc: ["'self'", "'unsafe-inline'", "https://fonts.googleapis.com"],
             fontSrc: ["'self'", "https://fonts.gstatic.com"],
             imgSrc: ["'self'", "data:", "blob:"],
@@ -236,6 +237,7 @@ app.use('/js', express.static(path.join(__dirname, 'js')));
 app.use('/img', express.static(path.join(__dirname, 'img')));
 app.use('/images', express.static(path.join(__dirname, 'images')));
 app.use('/pages', express.static(path.join(__dirname, 'pages')));
+app.use('/i18n', express.static(I18N_DIR));
 // Serve uploaded images from persistent volume (overrides local /images)
 if (VOLUME_PATH) {
     app.use('/images', express.static(IMAGES_DIR));
