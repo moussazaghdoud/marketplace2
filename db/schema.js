@@ -19,6 +19,7 @@ function createTables() {
             id TEXT PRIMARY KEY,
             email TEXT UNIQUE NOT NULL,
             password TEXT NOT NULL,
+            verificationCode TEXT,
             firstName TEXT NOT NULL,
             lastName TEXT NOT NULL,
             company TEXT,
@@ -230,6 +231,13 @@ function createTables() {
             updatedAt TEXT DEFAULT (datetime('now'))
         );
     `);
+
+    // Migration: add verificationCode column for existing databases
+    try {
+        db.exec(`ALTER TABLE clients ADD COLUMN verificationCode TEXT`);
+    } catch (e) {
+        // Column already exists — ignore
+    }
 
     // S2: Add indexes on frequently queried columns
     db.exec(`

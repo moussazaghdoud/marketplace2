@@ -132,8 +132,10 @@ const sendPasswordReset = (to, vars) => sendEmail({ to, subject: 'Réinitialisat
 const sendSubscriptionChange = (to, vars) => sendEmail({ to, subject: 'Modification de votre abonnement', templateName: 'subscription-change', variables: vars });
 const sendCancellation = (to, vars) => sendEmail({ to, subject: 'Confirmation d\'annulation', templateName: 'cancellation', variables: vars });
 const sendLicenseInvite = (to, vars) => sendEmail({ to, subject: `You've been granted a Rainbow license by ${vars.companyName || 'a team'}`, templateName: 'license-invite', variables: vars });
+const sendVerificationCode = (to, vars) => sendEmail({ to, subject: 'Your verification code', templateName: 'verification-code', variables: vars });
 
 module.exports = {
     sendEmail, sendWelcome, sendVerification, sendPaymentConfirmation,
-    sendPasswordReset, sendSubscriptionChange, sendCancellation, sendLicenseInvite
+    sendPasswordReset, sendSubscriptionChange, sendCancellation, sendLicenseInvite,
+    sendVerificationCode
 };
