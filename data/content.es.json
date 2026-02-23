@@ -1,8 +1,8 @@
 {
   "hero": {
     "badge": "Comunicacion en la nube de Alcatel-Lucent Enterprise",
-    "title": "Tu nube,<br><span class='text-brand-500'>a tu manera.</span>",
-    "description": "Mensajeria, video, telefonia y marketplace — una plataforma segura para 88+ paises.",
+    "title": "Comunicacion en equipo,<br><span class='text-brand-500 text-2xl sm:text-3xl'>Segura, Simplificada, Francesa.</span>",
+    "description": "Mensajeria, videoconferencia, uso compartido de archivos y telefonia en una plataforma segura. Disponible en 88 paises.",
     "ctaPrimary": "Comenzar gratis",
     "ctaSecondary": "Ver demostracion",
     "trustBadges": ["ISO 27001", "CSPN", "RGPD", "88+ Paises"],
@@ -43,14 +43,10 @@
   "solutions": {
     "heading": "Catalogo de soluciones",
     "subheading": "Elige las herramientas que tu empresa necesita.",
-    "categories": ["Todas", "Comunicaciones", "Red", "Continuidad"],
+    "categories": ["Todas", "Comunicaciones", "Continuidad"],
     "items": [
       { "name": "Rainbow Collaboration", "description": "Mensajeria unificada, videoconferencia HD y archivos compartidos.", "category": "Comunicaciones", "icon": "chat", "link": "/product/rainbow" },
       { "name": "Rainbow Webinar", "description": "Webinarios interactivos y eventos virtuales para hasta 10.000 participantes.", "category": "Comunicaciones", "icon": "presentation", "link": "/product/webinar" },
-      { "name": "Rainbow CPaaS", "description": "Integra comunicacion en tiempo real en tus apps via APIs y SDKs.", "category": "Comunicaciones", "icon": "code", "link": "#" },
-      { "name": "OXO Connect", "description": "Servidor de comunicacion todo en uno para pymes — telefonia y movilidad.", "category": "Red", "icon": "server", "link": "#" },
-      { "name": "OmniPCX Enterprise", "description": "Telefonia IP empresarial para hasta 100.000 usuarios.", "category": "Red", "icon": "phone", "link": "#" },
-      { "name": "OmniSwitch", "description": "Switches LAN inteligentes con seguridad e IoT integrados.", "category": "Red", "icon": "wifi", "link": "#" },
       { "name": "Rainbow Smart Hotel", "description": "Experiencia de huesped potenciada por IA con conserje vocal.", "category": "Continuidad", "icon": "building", "link": "/product/smart-hotel" },
       { "name": "Rainbow Emergency", "description": "Plataforma de notificacion masiva y comunicacion de crisis.", "category": "Continuidad", "icon": "shield", "link": "#" }
     ]
@@ -60,8 +56,7 @@
     "subheading": "Anade modulos potentes a medida que crecen tus necesidades.",
     "items": [
       { "name": "Rainbow Webinar", "description": "Organiza eventos virtuales, demos de producto y formaciones para hasta 10.000 participantes.", "icon": "presentation", "link": "/product/webinar" },
-      { "name": "Rainbow Smart Hotel", "description": "Conserje vocal IA, gestion de room service e integracion PMS.", "icon": "building", "link": "/product/smart-hotel" },
-      { "name": "Rainbow CPaaS", "description": "APIs REST y SDKs para integrar voz, video y mensajeria en cualquier aplicacion.", "icon": "code", "link": "#" }
+      { "name": "Rainbow Smart Hotel", "description": "Conserje vocal IA, gestion de room service e integracion PMS.", "icon": "building", "link": "/product/smart-hotel" }
     ]
   },
   "industries": {
@@ -112,7 +107,7 @@
         "pricePerUser": 19.99,
         "ctaText": "Suscribirse",
         "highlighted": false,
-        "features": ["Todo lo de Business", "Audioconferencia con acceso telefonico", "APIs y SDKs CPaaS", "Panel de analisis para administradores", "Despliegue hibrido / local", "Soporte prioritario (SLA 99,99%)"]
+        "features": ["Todo lo de Business", "Audioconferencia con acceso telefonico", "Panel de analisis para administradores", "Despliegue hibrido / local", "Soporte prioritario (SLA 99,99%)"]
       }
     ]
   },
@@ -165,7 +160,7 @@
       { "question": "Como funciona la facturacion?", "answer": "Las suscripciones se facturan mensualmente por usuario mediante tarjeta de credito (Stripe). Selecciona el numero de licencias, paga y listo. Anade o elimina licencias en cualquier momento." },
       { "question": "Es seguro Rainbow?", "answer": "Rainbow cuenta con la certificacion ISO 27001, cumple con RGPD/CCPA y utiliza cifrado TLS 1.3 y AES-256. Centros de datos en EMEA, NA, APAC y CALA." },
       { "question": "Que opciones de despliegue hay disponibles?", "answer": "Rainbow soporta cloud publico, cloud privado, hibrido y despliegue totalmente local. Elige el modelo que se adapte a tu estrategia IT y requisitos de soberania." },
-      { "question": "Puedo anadir modulos mas tarde?", "answer": "Por supuesto. Empieza con lo que necesites y anade Webinar, Smart Hotel, CPaaS u otros modulos en cualquier momento desde tu panel." }
+      { "question": "Puedo anadir modulos mas tarde?", "answer": "Por supuesto. Empieza con lo que necesites y anade Webinar, Smart Hotel u otros modulos en cualquier momento desde tu panel." }
     ]
   }
 }
