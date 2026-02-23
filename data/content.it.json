@@ -1,73 +1,77 @@
 {
   "hero": {
     "badge": "Comunicazione Cloud di Alcatel-Lucent Enterprise",
-    "title": "Comunicazione di squadra,<br><span class='text-brand-500 text-2xl sm:text-3xl'>Sicura, Semplificata, Francese.</span>",
-    "description": "Messaggistica, videoconferenze, condivisione file e telefonia in un'unica piattaforma sicura. Disponibile in 88 paesi.",
+    "title": "Il tuo cloud,<br><span class='text-brand-500'>a modo tuo.</span>",
+    "description": "Messaggistica, video, telefonia e marketplace — un'unica piattaforma sicura per 88+ paesi.",
     "ctaPrimary": "Inizia gratis",
     "ctaSecondary": "Guarda la demo",
-    "trustBadges": ["ISO 27001", "GDPR", "CCPA", "88+ Paesi"],
+    "trustBadges": ["ISO 27001", "CSPN", "GDPR", "88+ Paesi"],
     "image": "images/rainbow-ui.jpg"
+  },
+  "valueProp": {
+    "text": "Basta destreggiarsi tra gli strumenti. Rainbow sostituisce la tua app di chat, la piattaforma video e il telefono aziendale con un'unica soluzione cloud modulare e alla carta — distribuita a modo tuo."
+  },
+  "howItWorks": {
+    "heading": "Operativo in 4 passaggi",
+    "steps": [
+      { "number": "1", "title": "Registrazione gratuita", "description": "Crea il tuo account in 30 secondi" },
+      { "number": "2", "title": "Scegli i tuoi moduli", "description": "Collaborazione, Meeting, Chiamate o tutti e tre" },
+      { "number": "3", "title": "Collega i tuoi sistemi", "description": "Connetti PBX, CRM e strumenti via API" },
+      { "number": "4", "title": "Collabora in sicurezza", "description": "Lavora ovunque, su qualsiasi dispositivo" }
+    ]
   },
   "screenshots": {
     "heading": "Progettato per il tuo modo di lavorare",
     "items": [
-      {
-        "image": "images/rainbow-chat.png",
-        "label": "Chat e condivisione file",
-        "alt": "Chat e condivisione file Rainbow"
-      },
-      {
-        "image": "images/rainbow-video.png",
-        "label": "Videochiamate HD",
-        "alt": "Videochiamate Rainbow"
-      },
-      {
-        "image": "images/rainbow-screen.png",
-        "label": "Condivisione schermo",
-        "alt": "Condivisione schermo Rainbow"
-      }
+      { "image": "images/rainbow-chat.png", "label": "Chat e condivisione file", "alt": "Chat e condivisione file Rainbow" },
+      { "image": "images/rainbow-video.png", "label": "Videochiamate HD", "alt": "Videochiamate Rainbow" },
+      { "image": "images/rainbow-screen.png", "label": "Condivisione schermo", "alt": "Condivisione schermo Rainbow" }
     ]
   },
   "features": {
     "heading": "Cosa puoi fare con Rainbow",
     "subheading": "Un'unica piattaforma per tutte le tue esigenze di comunicazione.",
     "items": [
-      {
-        "title": "Messaggistica",
-        "description": "Chat individuali e di gruppo con le Bubble per organizzare le conversazioni per argomento o progetto.",
-        "iconBg": "blue",
-        "iconSvg": "M8 12h.01M12 12h.01M16 12h.01M21 12c0 4.418-4.03 8-9 8a9.863 9.863 0 01-4.255-.949L3 20l1.395-3.72C3.512 15.042 3 13.574 3 12c0-4.418 4.03-8 9-8s9 3.582 9 8z"
-      },
-      {
-        "title": "Videoconferenze",
-        "description": "Riunioni HD con fino a 120 partecipanti. Riduzione del rumore AI e sfocatura dello sfondo.",
-        "iconBg": "violet",
-        "iconSvg": "M15 10l4.553-2.276A1 1 0 0121 8.618v6.764a1 1 0 01-1.447.894L15 14M5 18h8a2 2 0 002-2V8a2 2 0 00-2-2H5a2 2 0 00-2 2v8a2 2 0 002 2z"
-      },
-      {
-        "title": "Telefonia cloud",
-        "description": "PBX aziendale nel cloud con numeri di chiamata globali e funzionalità telefoniche avanzate.",
-        "iconBg": "emerald",
-        "iconSvg": "M3 5a2 2 0 012-2h3.28a1 1 0 01.948.684l1.498 4.493a1 1 0 01-.502 1.21l-2.257 1.13a11.042 11.042 0 005.516 5.516l1.13-2.257a1 1 0 011.21-.502l4.493 1.498a1 1 0 01.684.949V19a2 2 0 01-2 2h-1C9.716 21 3 14.284 3 6V5z"
-      },
-      {
-        "title": "Condivisione file",
-        "description": "16 GB di archiviazione cloud per utente. Condividi file istantaneamente nelle conversazioni.",
-        "iconBg": "amber",
-        "iconSvg": "M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"
-      },
-      {
-        "title": "Condivisione schermo",
-        "description": "Presenta e collabora in tempo reale durante chiamate e riunioni.",
-        "iconBg": "pink",
-        "iconSvg": "M9.75 17L9 20l-1 1h8l-1-1-.75-3M3 13h18M5 17h14a2 2 0 002-2V5a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z"
-      },
-      {
-        "title": "Integrazioni e API",
-        "description": "Connettiti con Microsoft 365, Google Workspace, Salesforce e sviluppa con le API CPaaS.",
-        "iconBg": "cyan",
-        "iconSvg": "M11 4a2 2 0 114 0v1a1 1 0 001 1h3a1 1 0 011 1v3a1 1 0 01-1 1h-1a2 2 0 100 4h1a1 1 0 011 1v3a1 1 0 01-1 1h-3a1 1 0 01-1-1v-1a2 2 0 10-4 0v1a1 1 0 01-1 1H7a1 1 0 01-1-1v-3a1 1 0 00-1-1H4a2 2 0 110-4h1a1 1 0 001-1V7a1 1 0 011-1h3a1 1 0 001-1V4z"
-      }
+      { "title": "Messaggistica", "description": "Chat individuali e di gruppo con le Bubble per organizzare le conversazioni per argomento o progetto.", "iconBg": "blue", "iconSvg": "M8 12h.01M12 12h.01M16 12h.01M21 12c0 4.418-4.03 8-9 8a9.863 9.863 0 01-4.255-.949L3 20l1.395-3.72C3.512 15.042 3 13.574 3 12c0-4.418 4.03-8 9-8s9 3.582 9 8z" },
+      { "title": "Videoconferenze", "description": "Riunioni HD con fino a 120 partecipanti. Riduzione del rumore AI e sfocatura dello sfondo.", "iconBg": "violet", "iconSvg": "M15 10l4.553-2.276A1 1 0 0121 8.618v6.764a1 1 0 01-1.447.894L15 14M5 18h8a2 2 0 002-2V8a2 2 0 00-2-2H5a2 2 0 00-2 2v8a2 2 0 002 2z" },
+      { "title": "Telefonia cloud", "description": "PBX aziendale nel cloud con numeri di chiamata globali e funzionalita avanzate.", "iconBg": "emerald", "iconSvg": "M3 5a2 2 0 012-2h3.28a1 1 0 01.948.684l1.498 4.493a1 1 0 01-.502 1.21l-2.257 1.13a11.042 11.042 0 005.516 5.516l1.13-2.257a1 1 0 011.21-.502l4.493 1.498a1 1 0 01.684.949V19a2 2 0 01-2 2h-1C9.716 21 3 14.284 3 6V5z" },
+      { "title": "Condivisione file", "description": "16 GB di archiviazione cloud per utente. Condividi file istantaneamente nelle conversazioni.", "iconBg": "amber", "iconSvg": "M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" },
+      { "title": "Condivisione schermo", "description": "Presenta e collabora in tempo reale durante chiamate e riunioni.", "iconBg": "pink", "iconSvg": "M9.75 17L9 20l-1 1h8l-1-1-.75-3M3 13h18M5 17h14a2 2 0 002-2V5a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z" },
+      { "title": "Integrazioni e API", "description": "Connettiti con Microsoft 365, Google Workspace, Salesforce e sviluppa con le API CPaaS.", "iconBg": "cyan", "iconSvg": "M11 4a2 2 0 114 0v1a1 1 0 001 1h3a1 1 0 011 1v3a1 1 0 01-1 1h-1a2 2 0 100 4h1a1 1 0 011 1v3a1 1 0 01-1 1h-3a1 1 0 01-1-1v-1a2 2 0 10-4 0v1a1 1 0 01-1 1H7a1 1 0 01-1-1v-3a1 1 0 00-1-1H4a2 2 0 110-4h1a1 1 0 001-1V7a1 1 0 011-1h3a1 1 0 001-1V4z" }
+    ]
+  },
+  "solutions": {
+    "heading": "Catalogo soluzioni",
+    "subheading": "Scegli gli strumenti di cui la tua azienda ha bisogno.",
+    "categories": ["Tutte", "Comunicazioni", "Rete", "Continuita"],
+    "items": [
+      { "name": "Rainbow Collaboration", "description": "Messaggistica unificata, videoconferenza HD e condivisione file.", "category": "Comunicazioni", "icon": "chat", "link": "/product/rainbow" },
+      { "name": "Rainbow Webinar", "description": "Webinar interattivi ed eventi virtuali per fino a 10.000 partecipanti.", "category": "Comunicazioni", "icon": "presentation", "link": "/product/webinar" },
+      { "name": "Rainbow CPaaS", "description": "Integra comunicazione in tempo reale nelle tue app via API e SDK.", "category": "Comunicazioni", "icon": "code", "link": "#" },
+      { "name": "OXO Connect", "description": "Server di comunicazione all-in-one per PMI — telefonia e mobilita.", "category": "Rete", "icon": "server", "link": "#" },
+      { "name": "OmniPCX Enterprise", "description": "Telefonia IP aziendale per fino a 100.000 utenti.", "category": "Rete", "icon": "phone", "link": "#" },
+      { "name": "OmniSwitch", "description": "Switch LAN intelligenti con sicurezza e IoT integrati.", "category": "Rete", "icon": "wifi", "link": "#" },
+      { "name": "Rainbow Smart Hotel", "description": "Esperienza ospite potenziata dall'IA con concierge vocale.", "category": "Continuita", "icon": "building", "link": "/product/smart-hotel" },
+      { "name": "Rainbow Emergency", "description": "Piattaforma di notifica di massa e comunicazione di crisi.", "category": "Continuita", "icon": "shield", "link": "#" }
+    ]
+  },
+  "addOns": {
+    "heading": "Estendi la tua piattaforma",
+    "subheading": "Aggiungi moduli potenti man mano che le tue esigenze crescono.",
+    "items": [
+      { "name": "Rainbow Webinar", "description": "Organizza eventi virtuali, demo di prodotto e sessioni formative per fino a 10.000 partecipanti.", "icon": "presentation", "link": "/product/webinar" },
+      { "name": "Rainbow Smart Hotel", "description": "Concierge vocale IA, gestione room service e integrazione PMS.", "icon": "building", "link": "/product/smart-hotel" },
+      { "name": "Rainbow CPaaS", "description": "API REST e SDK per integrare voce, video e messaggistica in qualsiasi applicazione.", "icon": "code", "link": "#" }
+    ]
+  },
+  "industries": {
+    "heading": "Progettato per il tuo settore",
+    "items": [
+      { "name": "Istruzione", "icon": "academic-cap", "color": "blue", "slug": "education" },
+      { "name": "Sanita", "icon": "heart", "color": "red", "slug": "healthcare" },
+      { "name": "Ospitalita", "icon": "building-office", "color": "amber", "slug": "hospitality" },
+      { "name": "Governo", "icon": "building-library", "color": "indigo", "slug": "government" },
+      { "name": "Trasporti", "icon": "truck", "color": "emerald", "slug": "transportation" }
     ]
   },
   "video": {
@@ -76,7 +80,7 @@
     "youtubeUrl": "https://www.youtube.com/embed/RWRnalYCdVE"
   },
   "pricing": {
-    "heading": "Prezzi semplici",
+    "heading": "Prezzi semplici e trasparenti",
     "subheading": "Inizia gratis. Passa a un piano superiore quando ne hai bisogno.",
     "plans": [
       {
@@ -87,13 +91,7 @@
         "pricePerUser": 0,
         "ctaText": "Inizia subito",
         "highlighted": false,
-        "features": [
-          "Messaggistica istantanea e presenza",
-          "Chiamate audio e video 1-a-1",
-          "Chat di gruppo (20 partecipanti)",
-          "16 GB di archiviazione cloud",
-          "Desktop, web e mobile"
-        ]
+        "features": ["Messaggistica istantanea e presenza", "Chiamate audio e video 1-a-1", "Chat di gruppo (20 partecipanti)", "16 GB di archiviazione cloud", "Desktop, web e mobile"]
       },
       {
         "name": "Business",
@@ -104,31 +102,17 @@
         "ctaText": "Abbonati ora",
         "highlighted": true,
         "badge": "Popolare",
-        "features": [
-          "Tutto incluso in Essential",
-          "Video (120 partecipanti)",
-          "Condivisione schermo e file",
-          "Riduzione del rumore AI",
-          "Integrazioni aziendali",
-          "Garanzia SLA"
-        ]
+        "features": ["Tutto di Essential", "Video (120 partecipanti)", "Condivisione schermo e file", "Riduzione del rumore AI", "Integrazioni aziendali", "Garanzia SLA"]
       },
       {
         "name": "Enterprise",
-        "subtitle": "Per l'accesso completo alla piattaforma",
+        "subtitle": "Accesso completo alla piattaforma",
         "price": "19.99",
         "priceNote": "per utente / mese",
         "pricePerUser": 19.99,
         "ctaText": "Abbonati ora",
         "highlighted": false,
-        "features": [
-          "Tutto incluso in Business",
-          "Audioconferenza con dial-in",
-          "API e SDK CPaaS",
-          "Dashboard di analisi per amministratori",
-          "Distribuzione ibrida / on-premise",
-          "Supporto prioritario (SLA 99,99%)"
-        ]
+        "features": ["Tutto di Business", "Audioconferenza con dial-in", "API e SDK CPaaS", "Dashboard di analisi amministratori", "Distribuzione ibrida / on-premise", "Supporto prioritario (SLA 99,99%)"]
       }
     ]
   },
@@ -136,29 +120,52 @@
     "items": [
       { "value": "ISO 27001", "label": "Sicurezza certificata" },
       { "value": "88+", "label": "Paesi" },
-      { "value": "22", "label": "Lingue" },
-      { "value": "GDPR", "label": "Conforme" }
+      { "value": "5", "label": "Certificazioni UE" },
+      { "value": "100K+", "label": "Utenti" }
     ]
+  },
+  "partners": {
+    "heading": "Diventa partner Rainbow",
+    "subheading": "I tuoi obiettivi di business sono la nostra priorita, ad ogni passo.",
+    "stats": [
+      { "value": "9.000+", "label": "Partner di canale" },
+      { "value": "88+", "label": "Paesi coperti" },
+      { "value": "100K+", "label": "Clienti serviti" }
+    ],
+    "tiers": [
+      { "name": "Silver", "color": "gray", "requirement": "Livello di ingresso", "benefits": ["Accesso al portale partner", "Formazione commerciale e tecnica", "Licenze NFR dimostrative", "Margini standard"] },
+      { "name": "Gold", "color": "amber", "requirement": "Partner consolidati", "benefits": ["Tutto di Silver", "Partner manager dedicato", "Campagne marketing congiunte", "Prezzi progetto e registrazione opportunita", "Supporto tecnico prioritario"] },
+      { "name": "Platinum", "color": "violet", "requirement": "Top performer", "benefits": ["Tutto di Gold", "Team di successo dedicato", "Fondi marketing co-branded", "Accesso anticipato esclusivo ai nuovi prodotti", "Opzioni white-label e servizi gestiti", "Incentivi e sconti premium"] }
+    ],
+    "tools": [
+      { "title": "Portale Partner", "description": "Piattaforma self-service per gestire ordini, licenze e risorse.", "icon": "briefcase" },
+      { "title": "Licenze NFR e demo", "description": "Risorse dimostrative e di prova illimitate per presentare Rainbow.", "icon": "gift" },
+      { "title": "Registrazione opportunita", "description": "Registra i tuoi deal per sconti aggiuntivi, supporto e protezione.", "icon": "shield" },
+      { "title": "Gestione centralizzata", "description": "Distribuisci, monitora e gestisci le istanze dei clienti da remoto.", "icon": "cog" },
+      { "title": "Kit marketing", "description": "Materiali pronti all'uso, campagne co-branded e generazione lead.", "icon": "megaphone" },
+      { "title": "Accademia di formazione", "description": "Percorsi di certificazione commerciale e tecnica con corsi on-demand.", "icon": "academic" }
+    ],
+    "ctaPrimary": "Diventa partner",
+    "ctaSecondary": "Accesso portale partner"
+  },
+  "marketplace": {
+    "heading": "Esplora l'ecosistema",
+    "subheading": "Integrazioni, componenti aggiuntivi e soluzioni partner.",
+    "featured": [
+      { "name": "Microsoft Teams", "icon": "teams" },
+      { "name": "Salesforce", "icon": "salesforce" },
+      { "name": "Google Workspace", "icon": "google" }
+    ],
+    "ctaText": "Sfoglia tutte le integrazioni"
   },
   "faq": {
     "heading": "Domande frequenti",
     "items": [
-      {
-        "question": "Posso provare Rainbow gratuitamente?",
-        "answer": "Sì. Il piano Essential è gratuito per sempre e non richiede alcuna carta di credito. Include messaggistica, chiamate 1-a-1, chat di gruppo e 16 GB di archiviazione."
-      },
-      {
-        "question": "Come funziona la fatturazione?",
-        "answer": "Gli abbonamenti vengono fatturati mensilmente per utente tramite carta di credito (Stripe). Seleziona il numero di licenze, paga e sei pronto. Aggiungi o rimuovi licenze in qualsiasi momento. Annulla quando vuoi."
-      },
-      {
-        "question": "Rainbow è sicuro?",
-        "answer": "Rainbow è certificato ISO 27001, conforme a GDPR/CCPA, con crittografia TLS 1.3 e AES-256. Data center in EMEA, NA, APAC e CALA."
-      },
-      {
-        "question": "Posso modificare il numero di licenze?",
-        "answer": "Sì. Aumenta o riduci le licenze in qualsiasi momento dalla tua dashboard. Le modifiche vengono calcolate proporzionalmente."
-      }
+      { "question": "Posso provare Rainbow gratuitamente?", "answer": "Si. Il piano Essential e gratuito per sempre e non richiede carta di credito. Include messaggistica, chiamate 1-a-1, chat di gruppo e 16 GB di archiviazione." },
+      { "question": "Come funziona la fatturazione?", "answer": "Gli abbonamenti vengono fatturati mensilmente per utente tramite carta di credito (Stripe). Seleziona il numero di licenze, paga e sei pronto. Aggiungi o rimuovi licenze in qualsiasi momento." },
+      { "question": "Rainbow e sicuro?", "answer": "Rainbow e certificato ISO 27001, conforme a GDPR/CCPA, con crittografia TLS 1.3 e AES-256. Data center in EMEA, NA, APAC e CALA." },
+      { "question": "Quali opzioni di distribuzione sono disponibili?", "answer": "Rainbow supporta cloud pubblico, cloud privato, ibrido e distribuzione completamente on-premise. Scegli il modello adatto alla tua strategia IT e ai requisiti di sovranita." },
+      { "question": "Posso aggiungere moduli in seguito?", "answer": "Assolutamente. Inizia con cio di cui hai bisogno e aggiungi Webinar, Smart Hotel, CPaaS o altri moduli in qualsiasi momento dalla tua dashboard." }
     ]
   }
 }
