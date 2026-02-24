@@ -47,8 +47,7 @@
     "items": [
       { "name": "Rainbow Collaboration", "description": "Messagerie d'equipe unifiee, visioconference HD et partage de fichiers.", "category": "Communications", "icon": "chat", "link": "/product/rainbow" },
       { "name": "Rainbow Webinar", "description": "Webinaires interactifs et evenements virtuels jusqu'a 10 000 participants.", "category": "Communications", "icon": "presentation", "link": "/product/webinar" },
-      { "name": "Rainbow Smart Hotel", "description": "Experience client augmentee par l'IA avec concierge vocal.", "category": "Continuite", "icon": "building", "link": "/product/smart-hotel" },
-      { "name": "Rainbow Emergency", "description": "Plateforme de notification de masse et communication de crise.", "category": "Continuite", "icon": "shield", "link": "#" }
+      { "name": "Rainbow Smart Hotel", "description": "Experience client augmentee par l'IA avec concierge vocal.", "category": "Continuite", "icon": "building", "link": "/product/smart-hotel" }
     ]
   },
   "addOns": {

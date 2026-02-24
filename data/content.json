@@ -47,8 +47,7 @@
     "items": [
       { "name": "Rainbow Collaboration", "description": "Unified team messaging, HD video conferencing and file sharing.", "category": "Digital Age Communications", "icon": "chat", "link": "/product/rainbow" },
       { "name": "Rainbow Webinar", "description": "Interactive webinars and virtual events for up to 10,000 participants.", "category": "Digital Age Communications", "icon": "presentation", "link": "/product/webinar" },
-      { "name": "Rainbow Smart Hotel", "description": "AI-powered guest experience with voice concierge.", "category": "Business Continuity", "icon": "building", "link": "/product/smart-hotel" },
-      { "name": "Rainbow Emergency", "description": "Mass notification and crisis communication platform.", "category": "Business Continuity", "icon": "shield", "link": "#" }
+      { "name": "Rainbow Smart Hotel", "description": "AI-powered guest experience with voice concierge.", "category": "Business Continuity", "icon": "building", "link": "/product/smart-hotel" }
     ]
   },
   "addOns": {
