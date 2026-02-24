@@ -218,23 +218,6 @@ function renderSolutions(solutions) {
     if (heading) heading.textContent = solutions.heading;
     if (subheading) subheading.textContent = solutions.subheading;
 
-    // Render filter buttons
-    var filtersEl = document.getElementById('solutions-filters');
-    if (filtersEl && solutions.categories) {
-        filtersEl.innerHTML = '';
-        solutions.categories.forEach(function (cat, i) {
-            var btn = document.createElement('button');
-            btn.className = 'sol-filter-btn px-4 py-1.5 rounded-full text-sm font-medium border border-gray-200 text-gray-600 hover:border-brand-500 hover:text-brand-500 transition-colors' + (i === 0 ? ' active bg-brand-500 !text-white !border-brand-500' : '');
-            btn.textContent = cat;
-            btn.onclick = function () {
-                document.querySelectorAll('.sol-filter-btn').forEach(function (b) { b.classList.remove('active', 'bg-brand-500', '!text-white', '!border-brand-500'); });
-                btn.classList.add('active', 'bg-brand-500', '!text-white', '!border-brand-500');
-                filterSolutions(cat);
-            };
-            filtersEl.appendChild(btn);
-        });
-    }
-
     // Render solution cards
     var grid = document.getElementById('solutions-grid');
     if (!grid) return;
@@ -264,8 +247,7 @@ function renderSolutions(solutions) {
                 '<svg class="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="' + iconPath + '"/></svg>' +
             '</div>' +
             '<h3 class="font-semibold text-gray-900 text-sm mb-1">' + escapeHtml(sol.name) + '</h3>' +
-            '<p class="text-xs text-gray-500 leading-relaxed">' + escapeHtml(sol.description) + '</p>' +
-            '<span class="inline-block mt-3 text-xs font-medium text-brand-500 group-hover:underline">' + escapeHtml(sol.category) + '</span>';
+            '<p class="text-xs text-gray-500 leading-relaxed">' + escapeHtml(sol.description) + '</p>';
         grid.appendChild(card);
     });
 }
