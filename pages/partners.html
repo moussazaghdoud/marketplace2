@@ -1,0 +1,265 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Partners - Rainbow by Alcatel-Lucent Enterprise</title>
+    <meta name="description" content="Join the Rainbow partner program. Silver, Gold, and Platinum tiers with dedicated tools, training, and marketing support.">
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        brand: { 50: '#eef4ff', 100: '#dce8ff', 500: '#4F6DF5', 600: '#3B5DE7', 700: '#2D4ED9' }
+                    },
+                    fontFamily: { sans: ['Inter', 'system-ui', 'sans-serif'] }
+                }
+            }
+        }
+    </script>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+<style>
+    .lang-switcher { position: relative; }
+    .lang-switcher button { display: flex; align-items: center; gap: 4px; font-size: 0.8125rem; color: #64748b; cursor: pointer; background: none; border: none; padding: 4px 8px; border-radius: 6px; transition: color 0.2s; }
+    .lang-switcher button:hover { color: #0f172a; }
+    .lang-switcher .lang-dropdown { display: none; position: absolute; top: 100%; right: 0; background: #fff; border: 1px solid #e2e8f0; border-radius: 8px; box-shadow: 0 4px 12px rgba(0,0,0,0.1); min-width: 140px; z-index: 200; padding: 4px 0; margin-top: 4px; }
+    .lang-switcher.open .lang-dropdown { display: block; }
+    .lang-dropdown button { display: block; width: 100%; text-align: left; padding: 8px 14px; font-size: 0.8125rem; color: #374151; border: none; background: none; cursor: pointer; }
+    .lang-dropdown button:hover { background: #f1f5f9; }
+    .lang-dropdown button.active { color: #4F6DF5; font-weight: 600; }
+</style>
+</head>
+<body class="font-sans text-gray-700 antialiased bg-white">
+
+    <!-- NAV -->
+    <nav id="navbar" class="fixed top-0 w-full z-50 bg-white/80 backdrop-blur-md border-b border-gray-100">
+        <div class="max-w-6xl mx-auto px-6 flex items-center justify-between h-16">
+            <a href="/" class="flex items-center gap-2">
+                <img src="/img/rainbow-logo.png" alt="Rainbow" class="w-8 h-8 rounded-lg">
+                <span class="text-lg font-bold text-gray-900">Rainbow</span>
+            </a>
+            <div class="hidden md:flex items-center gap-6">
+                <a href="/" class="text-sm text-gray-500 hover:text-gray-900 transition-colors" data-i18n="nav.home">Home</a>
+                <a href="/products" class="text-sm text-gray-500 hover:text-gray-900 transition-colors" data-i18n="nav.product">Products</a>
+                <a href="/solutions" class="text-sm text-gray-500 hover:text-gray-900 transition-colors" data-i18n="nav.solutions">Solutions</a>
+                <a href="/industries" class="text-sm text-gray-500 hover:text-gray-900 transition-colors" data-i18n="nav.industries">Industries</a>
+                <a href="/offers" class="text-sm text-gray-500 hover:text-gray-900 transition-colors" data-i18n="nav.offers">Pricing</a>
+                <a href="/partners" class="text-sm font-medium text-brand-500 transition-colors" data-i18n="nav.partners">Partners</a>
+                <a href="/blog" class="text-sm text-gray-500 hover:text-gray-900 transition-colors" data-i18n="nav.blog">Blog</a>
+                <a href="/support" class="text-sm text-gray-500 hover:text-gray-900 transition-colors" data-i18n="nav.support">Support</a>
+                <div class="lang-switcher" id="lang-switcher">
+                    <button onclick="document.getElementById('lang-switcher').classList.toggle('open')">
+                        <svg class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M12 21a9.004 9.004 0 008.716-6.747M12 21a9.004 9.004 0 01-8.716-6.747M12 21c2.485 0 4.5-4.03 4.5-9S14.485 3 12 3m0 18c-2.485 0-4.5-4.03-4.5-9S9.515 3 12 3m0 0a8.997 8.997 0 017.843 4.582M12 3a8.997 8.997 0 00-7.843 4.582m15.686 0A11.953 11.953 0 0112 10.5c-2.998 0-5.74-1.1-7.843-2.918m15.686 0A8.959 8.959 0 0121 12c0 .778-.099 1.533-.284 2.253m0 0A17.919 17.919 0 0112 16.5c-3.162 0-6.133-.815-8.716-2.247m0 0A9.015 9.015 0 013 12c0-1.605.42-3.113 1.157-4.418"/></svg>
+                        <span id="lang-current">EN</span>
+                    </button>
+                    <div class="lang-dropdown" id="lang-dropdown"></div>
+                </div>
+                <a href="/login" class="px-5 py-2 rounded-lg bg-brand-500 text-white text-sm font-medium hover:bg-brand-600 transition-colors" data-i18n="nav.signin">Sign in</a>
+            </div>
+            <button id="mobile-menu-btn" class="md:hidden p-2" aria-label="Menu">
+                <svg class="w-6 h-6 text-gray-600" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M4 6h16M4 12h16M4 18h16"/></svg>
+            </button>
+        </div>
+        <div id="mobile-menu" class="md:hidden hidden border-t border-gray-100 bg-white px-6 py-4 space-y-3">
+            <a href="/" class="block text-sm text-gray-600 py-2" data-i18n="nav.home">Home</a>
+            <a href="/products" class="block text-sm text-gray-600 py-2" data-i18n="nav.product">Products</a>
+            <a href="/solutions" class="block text-sm text-gray-600 py-2" data-i18n="nav.solutions">Solutions</a>
+            <a href="/industries" class="block text-sm text-gray-600 py-2" data-i18n="nav.industries">Industries</a>
+            <a href="/offers" class="block text-sm text-gray-600 py-2" data-i18n="nav.offers">Pricing</a>
+            <a href="/partners" class="block text-sm font-medium text-brand-500 py-2" data-i18n="nav.partners">Partners</a>
+            <a href="/blog" class="block text-sm text-gray-600 py-2" data-i18n="nav.blog">Blog</a>
+            <a href="/support" class="block text-sm text-gray-600 py-2" data-i18n="nav.support">Support</a>
+            <div id="mobile-lang-switcher" class="flex flex-wrap gap-2 py-2"></div>
+            <a href="/login" class="block w-full text-center text-sm font-medium text-white bg-brand-500 rounded-lg py-2.5" data-i18n="nav.signin">Sign in</a>
+        </div>
+    </nav>
+
+    <!-- HERO -->
+    <header class="pt-28 pb-16 px-6 bg-gradient-to-br from-brand-100 via-white to-white">
+        <div class="max-w-5xl mx-auto text-center">
+            <h1 id="partners-heading" class="text-4xl sm:text-5xl font-bold text-gray-900 leading-tight"></h1>
+            <p id="partners-subheading" class="mt-4 text-lg text-gray-500 max-w-2xl mx-auto"></p>
+        </div>
+    </header>
+
+    <!-- STATS -->
+    <section class="px-6 -mt-6 mb-12">
+        <div class="max-w-3xl mx-auto">
+            <div id="partners-stats" class="flex justify-center gap-10"></div>
+        </div>
+    </section>
+
+    <!-- TIERS -->
+    <section class="py-16 px-6 bg-white">
+        <div class="max-w-5xl mx-auto">
+            <div id="partners-tiers" class="grid md:grid-cols-3 gap-6"></div>
+        </div>
+    </section>
+
+    <!-- TOOLS -->
+    <section class="py-16 px-6 bg-brand-50">
+        <div class="max-w-5xl mx-auto">
+            <h2 class="text-2xl font-bold text-gray-900 text-center mb-10" id="partners-tools-heading">Exclusive partner tools</h2>
+            <div id="partners-tools" class="grid sm:grid-cols-2 lg:grid-cols-3 gap-5"></div>
+        </div>
+    </section>
+
+    <!-- CTAs -->
+    <section class="py-16 px-6 bg-gradient-to-r from-brand-600 via-brand-500 to-indigo-500">
+        <div class="max-w-2xl mx-auto text-center">
+            <h2 class="text-2xl font-bold text-white" data-i18n="partners.ctaTitle">Ready to partner with us?</h2>
+            <p class="mt-2 text-blue-100 text-sm" data-i18n="partners.ctaDescription">Join 9,000+ channel partners delivering Rainbow worldwide.</p>
+            <div class="mt-6 flex flex-col sm:flex-row gap-3 justify-center">
+                <a href="/support#contact" id="partners-cta-primary" class="inline-block px-8 py-3.5 rounded-lg bg-white text-brand-600 font-semibold hover:bg-blue-50 transition-colors text-center"></a>
+                <a href="/login" id="partners-cta-secondary" class="inline-block px-8 py-3.5 rounded-lg border border-white/30 text-white font-medium hover:bg-white/10 transition-colors text-center"></a>
+            </div>
+        </div>
+    </section>
+
+    <!-- FOOTER -->
+    <footer class="bg-gray-900 text-gray-400 pt-16 pb-8 px-6">
+        <div class="max-w-6xl mx-auto">
+            <div class="grid sm:grid-cols-2 lg:grid-cols-4 gap-10 mb-12">
+                <div>
+                    <h4 class="text-white font-semibold text-sm mb-4" data-i18n="footer.product">Product</h4>
+                    <ul class="space-y-2 text-sm">
+                        <li><a href="/products" class="hover:text-white transition-colors" data-i18n="footer.rainbow">Rainbow</a></li>
+                        <li><a href="/#features" class="hover:text-white transition-colors" data-i18n="footer.features">Features</a></li>
+                        <li><a href="/offers" class="hover:text-white transition-colors" data-i18n="footer.pricing">Pricing</a></li>
+                        <li><a href="/#demo" class="hover:text-white transition-colors" data-i18n="footer.demo">Demo</a></li>
+                    </ul>
+                </div>
+                <div>
+                    <h4 class="text-white font-semibold text-sm mb-4" data-i18n="footer.resources">Resources</h4>
+                    <ul class="space-y-2 text-sm">
+                        <li><a href="/blog" class="hover:text-white transition-colors" data-i18n="footer.blog">Blog</a></li>
+                        <li><a href="/tutorials" class="hover:text-white transition-colors" data-i18n="footer.tutorials">Tutorials</a></li>
+                        <li><a href="#" class="hover:text-white transition-colors" data-i18n="footer.apiDocs">API Documentation</a></li>
+                        <li><a href="#" class="hover:text-white transition-colors" data-i18n="footer.changelog">Changelog</a></li>
+                    </ul>
+                </div>
+                <div>
+                    <h4 class="text-white font-semibold text-sm mb-4" data-i18n="footer.support">Support</h4>
+                    <ul class="space-y-2 text-sm">
+                        <li><a href="/support" class="hover:text-white transition-colors" data-i18n="footer.helpCenter">Help Center</a></li>
+                        <li><a href="/support" class="hover:text-white transition-colors" data-i18n="footer.contactUs">Contact Us</a></li>
+                        <li><a href="#" class="hover:text-white transition-colors" data-i18n="footer.serviceStatus">Service Status</a></li>
+                        <li><a href="/reviews" class="hover:text-white transition-colors" data-i18n="footer.customerReviews">Customer Reviews</a></li>
+                    </ul>
+                </div>
+                <div>
+                    <h4 class="text-white font-semibold text-sm mb-4" data-i18n="footer.company">Company</h4>
+                    <ul class="space-y-2 text-sm">
+                        <li><a href="/about" class="hover:text-white transition-colors" data-i18n="footer.about">About</a></li>
+                        <li><a href="/legal" class="hover:text-white transition-colors" data-i18n="footer.legalNotice">Legal Notice</a></li>
+                        <li><a href="/privacy" class="hover:text-white transition-colors" data-i18n="footer.privacyPolicy">Privacy Policy</a></li>
+                    </ul>
+                </div>
+            </div>
+            <div class="border-t border-gray-800 pt-6 text-center text-xs text-gray-500">
+                &copy; 2026 Rainbow by Alcatel-Lucent Enterprise. All rights reserved.
+            </div>
+        </div>
+    </footer>
+
+    <script src="/js/i18n.js"></script>
+    <script>
+        document.getElementById('mobile-menu-btn').addEventListener('click', function() {
+            document.getElementById('mobile-menu').classList.toggle('hidden');
+        });
+
+        document.addEventListener('click', function(e) {
+            var sw = document.getElementById('lang-switcher');
+            if (sw && !sw.contains(e.target)) sw.classList.remove('open');
+        });
+
+        function escapeHtml(s) {
+            var div = document.createElement('div');
+            div.textContent = s;
+            return div.innerHTML;
+        }
+
+        var TOOL_ICONS = {
+            briefcase: '<svg class="w-6 h-6" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.5"><path stroke-linecap="round" stroke-linejoin="round" d="M20 7H4a2 2 0 00-2 2v10a2 2 0 002 2h16a2 2 0 002-2V9a2 2 0 00-2-2z"/><path stroke-linecap="round" stroke-linejoin="round" d="M16 7V5a2 2 0 00-2-2h-4a2 2 0 00-2 2v2"/></svg>',
+            gift: '<svg class="w-6 h-6" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.5"><path stroke-linecap="round" stroke-linejoin="round" d="M12 8v13m0-13V6a2 2 0 112 2h-2zm0 0V5.5A2.5 2.5 0 109.5 8H12zm-7 4h14M5 12a2 2 0 110-4h14a2 2 0 110 4M5 12v7a2 2 0 002 2h10a2 2 0 002-2v-7"/></svg>',
+            shield: '<svg class="w-6 h-6" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.5"><path stroke-linecap="round" stroke-linejoin="round" d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z"/></svg>',
+            cog: '<svg class="w-6 h-6" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.5"><path stroke-linecap="round" stroke-linejoin="round" d="M10.325 4.317c.426-1.756 2.924-1.756 3.35 0a1.724 1.724 0 002.573 1.066c1.543-.94 3.31.826 2.37 2.37a1.724 1.724 0 001.066 2.573c1.756.426 1.756 2.924 0 3.35a1.724 1.724 0 00-1.066 2.573c.94 1.543-.826 3.31-2.37 2.37a1.724 1.724 0 00-2.573 1.066c-.426 1.756-2.924 1.756-3.35 0a1.724 1.724 0 00-2.573-1.066c-1.543.94-3.31-.826-2.37-2.37a1.724 1.724 0 00-1.066-2.573c-1.756-.426-1.756-2.924 0-3.35a1.724 1.724 0 001.066-2.573c-.94-1.543.826-3.31 2.37-2.37.996.608 2.296.07 2.572-1.065z"/><path stroke-linecap="round" stroke-linejoin="round" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"/></svg>',
+            megaphone: '<svg class="w-6 h-6" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.5"><path stroke-linecap="round" stroke-linejoin="round" d="M11 5.882V19.24a1.76 1.76 0 01-3.417.592l-2.147-6.15M18 13a3 3 0 100-6M5.436 13.683A4.001 4.001 0 017 6h1.832c4.1 0 7.625-1.234 9.168-3v14c-1.543-1.766-5.067-3-9.168-3H7a3.988 3.988 0 01-1.564-.317z"/></svg>',
+            academic: '<svg class="w-6 h-6" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.5"><path stroke-linecap="round" stroke-linejoin="round" d="M12 14l9-5-9-5-9 5 9 5zm0 0l6.16-3.422a12.083 12.083 0 01.665 6.479A11.952 11.952 0 0012 20.055a11.952 11.952 0 00-6.824-2.998 12.078 12.078 0 01.665-6.479L12 14zm-4 6v-7.5l4-2.222"/></svg>'
+        };
+
+        var TIER_COLORS = {
+            gray: { border: 'border-gray-200', bg: 'bg-gray-50', text: 'text-gray-600', dot: 'bg-gray-400' },
+            amber: { border: 'border-amber-300', bg: 'bg-amber-50', text: 'text-amber-700', dot: 'bg-amber-400' },
+            violet: { border: 'border-violet-300', bg: 'bg-violet-50', text: 'text-violet-700', dot: 'bg-violet-400' }
+        };
+
+        function renderPartners(data) {
+            if (!data) return;
+
+            // Heading + subheading
+            var h = document.getElementById('partners-heading');
+            var s = document.getElementById('partners-subheading');
+            if (h) h.textContent = data.heading || '';
+            if (s) s.textContent = data.subheading || '';
+
+            // Stats
+            var statsEl = document.getElementById('partners-stats');
+            if (statsEl && data.stats) {
+                statsEl.innerHTML = data.stats.map(function(st) {
+                    return '<div class="text-center"><p class="text-3xl font-bold text-gray-900">' + escapeHtml(st.value) + '</p><p class="text-sm text-gray-500">' + escapeHtml(st.label) + '</p></div>';
+                }).join('');
+            }
+
+            // Tiers
+            var tiersEl = document.getElementById('partners-tiers');
+            if (tiersEl && data.tiers) {
+                tiersEl.innerHTML = data.tiers.map(function(tier) {
+                    var c = TIER_COLORS[tier.color] || TIER_COLORS.gray;
+                    var benefitsHtml = (tier.benefits || []).map(function(b) {
+                        return '<li class="flex items-start gap-2"><span class="w-1.5 h-1.5 rounded-full ' + c.dot + ' mt-1.5 shrink-0"></span>' + escapeHtml(b) + '</li>';
+                    }).join('');
+                    return '<div class="rounded-xl border-2 ' + c.border + ' p-7">' +
+                        '<div class="flex items-center gap-2 mb-1"><span class="w-3 h-3 rounded-full ' + c.dot + '"></span><h3 class="text-lg font-bold text-gray-900">' + escapeHtml(tier.name) + '</h3></div>' +
+                        '<p class="text-xs ' + c.text + ' mb-5">' + escapeHtml(tier.requirement) + '</p>' +
+                        '<ul class="space-y-2 text-sm text-gray-600">' + benefitsHtml + '</ul></div>';
+                }).join('');
+            }
+
+            // Tools
+            var toolsEl = document.getElementById('partners-tools');
+            if (toolsEl && data.tools) {
+                toolsEl.innerHTML = data.tools.map(function(tool) {
+                    var iconHtml = TOOL_ICONS[tool.icon] || '';
+                    return '<div class="flex gap-4 p-5 rounded-xl bg-white border border-gray-100">' +
+                        '<div class="w-10 h-10 rounded-lg bg-brand-50 text-brand-500 flex items-center justify-center shrink-0">' + iconHtml + '</div>' +
+                        '<div><h4 class="text-sm font-semibold text-gray-900">' + escapeHtml(tool.title) + '</h4>' +
+                        '<p class="text-xs text-gray-500 mt-1">' + escapeHtml(tool.description) + '</p></div></div>';
+                }).join('');
+            }
+
+            // CTAs
+            var ctaPrimary = document.getElementById('partners-cta-primary');
+            var ctaSecondary = document.getElementById('partners-cta-secondary');
+            if (ctaPrimary) ctaPrimary.textContent = data.ctaPrimary || 'Become a Partner';
+            if (ctaSecondary) ctaSecondary.textContent = data.ctaSecondary || 'Partner Portal Login';
+        }
+
+        function loadPartners() {
+            var lang = window.i18n ? i18n.getLang() : 'en';
+            var url = '/api/content' + (lang !== 'en' ? '?lang=' + lang : '');
+            fetch(url).then(function(r) { return r.json(); }).then(function(content) {
+                if (content.partners) renderPartners(content.partners);
+            }).catch(function(err) {
+                console.error('Failed to load partners content:', err);
+            });
+        }
+
+        loadPartners();
+        window.addEventListener('langchange', function() { loadPartners(); });
+    </script>
+</body>
+</html>

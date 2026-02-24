@@ -82,7 +82,7 @@
                 <a href="/solutions" class="text-sm text-gray-500 hover:text-gray-900 transition-colors" data-i18n="nav.solutions">Solutions</a>
                 <a href="/industries" class="text-sm text-gray-500 hover:text-gray-900 transition-colors" data-i18n="nav.industries">Industries</a>
                 <a href="/offers" class="text-sm text-gray-500 hover:text-gray-900 transition-colors" data-i18n="nav.offers">Pricing</a>
-                <a href="#partners" class="text-sm text-gray-500 hover:text-gray-900 transition-colors" data-i18n="nav.partners">Partners</a>
+                <a href="/partners" class="text-sm text-gray-500 hover:text-gray-900 transition-colors" data-i18n="nav.partners">Partners</a>
                 <a href="/blog" class="text-sm text-gray-500 hover:text-gray-900 transition-colors" data-i18n="nav.blog">Blog</a>
                 <a href="/support" class="text-sm text-gray-500 hover:text-gray-900 transition-colors" data-i18n="nav.support">Support</a>
                 <div class="lang-switcher" id="lang-switcher">
@@ -104,7 +104,7 @@
             <a href="/solutions" class="block text-sm text-gray-600 py-2" data-i18n="nav.solutions">Solutions</a>
             <a href="/industries" class="block text-sm text-gray-600 py-2" data-i18n="nav.industries">Industries</a>
             <a href="/offers" class="block text-sm text-gray-600 py-2" data-i18n="nav.offers">Pricing</a>
-            <a href="#partners" class="block text-sm text-gray-600 py-2" data-i18n="nav.partners">Partners</a>
+            <a href="/partners" class="block text-sm text-gray-600 py-2" data-i18n="nav.partners">Partners</a>
             <a href="/blog" class="block text-sm text-gray-600 py-2" data-i18n="nav.blog">Blog</a>
             <a href="/support" class="block text-sm text-gray-600 py-2" data-i18n="nav.support">Support</a>
             <div id="mobile-lang-switcher" class="flex flex-wrap gap-2 py-2"></div>
@@ -160,23 +160,6 @@
         </div>
     </section>
 
-    <!-- ===== S5: PRICING ===== -->
-    <section id="pricing" class="py-20 px-6 bg-white">
-        <div class="max-w-5xl mx-auto">
-            <div class="text-center mb-4">
-                <h2 id="pricing-heading" class="text-3xl font-bold text-gray-900"></h2>
-                <p id="pricing-subheading" class="mt-3 text-gray-500"></p>
-            </div>
-            <div class="flex items-center justify-center gap-3 mb-12">
-                <label class="text-sm text-gray-500" data-i18n="home.licenses">Licenses:</label>
-                <button onclick="adjustLicenses(-1)" class="w-8 h-8 rounded-lg border border-gray-200 flex items-center justify-center text-gray-500 hover:bg-gray-50">-</button>
-                <input type="number" id="license-count" value="10" min="1" max="1000" onchange="updatePrices()" class="w-16 text-center border border-gray-200 rounded-lg py-1.5 text-sm font-medium">
-                <button onclick="adjustLicenses(1)" class="w-8 h-8 rounded-lg border border-gray-200 flex items-center justify-center text-gray-500 hover:bg-gray-50">+</button>
-            </div>
-            <div id="pricing-grid" class="grid md:grid-cols-3 gap-6"></div>
-        </div>
-    </section>
-
     <!-- ===== S6: ADD-ONS ===== -->
     <section id="addons" class="py-20 px-6 bg-gradient-to-b from-brand-50 to-white">
         <div class="max-w-5xl mx-auto">
@@ -185,33 +168,6 @@
                 <p id="addons-subheading" class="mt-3 text-gray-500"></p>
             </div>
             <div id="addons-grid" class="grid md:grid-cols-3 gap-6"></div>
-        </div>
-    </section>
-
-    <!-- ===== S6b: PARTNERS ===== -->
-    <section id="partners" class="py-20 px-6 bg-white">
-        <div class="max-w-6xl mx-auto">
-            <!-- Header + Stats -->
-            <div class="text-center mb-6">
-                <h2 id="partners-heading" class="text-3xl font-bold text-gray-900"></h2>
-                <p id="partners-subheading" class="mt-3 text-gray-500 max-w-xl mx-auto"></p>
-            </div>
-            <div id="partners-stats" class="flex justify-center gap-10 mb-14"></div>
-
-            <!-- Tiers -->
-            <div id="partners-tiers" class="grid md:grid-cols-3 gap-6 mb-16"></div>
-
-            <!-- Tools -->
-            <div class="mb-12">
-                <h3 class="text-xl font-bold text-gray-900 text-center mb-8">Exclusive partner tools</h3>
-                <div id="partners-tools" class="grid sm:grid-cols-2 lg:grid-cols-3 gap-5"></div>
-            </div>
-
-            <!-- CTAs -->
-            <div class="flex flex-col sm:flex-row gap-3 justify-center">
-                <a href="/support#contact" id="partners-cta-primary" class="px-8 py-3.5 rounded-lg bg-brand-500 text-white font-semibold hover:bg-brand-600 transition-colors shadow-lg shadow-brand-500/25 text-center"></a>
-                <a href="/login" id="partners-cta-secondary" class="px-8 py-3.5 rounded-lg border border-gray-200 text-gray-700 font-medium hover:border-gray-300 hover:bg-gray-50 transition-colors text-center"></a>
-            </div>
         </div>
     </section>
 
@@ -309,7 +265,7 @@
                     <ul class="space-y-2 text-sm text-gray-500">
                         <li><a href="/solutions" class="hover:text-gray-900" data-i18n="footer.allSolutions">All Solutions</a></li>
                         <li><a href="/industries" class="hover:text-gray-900" data-i18n="nav.industries">Industries</a></li>
-                        <li><a href="#" class="hover:text-gray-900">CPaaS & APIs</a></li>
+                        <li><a href="/partners" class="hover:text-gray-900" data-i18n="nav.partners">Partners</a></li>
                     </ul>
                 </div>
                 <div>
